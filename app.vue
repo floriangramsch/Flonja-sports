@@ -1,5 +1,9 @@
 <template>
-  <div class="bg-">
-    <Test />
-  </div>
+  <NuxtLayout>
+    <MainPage />
+  </NuxtLayout>
 </template>
+
+<script setup>
+import MainPage from "./components/MainPage.vue";
+</script>

@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@tanstack/vue-query": "^5.59.1",
     "mysql2": "^3.11.3",
     "nuxt": "^3.13.0",
+    "radix-vue": "^1.9.6",
     "vue": "latest",
     "vue-router": "latest"
   }
