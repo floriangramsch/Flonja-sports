@@ -76,6 +76,7 @@ export const addWorkout = async (userId: number) => {
       return {
         statusCode: 200,
         message: "Workout added successfully",
+        workoutId: results.insertId,
       };
     } else {
       return {

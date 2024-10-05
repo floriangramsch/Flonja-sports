@@ -33,7 +33,7 @@
           >
             Hallo Se Bebi {{ logged.user?.name }}
             <br />
-            {{ formatTime(logged.workout?.start) }}
+            {{ formatTime(loggedWorkout?.start) }}
           </h1>
         </div>
       </template>
@@ -55,7 +55,7 @@
         :equips="equips"
         :muscles="muscles"
         :users="users"
-        v-model:workout="logged.workout"
+        :workout="loggedWorkout"
         v-model:filter="exerciseFilter"
         v-model:showRouter="showRouter"
       />
@@ -176,7 +176,9 @@ import Start from "@/components/Dialogs/Start.vue";
 import EquipList from "@/components/Equip/EquipList.vue";
 import ExerciseOverview from "@/components/Exercises/ExerciseOverview.vue";
 import WorkoutOverview from "@/components/Workout/WorkoutOverview.vue";
-import { useQuery } from "@tanstack/vue-query";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
+
+const queryClient = useQueryClient();
 
 const { data: users, isSuccess: isUsersSuccess } = useQuery<UserType>({
   queryKey: ["users"],
@@ -209,7 +211,18 @@ const exerciseFilter = ref<number[]>([]);
 const logged: Ref<LoggedType> = ref({
   isLogged: false,
   user: undefined,
-  workout: undefined,
+  test: 18,
+});
+
+const loggedWorkout = computed(() => {
+  if (workouts.value) {
+    const lWorkout = logged.value.test
+      ? workouts.value[logged.value.test]
+      : undefined;
+    if (lWorkout) {
+      return { id: logged.value.test, ...lWorkout };
+    }
+  }
 });
 
 // Funktion zum Speichern des Anmeldezustands im Local Storage
@@ -230,7 +243,7 @@ const logout = () => {
   logged.value = {
     isLogged: false,
     user: logged.value.user,
-    workout: undefined,
+    test: undefined,
   };
   showDialogLogin.value = false;
   localStorage.removeItem("logged");
@@ -244,7 +257,10 @@ onMounted(() => {
 watch(logged, saveLoggedState, { deep: true });
 
 const handleRefresh = async () => {
-  // getAll();
+  queryClient.invalidateQueries({ queryKey: ["users"] });
+  queryClient.invalidateQueries({ queryKey: ["muscles"] });
+  queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  queryClient.invalidateQueries({ queryKey: ["equips"] });
 };
 
 // tbd
@@ -261,8 +277,8 @@ const switchUser = () => {
         name: users.value[0].name,
       };
     }
-    logged.value.workout = undefined;
     logged.value.isLogged = false;
+    logged.value.test = undefined;
     showDialogLogin.value = false;
   }
 };

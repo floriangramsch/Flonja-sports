@@ -16,7 +16,7 @@
   >
     <NewEx
       :equip="equip"
-      v-model:workout="workout"
+      :workout="workout"
       @close="showDialogWeight = false"
     />
   </Dialog>
@@ -32,9 +32,10 @@ const showDialogWeight = ref(false);
 defineProps<{
   equip: EquipSpecialType;
   users: UserType;
+  workout: LoggedWorkout | undefined;
 }>();
 
-const workout = defineModel<LoggedWorkout>("workout");
+// const workout = defineModel<LoggedWorkout>("workout");
 
 // const usersWeight = ref(
 //   props.users?.map((user) => ({

@@ -1,7 +1,7 @@
 export type LoggedType = {
   isLogged: boolean;
   user: LoggedUser | undefined;
-  workout: LoggedWorkout | undefined;
+  test: number | undefined;
 };
 
 export type LoggedUser = {
@@ -10,7 +10,7 @@ export type LoggedUser = {
 };
 
 export type LoggedWorkout = {
-  id: number;
+  id: number | undefined;
   start: Date;
   end: Date;
   user: LoggedUser;

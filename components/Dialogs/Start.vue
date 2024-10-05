@@ -20,7 +20,6 @@ import { useMutation, useQueryClient } from "@tanstack/vue-query";
 const queryClient = useQueryClient();
 
 const logged = defineModel<LoggedType>();
-console.log(logged.value?.user);
 const workouts = defineModel<WorkoutType>("workouts");
 
 const mutation = useMutation({
@@ -41,28 +40,28 @@ const mutation = useMutation({
 
     return response.json();
   },
-  onSuccess: (data: LoggedWorkout) => {
+  onSuccess: (data: any) => {
     queryClient.invalidateQueries({ queryKey: ["workouts"] });
 
-    if (!logged.value || !logged.value.user || !workouts.value) return;
-    const nullEquips = Object.keys(workouts.value?.[1]?.equips || {}).reduce(
-      (acc, key) => {
-        acc[Number(key)] = null;
-        return acc;
-      },
-      {} as Record<number, number | null>
-    );
-    const newWorkout = {
-      ...data,
-      user: logged.value?.user,
-      equips: nullEquips,
-    };
+    // if (!logged.value || !logged.value.user || !workouts.value) return;
+    // const nullEquips = Object.keys(workouts.value?.[1]?.equips || {}).reduce(
+    //   (acc, key) => {
+    //     acc[Number(key)] = null;
+    //     return acc;
+    //   },
+    //   {} as Record<number, number | null>
+    // );
+    // const newWorkout = {
+    //   ...data,
+    //   user: logged.value?.user,
+    //   equips: nullEquips,
+    // };
     logged.value = {
       isLogged: true,
       user: logged.value?.user,
-      workout: newWorkout,
+      test: data.workoutId,
     };
-    workouts.value[newWorkout.id] = newWorkout;
+    // workouts.value[newWorkout.id] = newWorkout;
   },
 });
 
@@ -83,7 +82,7 @@ const resumeWorkout = () => {
     logged.value = {
       isLogged: true,
       user: logged.value?.user,
-      workout: { id: Number(latestKey), ...latestWorkout },
+      test: Number(latestKey),
     };
   }
 };

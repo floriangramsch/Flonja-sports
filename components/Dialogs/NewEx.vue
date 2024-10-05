@@ -26,9 +26,8 @@ const newWorkoutWeight = ref("");
 
 const props = defineProps<{
   equip: EquipSpecialType;
+  workout: LoggedWorkout;
 }>();
-
-const workout = defineModel<LoggedWorkout>("workout");
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -51,40 +50,18 @@ const mutation = useMutation({
   },
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    queryClient.invalidateQueries({ queryKey: ["equips"] });
     emit("close");
   },
 });
 
 const addNewExercice = () => {
-  if (newWorkoutWeight.value && workout.value?.id && props.equip.id) {
+  if (newWorkoutWeight.value && props.workout.id && props.equip.id) {
     mutation.mutate({
-      workout_id: workout.value.id,
+      workout_id: props.workout.id,
       equip_id: props.equip.id,
       weight: newWorkoutWeight.value,
     });
   }
 };
-
-// const addExercice = () => {
-//   if (newWorkoutWeight.value && workout.value) {
-//     fetch("/api/addExercice", {
-//       method: "Post",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         workout_id: workout.value.id,
-//         equip_id: props.equip.id,
-//         weight: newWorkoutWeight.value,
-//       }),
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         if (workout.value) {
-//           workout.value.equips[props.equip.id] = Number(newWorkoutWeight.value);
-//         }
-//         emit("close");
-//       });
-//   }
-// };
 </script>

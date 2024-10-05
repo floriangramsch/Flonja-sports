@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event); // Holt den Body der POST-Anfrage
     const userId = body;
 
-    const equips = await addWorkout(userId);
-    return equips; // Hier nur das Objekt zurückgeben
+    const response = await addWorkout(userId);
+    return response; // Hier nur das Objekt zurückgeben
   } catch (error) {
     console.error(error);
     return { error: "Failed to add Equip" };

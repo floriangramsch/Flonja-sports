@@ -12,7 +12,7 @@
         <Equip
           :equip="{ ...equip, id: Number(id) }"
           :users="users"
-          v-model:workout="workout"
+          :workout="workout"
         />
         <div class="ml-auto mt-auto mr-2">
           <button
@@ -53,9 +53,8 @@ const props = defineProps<{
   equips: EquipType;
   muscles: MuscleType;
   users: UserType;
+  workout: LoggedWorkout | undefined;
 }>();
-
-const workout = defineModel<LoggedWorkout>("workout");
 
 const filteredEquips = computed(() => {
   return Object.entries(props.equips)
