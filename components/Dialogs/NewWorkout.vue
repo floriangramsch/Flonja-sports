@@ -1,5 +1,5 @@
 <template>
-  <form style="color: #263222;">
+  <form style="color: #263222">
     <div class="flex flex-col">
       <div>
         <label>Gerätename:</label>
@@ -14,7 +14,7 @@
       @click.prevent="addNewEquip"
       class="mt-4 bg-[#5d7851] text-[#263222] p-2 rounded"
     >
-      Füge neues Gerät hinzu!
+      Füge neues Gerät hinzu!!
     </button>
   </form>
 </template>

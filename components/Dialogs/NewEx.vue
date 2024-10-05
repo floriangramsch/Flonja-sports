@@ -35,17 +35,17 @@ const emit = defineEmits<{
 }>();
 
 const mutation = useMutation({
-  mutationFn: async (newWorkout: {
+  mutationFn: async (newEx: {
     workout_id: number;
     equip_id: number;
     weight: string;
   }) => {
-    const response = await fetch("/api/addExercice", {
+    const response = await fetch("/api/addExercise", {
       method: "Post",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newWorkout),
+      body: JSON.stringify(newEx),
     });
     return response.json();
   },
@@ -56,7 +56,7 @@ const mutation = useMutation({
 });
 
 const addNewExercice = () => {
-  if (newWorkoutWeight.value && workout.value?.id) {
+  if (newWorkoutWeight.value && workout.value?.id && props.equip.id) {
     mutation.mutate({
       workout_id: workout.value.id,
       equip_id: props.equip.id,
