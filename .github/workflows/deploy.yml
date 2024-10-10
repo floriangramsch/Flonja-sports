@@ -20,5 +20,16 @@ jobs:
           username: ${{ secrets.PI_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/pi/Deployed/Schichtplan
+            cd /home/pi/Deployed/Flonja-sports
             git pull
+
+      - name: Install everything and build
+        run: |
+          echo "Install and building..."
+          npm install
+          npm run build
+
+      - name: Restart systemctl
+        run: |
+          echo "Restarting systemctl..."
+          sudo systemctl restart flonja-sports.service
