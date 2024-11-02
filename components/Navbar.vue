@@ -1,20 +1,5 @@
 <script setup lang="ts">
-import Start from "./Dialogs/Start.vue";
-
-const logged = defineModel<LoggedType>();
-const workouts = defineModel<WorkoutType>("workouts");
-const show = defineModel<any>("show");
-
-// Funktion zum Ausloggen
-const logout = () => {
-  logged.value = {
-    isLogged: false,
-    user: logged.value?.user,
-    loggedWorkout: undefined,
-  };
-  show.value.showLogin = false;
-  localStorage.removeItem("logged");
-};
+const show = defineModel<any>();
 </script>
 
 <template>
@@ -24,54 +9,40 @@ const logout = () => {
     >
       <div class="flex-grow">
         <button
-          @click="
-            show.showRouter !== 'exercises'
-              ? (show.showRouter = 'exercises')
-              : (show.showRouter = 'equiplist')
-          "
+          @click="show.showRouter = 'exercises'"
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-chart-line text-4xl" />
+          <i
+            v-if="show.showRouter === 'exercises'"
+            class="fa-solid fa-chart-line text-4xl text-sonja-akz"
+          />
+          <i v-else class="fa-solid fa-chart-line text-4xl" />
         </button>
       </div>
 
-      <div v-if="logged?.isLogged" class="flex-grow">
-        <button
-          @click.prevent="logout"
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-cat text-4xl"></i>
-        </button>
-      </div>
-      <div v-else class="flex-grow">
-        <button
-          @click="
-            {
-              show.showLogin = !show.showLogin;
-              show.showNew = false;
-            }
-          "
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-dumbbell text-4xl"></i>
-        </button>
-        <Start
-          v-if="show.showLogin"
-          v-outside
-          v-model="logged"
-          v-model:workouts="workouts"
-        />
-      </div>
       <div class="flex-grow">
         <button
-          @click="
-            show.showRouter !== 'workouts'
-              ? (show.showRouter = 'workouts')
-              : (show.showRouter = 'equiplist')
-          "
+          @click="show.showRouter = 'equiplist'"
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-calendar text-4xl"></i>
+          <i
+            v-if="show.showRouter === 'equiplist'"
+            class="fa-solid fa-dumbbell text-4xl text-sonja-akz"
+          />
+          <i v-else class="fa-solid fa-dumbbell text-4xl" />
+        </button>
+      </div>
+
+      <div class="flex-grow">
+        <button
+          @click="show.showRouter = 'workouts'"
+          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
+        >
+          <i
+            v-if="show.showRouter === 'workouts'"
+            class="fa-solid fa-calendar text-4xl text-sonja-akz"
+          ></i>
+          <i v-else class="fa-solid fa-calendar text-4xl"></i>
         </button>
       </div>
     </div>
