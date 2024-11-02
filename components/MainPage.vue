@@ -29,51 +29,51 @@
           <button
             @click="
               {
-                showNew.show = !showNew.show;
-                showLogin = false;
+                show.showNew = !show.showNew;
+                show.showLogin = false;
               }
             "
             class="text-sonja-akz cursor-pointer"
           >
             <i class="fa-solid fa-plus text-3xl"></i>
           </button>
-          <div v-if="showNew.show">
+          <div v-if="show.showNew">
             <div
               class="absolute top-2 right-10 bg-sonja-akz rounded-md shadow-lg"
             >
               <button
-                @click="showNew.showDialogEquip = !showNew.showDialogEquip"
+                @click="show.showDialogEquip = !show.showDialogEquip"
                 class="flex px-4 py-2 cursor-pointer"
               >
                 Neuer Muskle
               </button>
               <button
-                @click="showNew.showDialogMuskle = !showNew.showDialogMuskle"
+                @click="show.showDialogMuskle = !show.showDialogMuskle"
                 class="flex px-4 py-2 cursor-pointer"
               >
                 Neues Gerät
               </button>
             </div>
             <Dialog
-              :isOpen="showNew.showDialogEquip"
+              :isOpen="show.showDialogEquip"
               @close="
-                showNew.showDialogEquip = false;
-                showNew.show = false;
+                show.showDialogEquip = false;
+                show.showNew = false;
               "
             >
               <NewMuskle
                 v-model:muscles="muscles"
                 @close="
-                  showNew.showDialogMuskle = false;
-                  showNew.show = false;
+                  show.showDialogMuskle = false;
+                  show.showNew = false;
                 "
               />
             </Dialog>
             <Dialog
-              :isOpen="showNew.showDialogMuskle"
+              :isOpen="show.showDialogMuskle"
               @close="
-                showNew.showDialogMuskle = false;
-                showNew.show = false;
+                show.showDialogMuskle = false;
+                show.showNew = false;
               "
             >
               <NewEquip
@@ -81,8 +81,8 @@
                 :muscles="muscles"
                 v-model:equips="equips"
                 @close="
-                  showNew.showDialogEquip = false;
-                  showNew.show = false;
+                  show.showDialogEquip = false;
+                  show.showNew = false;
                 "
               />
             </Dialog>
@@ -101,96 +101,32 @@
         </div>
       </template>
       <ExerciseOverview
-        v-if="showRouter === 'exercises' && users"
+        v-if="show.showRouter === 'exercises' && users"
         :users="users"
         v-model="equips"
         v-model:filter="exerciseFilter"
       />
       <WorkoutOverview
-        v-if="showRouter === 'workouts' && users && workouts"
+        v-if="show.showRouter === 'workouts' && users && workouts"
         :workouts="workouts"
         :users="users"
         v-model="logged"
-        v-model:showRouter="showRouter"
+        v-model:showRouter="show.showRouter"
       />
       <EquipList
-        v-if="showRouter === 'equiplist' && equips && muscles && users"
+        v-if="show.showRouter === 'equiplist' && equips && muscles && users"
         :equips="equips"
         :muscles="muscles"
         :users="users"
         :workout="loggedWorkout"
         v-model:filter="exerciseFilter"
-        v-model:showRouter="showRouter"
+        v-model:showRouter="show.showRouter"
       />
-      <Home v-if="showRouter === 'home'" v-model="logged" />
+      <Home v-if="show.showRouter === 'home'" v-model="logged" />
     </div>
   </div>
   <div v-else>Loading...</div>
-  <Navbar
-    v-model="logged"
-    v-model:show-router="showRouter"
-    v-model:show-login="showLogin"
-    v-model:show-new="showNew"
-    v-model:workouts="workouts"
-  />
-  <!-- <nav class="fixed bottom-0 w-full">
-    <div
-      class="flex justify-evenly bg-sonja-fg border-t-2 border-sonja-fg-darker text-sonja-text"
-    >
-      <div class="flex-grow">
-        <button
-          @click="
-            showRouter !== 'exercises'
-              ? (showRouter = 'exercises')
-              : (showRouter = 'equiplist')
-          "
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-chart-line text-4xl" />
-        </button>
-      </div>
-
-      <div v-if="logged.isLogged" class="flex-grow">
-        <button
-          @click.prevent="logout"
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-cat text-4xl"></i>
-        </button>
-      </div>
-      <div v-else class="flex-grow">
-        <button
-          @click="
-            {
-              showLogin = !showLogin;
-              showNew.show = false;
-            }
-          "
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-dumbbell text-4xl"></i>
-        </button>
-        <Start
-          v-if="showLogin"
-          v-outside
-          v-model="logged"
-          v-model:workouts="workouts"
-        />
-      </div>
-      <div class="flex-grow">
-        <button
-          @click="
-            showRouter !== 'workouts'
-              ? (showRouter = 'workouts')
-              : (showRouter = 'equiplist')
-          "
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-calendar text-4xl"></i>
-        </button>
-      </div>
-    </div>
-  </nav> -->
+  <Navbar v-model="logged" v-model:show="show" v-model:workouts="workouts" />
 </template>
 
 <script setup lang="ts">
@@ -222,14 +158,13 @@ const { data: workouts, isSuccess: isWorkoutsSuccess } = useQuery<WorkoutType>({
   queryFn: fetchWorkouts,
 });
 
-const showNew = ref({
-  show: false, // show dropdown
+const show = ref({
+  showNew: false, // show dropdown
   showDialogEquip: false, // show equip dialog
   showDialogMuskle: false, // show muscle dialog
-  // showLogin: false // show login
+  showLogin: false, // show login
+  showRouter: "home",
 });
-const showLogin = ref(false);
-const showRouter = ref("home");
 
 const exerciseFilter = ref<number[]>([]);
 
@@ -268,17 +203,6 @@ const loadLoggedState = () => {
   }
 };
 
-// Funktion zum Ausloggen
-const logout = () => {
-  logged.value = {
-    isLogged: false,
-    user: logged.value.user,
-    loggedWorkout: undefined,
-  };
-  showLogin.value = false;
-  localStorage.removeItem("logged");
-};
-
 onMounted(() => {
   loadLoggedState();
 });
@@ -293,7 +217,6 @@ const handleRefresh = async () => {
   queryClient.invalidateQueries({ queryKey: ["equips"] });
 };
 
-// tbd
 const switchUser = () => {
   if (users.value && Object.keys(users.value).length === 2) {
     if (logged.value.user?.name === "Florian") {
@@ -309,7 +232,7 @@ const switchUser = () => {
     }
     logged.value.isLogged = false;
     logged.value.loggedWorkout = undefined;
-    showLogin.value = false;
+    show.value.showLogin = false;
   }
 };
 </script>

@@ -2,10 +2,8 @@
 import Start from "./Dialogs/Start.vue";
 
 const logged = defineModel<LoggedType>();
-const showRouter = defineModel("showRouter");
 const workouts = defineModel<WorkoutType>("workouts");
-const showLogin = defineModel("showLogin");
-const showNew = defineModel<any>("showNew");
+const show = defineModel<any>("show");
 
 // Funktion zum Ausloggen
 const logout = () => {
@@ -14,7 +12,7 @@ const logout = () => {
     user: logged.value?.user,
     loggedWorkout: undefined,
   };
-  showLogin.value = false;
+  show.value.showLogin = false;
   localStorage.removeItem("logged");
 };
 </script>
@@ -27,9 +25,9 @@ const logout = () => {
       <div class="flex-grow">
         <button
           @click="
-            showRouter !== 'exercises'
-              ? (showRouter = 'exercises')
-              : (showRouter = 'equiplist')
+            show.showRouter !== 'exercises'
+              ? (show.showRouter = 'exercises')
+              : (show.showRouter = 'equiplist')
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
@@ -49,8 +47,8 @@ const logout = () => {
         <button
           @click="
             {
-              showLogin = !showLogin;
-              showNew.show = false;
+              show.showLogin = !show.showLogin;
+              show.showNew = false;
             }
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
@@ -58,7 +56,7 @@ const logout = () => {
           <i class="fa-solid fa-dumbbell text-4xl"></i>
         </button>
         <Start
-          v-if="showLogin"
+          v-if="show.showLogin"
           v-outside
           v-model="logged"
           v-model:workouts="workouts"
@@ -67,9 +65,9 @@ const logout = () => {
       <div class="flex-grow">
         <button
           @click="
-            showRouter !== 'workouts'
-              ? (showRouter = 'workouts')
-              : (showRouter = 'equiplist')
+            show.showRouter !== 'workouts'
+              ? (show.showRouter = 'workouts')
+              : (show.showRouter = 'equiplist')
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
