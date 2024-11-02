@@ -46,14 +46,15 @@
       />
       <Home v-if="show.showRouter === 'home'" v-model="logged" />
     </div>
+    <Navbar v-model="show" />
   </div>
+  <!-- loading -->
   <div
     v-else
     class="flex justify-center items-center text-5xl -mt-10 bg-sonja-fg h-screen"
   >
     Loading...
   </div>
-  <Navbar v-model="show" />
 </template>
 
 <script setup lang="ts">
