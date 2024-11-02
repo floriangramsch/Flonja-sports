@@ -122,11 +122,18 @@
         v-model:filter="exerciseFilter"
         v-model:showRouter="showRouter"
       />
-      <Home v-if="showRouter === 'home'" />
+      <Home v-if="showRouter === 'home'" v-model="logged" />
     </div>
   </div>
   <div v-else>Loading...</div>
-  <nav class="fixed bottom-0 w-full">
+  <Navbar
+    v-model="logged"
+    v-model:show-router="showRouter"
+    v-model:show-login="showLogin"
+    v-model:show-new="showNew"
+    v-model:workouts="workouts"
+  />
+  <!-- <nav class="fixed bottom-0 w-full">
     <div
       class="flex justify-evenly bg-sonja-fg border-t-2 border-sonja-fg-darker text-sonja-text"
     >
@@ -183,7 +190,7 @@
         </button>
       </div>
     </div>
-  </nav>
+  </nav> -->
 </template>
 
 <script setup lang="ts">
@@ -219,26 +226,29 @@ const showNew = ref({
   show: false, // show dropdown
   showDialogEquip: false, // show equip dialog
   showDialogMuskle: false, // show muscle dialog
+  // showLogin: false // show login
 });
 const showLogin = ref(false);
-const showRouter = ref("equiplist");
-// const showRouter = ref("home");
+const showRouter = ref("home");
 
 const exerciseFilter = ref<number[]>([]);
 
 const logged: Ref<LoggedType> = ref({
   isLogged: false,
-  user: undefined,
-  test: 18,
+  user: {
+    id: 1,
+    name: "Florian",
+  },
+  loggedWorkout: undefined,
 });
 
 const loggedWorkout = computed(() => {
   if (workouts.value) {
-    const lWorkout = logged.value.test
-      ? workouts.value[logged.value.test]
+    const lWorkout = logged.value.loggedWorkout
+      ? workouts.value[logged.value.loggedWorkout]
       : undefined;
     if (lWorkout) {
-      return { id: logged.value.test, ...lWorkout };
+      return { id: logged.value.loggedWorkout, ...lWorkout };
     }
   }
 });
@@ -263,7 +273,7 @@ const logout = () => {
   logged.value = {
     isLogged: false,
     user: logged.value.user,
-    test: undefined,
+    loggedWorkout: undefined,
   };
   showLogin.value = false;
   localStorage.removeItem("logged");
@@ -298,7 +308,7 @@ const switchUser = () => {
       };
     }
     logged.value.isLogged = false;
-    logged.value.test = undefined;
+    logged.value.loggedWorkout = undefined;
     showLogin.value = false;
   }
 };

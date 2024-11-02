@@ -59,7 +59,7 @@ const mutation = useMutation({
     logged.value = {
       isLogged: true,
       user: logged.value?.user,
-      test: data.workoutId,
+      loggedWorkout: data.workoutId,
     };
     // workouts.value[newWorkout.id] = newWorkout;
   },
@@ -83,7 +83,7 @@ const resumeWorkout = () => {
     logged.value = {
       isLogged: true,
       user: logged.value?.user,
-      test: Number(latestKey),
+      loggedWorkout: Number(latestKey),
     };
   }
 };
