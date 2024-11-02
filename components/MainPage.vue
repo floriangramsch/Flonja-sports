@@ -78,7 +78,12 @@
       </div>
       <div class="flex-grow">
         <button
-          @click="showNew.show = !showNew.show"
+          @click="
+            {
+              showNew.show = !showNew.show;
+              showLogin = false;
+            }
+          "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
           <i class="fa-solid fa-plus text-3xl"></i>
@@ -137,7 +142,7 @@
 
       <div v-if="logged.isLogged" class="flex-grow">
         <button
-          @click="logout"
+          @click.prevent="logout"
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
           <i class="fa-solid fa-cat text-3xl"></i>
@@ -145,7 +150,12 @@
       </div>
       <div v-else class="flex-grow">
         <button
-          @click="showLogin = !showLogin"
+          @click="
+            {
+              showLogin = !showLogin;
+              showNew.show = false;
+            }
+          "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
           <i class="fa-solid fa-dumbbell text-3xl"></i>
@@ -202,7 +212,6 @@ const showNew = ref({
   showDialogEquip: false, // show equip dialog
   showDialogMuskle: false, // show muscle dialog
 });
-const showDialogLogin = ref(false);
 const showLogin = ref(false);
 const showRouter = ref("equiplist");
 
@@ -245,7 +254,7 @@ const logout = () => {
     user: logged.value.user,
     test: undefined,
   };
-  showDialogLogin.value = false;
+  showLogin.value = false;
   localStorage.removeItem("logged");
 };
 
@@ -279,7 +288,7 @@ const switchUser = () => {
     }
     logged.value.isLogged = false;
     logged.value.test = undefined;
-    showDialogLogin.value = false;
+    showLogin.value = false;
   }
 };
 </script>

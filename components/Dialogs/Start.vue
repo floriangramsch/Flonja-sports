@@ -66,6 +66,7 @@ const mutation = useMutation({
 });
 
 const newWorkout = () => {
+  console.log("id", logged.value);
   if (!logged.value?.user?.id) return;
   mutation.mutate(logged.value.user?.id);
 };

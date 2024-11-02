@@ -25,10 +25,6 @@ import { ref } from "vue";
 const newEquipName = ref("");
 const newEquipMuscle = ref("");
 
-// defineProps<{
-//   muscles: Array<MuscleType>;
-// }>();
-
 const addNewEquip = () => {
   if (newEquipName.value && newEquipMuscle.value) {
     fetch("/api/addEquip", {
