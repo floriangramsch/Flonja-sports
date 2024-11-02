@@ -52,6 +52,7 @@ const filterData = (id: number) => {
     filteredData.value = filteredData.value.filter((dataId) => dataId !== id);
   } else {
     filteredData.value.push(id);
+    isOpen.value = false;
   }
   filter.value = filteredData.value;
 };
@@ -59,5 +60,6 @@ const filterData = (id: number) => {
 const reset = () => {
   filteredData.value = [];
   filter.value = [];
+  isOpen.value = false;
 };
 </script>

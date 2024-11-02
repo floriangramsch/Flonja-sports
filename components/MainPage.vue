@@ -25,6 +25,69 @@
             <i class="fa-solid fa-rotate-right text-sonja-akz"></i>
           </a>
         </div>
+        <div class="absolute right-1 top-10">
+          <button
+            @click="
+              {
+                showNew.show = !showNew.show;
+                showLogin = false;
+              }
+            "
+            class="text-sonja-akz cursor-pointer"
+          >
+            <i class="fa-solid fa-plus text-3xl"></i>
+          </button>
+          <div v-if="showNew.show">
+            <div
+              class="absolute top-2 right-10 bg-sonja-akz rounded-md shadow-lg"
+            >
+              <button
+                @click="showNew.showDialogEquip = !showNew.showDialogEquip"
+                class="flex px-4 py-2 cursor-pointer"
+              >
+                Neuer Muskle
+              </button>
+              <button
+                @click="showNew.showDialogMuskle = !showNew.showDialogMuskle"
+                class="flex px-4 py-2 cursor-pointer"
+              >
+                Neues Gerät
+              </button>
+            </div>
+            <Dialog
+              :isOpen="showNew.showDialogEquip"
+              @close="
+                showNew.showDialogEquip = false;
+                showNew.show = false;
+              "
+            >
+              <NewMuskle
+                v-model:muscles="muscles"
+                @close="
+                  showNew.showDialogMuskle = false;
+                  showNew.show = false;
+                "
+              />
+            </Dialog>
+            <Dialog
+              :isOpen="showNew.showDialogMuskle"
+              @close="
+                showNew.showDialogMuskle = false;
+                showNew.show = false;
+              "
+            >
+              <NewEquip
+                v-if="muscles"
+                :muscles="muscles"
+                v-model:equips="equips"
+                @close="
+                  showNew.showDialogEquip = false;
+                  showNew.show = false;
+                "
+              />
+            </Dialog>
+          </div>
+        </div>
       </div>
       <template v-if="logged.user">
         <div class="mb-20">
@@ -59,11 +122,14 @@
         v-model:filter="exerciseFilter"
         v-model:showRouter="showRouter"
       />
+      <Home v-if="showRouter === 'home'" />
     </div>
   </div>
   <div v-else>Loading...</div>
   <nav class="fixed bottom-0 w-full">
-    <div class="flex justify-evenly bg-sonja-akz text-sonja-text">
+    <div
+      class="flex justify-evenly bg-sonja-fg border-t-2 border-sonja-fg-darker text-sonja-text"
+    >
       <div class="flex-grow">
         <button
           @click="
@@ -73,71 +139,8 @@
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-chart-line text-3xl" />
+          <i class="fa-solid fa-chart-line text-4xl" />
         </button>
-      </div>
-      <div class="flex-grow">
-        <button
-          @click="
-            {
-              showNew.show = !showNew.show;
-              showLogin = false;
-            }
-          "
-          class="text-lg border-sonja-fg pt-2 pb-10 w-full"
-        >
-          <i class="fa-solid fa-plus text-3xl"></i>
-        </button>
-        <div v-if="showNew.show">
-          <div
-            class="absolute bottom-24 bg-sonja-akz rounded-md shadow-lg text-2xl"
-          >
-            <button
-              @click="showNew.showDialogEquip = !showNew.showDialogEquip"
-              class="flex px-4 py-2 cursor-pointer"
-            >
-              Neuer Muskle
-            </button>
-            <button
-              @click="showNew.showDialogMuskle = !showNew.showDialogMuskle"
-              class="flex px-4 py-2 cursor-pointer"
-            >
-              Neues Gerät
-            </button>
-          </div>
-          <Dialog
-            :isOpen="showNew.showDialogEquip"
-            @close="
-              showNew.showDialogEquip = false;
-              showNew.show = false;
-            "
-          >
-            <NewMuskle
-              v-model:muscles="muscles"
-              @close="
-                showNew.showDialogMuskle = false;
-                showNew.show = false;
-              "
-            />
-          </Dialog>
-          <Dialog
-            :isOpen="showNew.showDialogMuskle"
-            @close="
-              showNew.showDialogMuskle = false;
-              showNew.show = false;
-            "
-          >
-            <NewEquip
-              v-if="muscles"
-              :muscles="muscles"
-              v-model:equips="equips"
-              @close="
-                showNew.showDialogEquip = false;
-                showNew.show = false;
-              "
-            />
-          </Dialog>
-        </div>
       </div>
 
       <div v-if="logged.isLogged" class="flex-grow">
@@ -145,7 +148,7 @@
           @click.prevent="logout"
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-cat text-3xl"></i>
+          <i class="fa-solid fa-cat text-4xl"></i>
         </button>
       </div>
       <div v-else class="flex-grow">
@@ -158,7 +161,7 @@
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-dumbbell text-3xl"></i>
+          <i class="fa-solid fa-dumbbell text-4xl"></i>
         </button>
         <Start
           v-if="showLogin"
@@ -176,7 +179,7 @@
           "
           class="text-lg border-sonja-fg pt-2 pb-10 w-full"
         >
-          <i class="fa-solid fa-calendar text-3xl"></i>
+          <i class="fa-solid fa-calendar text-4xl"></i>
         </button>
       </div>
     </div>
@@ -219,6 +222,7 @@ const showNew = ref({
 });
 const showLogin = ref(false);
 const showRouter = ref("equiplist");
+// const showRouter = ref("home");
 
 const exerciseFilter = ref<number[]>([]);
 
@@ -249,6 +253,8 @@ const loadLoggedState = () => {
   const savedLogged = localStorage.getItem("logged");
   if (savedLogged) {
     logged.value = JSON.parse(savedLogged);
+  } else {
+    saveLoggedState();
   }
 };
 

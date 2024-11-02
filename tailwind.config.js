@@ -33,7 +33,8 @@ module.exports = {
         // },
         sonja: {
           bg: "#27272a",
-          fg: "#a8a29e",
+          "fg-darker": "#a8a29e",
+          fg: "#97918e",
           text: "#1e293b",
           akz: "#0d9488",
           akz2: "#eef2ff",
