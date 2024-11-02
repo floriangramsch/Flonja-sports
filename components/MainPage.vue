@@ -160,7 +160,12 @@
         >
           <i class="fa-solid fa-dumbbell text-3xl"></i>
         </button>
-        <Start v-if="showLogin" v-model="logged" v-model:workouts="workouts" />
+        <Start
+          v-if="showLogin"
+          v-outside
+          v-model="logged"
+          v-model:workouts="workouts"
+        />
       </div>
       <div class="flex-grow">
         <button
