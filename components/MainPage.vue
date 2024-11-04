@@ -51,7 +51,7 @@
   <!-- loading -->
   <div
     v-else
-    class="flex justify-center items-center text-5xl -mt-10 bg-sonja-fg h-screen"
+    class="flex justify-center items-center text-5xl bg-sonja-fg h-screen"
   >
     Loading...
   </div>
