@@ -19,8 +19,12 @@ import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
 const queryClient = useQueryClient();
 
+const props = defineProps<{
+  workouts: WorkoutType | undefined;
+}>();
+
 const logged = defineModel<LoggedType>();
-const workouts = defineModel<WorkoutType>("workouts");
+// const workouts = defineModel<WorkoutType>("workouts");
 
 const mutation = useMutation({
   mutationFn: async (userId: number) => {
@@ -72,8 +76,8 @@ const newWorkout = () => {
 };
 
 const resumeWorkout = () => {
-  if (workouts) {
-    const [latestKey, latestWorkout] = Object.entries(workouts.value || {})
+  if (props.workouts) {
+    const [latestKey, latestWorkout] = Object.entries(props.workouts || {})
       .filter(([key, workout]) => workout.user.id === logged.value?.user?.id)
       .reduce(([latestKey, latestWorkout], [currentKey, currentWorkout]) => {
         return new Date(currentWorkout.start) > new Date(latestWorkout.start)

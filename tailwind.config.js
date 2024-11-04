@@ -32,9 +32,9 @@ module.exports = {
         //   akz2: "#bfdbfe",
         // },
         sonja: {
-          bg: "#27272a",
-          "fg-darker": "#a8a29e",
-          fg: "#97918e",
+          bg: "#97918e",
+          "bg-darker": "#a8a29e",
+          fg: "#27272a",
           text: "#1e293b",
           akz: "#0d9488",
           akz2: "#eef2ff",

@@ -1,84 +1,37 @@
 <template>
-  <div
-    v-if="
-      isUsersSuccess && isEquipsSuccess && isMusclesSuccess && isWorkoutsSuccess
-    "
-  >
+  <div v-if="isSuccess" class="flex flex-col h-screen">
     <Statusbar
-      v-model:equips="equips"
+      :users="users"
+      :workouts="workouts"
+      :workout-start="loggedWorkout?.start"
       v-model:logged="logged"
-      v-model:muscles="muscles"
       v-model:show="show"
+    />
+    <Content
       v-model:users="users"
       v-model:workouts="workouts"
+      v-model:logged-workout="loggedWorkout"
+      v-model:logged="logged"
+      v-model:show="show"
     />
-    <div class="flex flex-col bg-sonja-bg text-sonja-text h-screen text-2xl">
-      <div v-if="logged.user" class="mb-20">
-        <h1
-          class="absolute left-[18%] justify-center text-sonja-text text-1xl rounded bg-sonja-fg bg-opacity-25 backdrop-blur-md p-1"
-        >
-          Hallo Se Bebi {{ logged.user?.name }}
-          <br />
-          {{ formatTime(loggedWorkout?.start) }}
-        </h1>
-      </div>
-      <ExerciseOverview
-        v-if="show.showRouter === 'exercises' && users"
-        :users="users"
-        v-model="equips"
-        v-model:filter="exerciseFilter"
-      />
-      <WorkoutOverview
-        v-if="show.showRouter === 'workouts' && users && workouts"
-        :workouts="workouts"
-        :users="users"
-        v-model="logged"
-        v-model:showRouter="show.showRouter"
-      />
-      <EquipList
-        v-if="show.showRouter === 'equiplist' && equips && muscles && users"
-        :equips="equips"
-        :muscles="muscles"
-        :users="users"
-        :workout="loggedWorkout"
-        v-model:filter="exerciseFilter"
-        v-model:showRouter="show.showRouter"
-      />
-      <Home v-if="show.showRouter === 'home'" v-model="logged" />
-    </div>
     <Navbar v-model="show" />
   </div>
   <!-- loading -->
   <div
     v-else
-    class="flex justify-center items-center text-5xl bg-sonja-fg h-screen"
+    class="flex justify-center items-center text-5xl bg-sonja-bg h-screen"
   >
     Loading...
   </div>
 </template>
 
 <script setup lang="ts">
-import EquipList from "@/components/Equip/EquipList.vue";
-import ExerciseOverview from "@/components/Exercises/ExerciseOverview.vue";
-import WorkoutOverview from "@/components/Workout/WorkoutOverview.vue";
-import { useQuery } from "@tanstack/vue-query";
+import useWorkouts from "~/composables/useWorkouts";
 
-const { data: users, isSuccess: isUsersSuccess } = useQuery<UserType>({
-  queryKey: ["users"],
-  queryFn: fetchUsers,
-});
-const { data: equips, isSuccess: isEquipsSuccess } = useQuery<EquipType>({
-  queryKey: ["equips"],
-  queryFn: fetchEquipment,
-});
-const { data: muscles, isSuccess: isMusclesSuccess } = useQuery<MuscleType>({
-  queryKey: ["muscles"],
-  queryFn: fetchMuscles,
-});
-const { data: workouts, isSuccess: isWorkoutsSuccess } = useQuery<WorkoutType>({
-  queryKey: ["workouts"],
-  queryFn: fetchWorkouts,
-});
+const { isSuccess } = usePreloadData();
+
+const { data: users } = useUsers();
+const { data: workouts } = useWorkouts();
 
 const show = ref({
   showNew: false, // show dropdown
@@ -87,8 +40,6 @@ const show = ref({
   showLogin: false, // show login
   showRouter: "home",
 });
-
-const exerciseFilter = ref<number[]>([]);
 
 const logged: Ref<LoggedType> = ref({
   isLogged: false,

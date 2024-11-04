@@ -1,12 +1,12 @@
 <template>
   <div
-    class="flex flex-col snap-y snap-mandatory bg-sonja-fg overflow-y-scroll no-scrollbar"
-    :class="Object.keys(filteredEquips).length > 5 ? 'mb-20' : 'mb-0'"
+    class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
   >
+    <!-- :class="Object.keys(filteredEquips).length > 5 ? 'mb-[5.7rem]' : 'mb-0'" -->
     <div
       v-for="(equip, id) in sortedEquips"
       :key="id"
-      class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-fg cursor-pointer"
+      class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
     >
       <div class="flex">
         <Equip

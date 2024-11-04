@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sonja-fg text-sonja-text">
+  <div class="bg-sonja-bg text-sonja-text">
     <template v-if="Object.keys(filtered).length !== 0">
       <div
         v-for="equip in filtered"

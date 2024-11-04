@@ -30,16 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 const newEquipName = ref("");
 const newEquipMuscleId = ref<number | undefined>(undefined);
 
-defineProps<{
-  muscles: MuscleType;
-}>();
-
-const equips = defineModel<EquipType>("equips");
+const { data: muscles } = useQuery<MuscleType>({
+  queryKey: ["muscles"],
+  queryFn: fetchMuscles,
+});
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -58,32 +57,22 @@ const mutation = useMutation({
     });
     return response.json();
   },
-  onSuccess: (data) => {
-    // const newEquip = {
-    //   id: Number(data.id),
-    //   FloLast: null,
-    //   FloPB: null,
-    //   SonjaLast: null,
-    //   SonjaPB: null,
-    //   equip_muscle_name:
-    //     props.muscles[Number(newEquipMuscleId.value)].muscle_name,
-    //   equip_name: newEquipName.value,
-    //   exercises: {},
-    // };
-    // if (equips.value) {
-    //   equips.value[Number(data.id)] = newEquip;
-    // }
+  onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["equips"] });
-    emit("close");
   },
 });
 
 const addNewEquip = () => {
   if (newEquipName.value && newEquipMuscleId.value) {
-    mutation.mutate({
-      name: newEquipName.value,
-      muscleGroupId: newEquipMuscleId.value,
-    });
+    mutation.mutate(
+      {
+        name: newEquipName.value,
+        muscleGroupId: newEquipMuscleId.value,
+      },
+      {
+        onSuccess: () => emit("close"),
+      }
+    );
   }
 };
 </script>

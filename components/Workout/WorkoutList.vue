@@ -4,7 +4,7 @@
   >
     <div
       @click="editWorkout(workout)"
-      class="p-1 flex min-w-full snap-start justify-center bg-sonja-fg rounded"
+      class="p-1 flex min-w-full snap-start justify-center bg-sonja-bg rounded"
       v-for="(workout, id) in workouts"
       :key="id"
     >

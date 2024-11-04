@@ -5,24 +5,26 @@ import NewMuskle from "./Dialogs/NewMuskle.vue";
 import NewEquip from "./Dialogs/NewEquip.vue";
 import Start from "./Dialogs/Start.vue";
 
+const props = defineProps<{
+  users: UserType | undefined;
+  workouts: WorkoutType | undefined;
+  workoutStart: Date | undefined;
+}>();
+
 const logged = defineModel<any>("logged");
 const show = defineModel<any>("show");
-const workouts = defineModel<any>("workouts");
-const muscles = defineModel<any>("muscles");
-const equips = defineModel<any>("equips");
-const users = defineModel<any>("users");
 
 const switchUser = () => {
-  if (users.value && Object.keys(users.value).length === 2) {
-    if (logged.value.user?.name === "Florian") {
+  if (props.users && Object.keys(props.users).length === 2) {
+    if (logged.value.name === "Florian") {
       logged.value.user = {
         id: 2,
-        name: users.value[1].name,
+        name: props.users[1].name,
       };
     } else {
       logged.value.user = {
         id: 1,
-        name: users.value[0].name,
+        name: props.users[0].name,
       };
     }
     logged.value.isLogged = false;
@@ -52,7 +54,15 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="text-sonja-akz fixed top-0 w-full bg-red-500">
+  <div class="fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20">
+    <h1
+      v-if="logged.user"
+      class="absolute left-[18%] justify-center text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1"
+    >
+      Hallo Se Bebi {{ logged.user?.name }}
+      <br />
+      {{ formatTime(workoutStart) }}
+    </h1>
     <div class="absolute left-1">
       <a @click.prevent="switchUser" class="ml-auto cursor-pointer">
         <img
@@ -88,7 +98,7 @@ const logout = () => {
         v-if="show.showLogin"
         v-outside
         v-model="logged"
-        v-model:workouts="workouts"
+        :workouts="workouts"
       />
     </div>
     <div class="absolute right-10">
@@ -128,7 +138,6 @@ const logout = () => {
           "
         >
           <NewMuskle
-            v-model:muscles="muscles"
             @close="
               show.showDialogMuskle = false;
               show.showNew = false;
@@ -143,9 +152,6 @@ const logout = () => {
           "
         >
           <NewEquip
-            v-if="muscles"
-            :muscles="muscles"
-            v-model:equips="equips"
             @close="
               show.showDialogEquip = false;
               show.showNew = false;

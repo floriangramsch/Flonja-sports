@@ -23,8 +23,6 @@ import { useMutation } from "@tanstack/vue-query";
 
 const newMuscleName = ref("");
 
-const muscles = defineModel<MuscleType>("muscles");
-
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
@@ -44,16 +42,8 @@ const addMuscleMutation = useMutation({
     });
     return response.json();
   },
-  onSuccess: (data) => {
+  onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["muscles"] });
-
-    // const newMuskle = {
-    //   muscle_name: newMuscleName.value,
-    // };
-    // if (muscles.value) {
-    //   muscles.value[Number(data.id)] = newMuskle;
-    // }
-    emit("close");
   },
   onError: (error) => {
     console.error("Mutation failed:", error);
@@ -62,9 +52,9 @@ const addMuscleMutation = useMutation({
 
 const addMuscle = () => {
   if (newMuscleName.value) {
-    addMuscleMutation.mutate(newMuscleName.value);
+    addMuscleMutation.mutate(newMuscleName.value, {
+      onSuccess: () => emit("close"),
+    });
   }
 };
 </script>
-
-<style scoped></style>
