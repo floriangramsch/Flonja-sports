@@ -24,7 +24,7 @@ const props = defineProps<{
 }>();
 
 const logged = defineModel<LoggedType>();
-// const workouts = defineModel<WorkoutType>("workouts");
+const show = defineModel<any>("show");
 
 const mutation = useMutation({
   mutationFn: async (userId: number) => {
@@ -89,6 +89,7 @@ const resumeWorkout = () => {
       user: logged.value?.user,
       loggedWorkout: Number(latestKey),
     };
+    show.value.showRouter = "workoutdetail";
   }
 };
 </script>

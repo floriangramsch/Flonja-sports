@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
 import ExerciseOverview from "./Exercises/ExerciseOverview.vue";
 
-const logged = defineModel<any>("logged");
+defineProps<{ users: UserType; workouts: WorkoutType }>();
+
+const logged = defineModel<LoggedType>("logged");
 const show = defineModel<any>("show");
-const workouts = defineModel<WorkoutType>("workouts");
-const users = defineModel<UserType>("users");
-const loggedWorkout = defineModel<any>("loggedWorkout");
+const loggedWorkout = defineModel<LoggedWorkout>("loggedWorkout");
 
 const { data: equips } = useEquips();
 const { data: muscles } = useMuscles();
@@ -39,6 +38,11 @@ const exerciseFilter = ref<number[]>([]);
       :workout="loggedWorkout"
       v-model:filter="exerciseFilter"
       v-model:showRouter="show.showRouter"
+    />
+    <WorkoutDetail
+      v-if="show.showRouter === 'workoutdetail' && equips && loggedWorkout"
+      :equips="equips"
+      :workout="loggedWorkout"
     />
     <Home v-if="show.showRouter === 'home'" v-model="logged" />
   </div>

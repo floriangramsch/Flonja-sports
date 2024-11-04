@@ -8,8 +8,9 @@
       v-model:show="show"
     />
     <Content
-      v-model:users="users"
-      v-model:workouts="workouts"
+      v-if="users && workouts && logged && show"
+      :users="users"
+      :workouts="workouts"
       v-model:logged-workout="loggedWorkout"
       v-model:logged="logged"
       v-model:show="show"

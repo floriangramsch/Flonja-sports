@@ -2,7 +2,6 @@
   <div
     class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
   >
-    <!-- :class="Object.keys(filteredEquips).length > 5 ? 'mb-[5.7rem]' : 'mb-0'" -->
     <div
       v-for="(equip, id) in sortedEquips"
       :key="id"

@@ -4,6 +4,7 @@ import Dialog from "./Dialogs/Dialog.vue";
 import NewMuskle from "./Dialogs/NewMuskle.vue";
 import NewEquip from "./Dialogs/NewEquip.vue";
 import Start from "./Dialogs/Start.vue";
+import type { ShowType } from "~/utils/types";
 
 const props = defineProps<{
   users: UserType | undefined;
@@ -11,12 +12,12 @@ const props = defineProps<{
   workoutStart: Date | undefined;
 }>();
 
-const logged = defineModel<any>("logged");
+const logged = defineModel<LoggedType>("logged");
 const show = defineModel<any>("show");
 
 const switchUser = () => {
-  if (props.users && Object.keys(props.users).length === 2) {
-    if (logged.value.name === "Florian") {
+  if (props.users && Object.keys(props.users).length === 2 && logged.value) {
+    if (logged.value.user?.name === "Florian") {
       logged.value.user = {
         id: 2,
         name: props.users[1].name,
@@ -56,7 +57,7 @@ const logout = () => {
 <template>
   <div class="fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20">
     <h1
-      v-if="logged.user"
+      v-if="logged?.user"
       class="absolute left-[18%] justify-center text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1"
     >
       Hallo Se Bebi {{ logged.user?.name }}
@@ -66,7 +67,7 @@ const logout = () => {
     <div class="absolute left-1">
       <a @click.prevent="switchUser" class="ml-auto cursor-pointer">
         <img
-          v-if="logged.user?.name === 'Florian'"
+          v-if="logged?.user?.name === 'Florian'"
           src="@/public/flo.jpg"
           class="max-h-[9vh] max-w-[9vh]"
         />
@@ -98,6 +99,7 @@ const logout = () => {
         v-if="show.showLogin"
         v-outside
         v-model="logged"
+        v-model:show="show"
         :workouts="workouts"
       />
     </div>

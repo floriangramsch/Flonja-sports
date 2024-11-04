@@ -4,6 +4,14 @@ export type LoggedType = {
   loggedWorkout: number | undefined;
 };
 
+export type ShowType = {
+  showNew: boolean; // show dropdown
+  showDialogEquip: boolean; // show equip dialog
+  showDialogMuskle: boolean; // show muscle dialog
+  showLogin: boolean; // show login
+  showRouter: string;
+};
+
 export type LoggedUser = {
   id: number;
   name: string;
