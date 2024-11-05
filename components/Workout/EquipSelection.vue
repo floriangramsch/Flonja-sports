@@ -41,21 +41,32 @@ const addNewExercice = (equipId: number) => {
 </script>
 
 <template>
-  <div
-    v-if="showMuscleOverview"
-    class="grid grid-cols-3 gap-2 place-items-center mt-10"
-  >
-    <div
-      class="w-28 h-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
-      @click="chooseMuscle(muscle.muscle_name)"
-      v-for="muscle in muscles"
-      :key="muscle.muscle_group_id"
-    >
-      {{ muscle.muscle_name }}
-    </div>
-  </div>
   <Transition name="fade" mode="out-in">
-    <div v-if="showEquipOverview" class="flex flex-col">
+    <div
+      v-if="showMuscleOverview"
+      class="grid grid-cols-3 gap-2 place-items-center mt-10 absolute inset-0"
+    >
+      <div
+        class="w-28 h-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
+        @click="chooseMuscle(muscle.muscle_name)"
+        v-for="muscle in muscles"
+        :key="muscle.muscle_group_id"
+      >
+        {{ muscle.muscle_name }}
+      </div>
+      <div class="w-full flex justify-center">
+        <button
+          class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
+          @click="show.showRouter = 'workoutdetail'"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </Transition>
+
+  <Transition name="fade" mode="out-in">
+    <div v-if="showEquipOverview" class="flex flex-col absolute inset-0">
       <div
         v-for="[id, equip] in equipsToShow"
         @click="addNewExercice(Number(id))"
@@ -63,7 +74,21 @@ const addNewExercice = (equipId: number) => {
       >
         {{ equip.equip_name }}
       </div>
+      <div class="w-full flex justify-center">
+        <button
+          class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
+          @click="
+            showMuscleOverview = true;
+            showEquipOverview = false;
+          "
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </Transition>
+  <Transition name="fade" mode="out-in">
+    <EquipDetail />
   </Transition>
 </template>
 <style>
