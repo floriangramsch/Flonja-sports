@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ExerciseOverview from "./Exercises/ExerciseOverview.vue";
+import EquipSelection from "./Workout/EquipSelection.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType }>();
 
@@ -43,7 +44,20 @@ const exerciseFilter = ref<number[]>([]);
       v-if="show.showRouter === 'workoutdetail' && equips && loggedWorkout"
       :equips="equips"
       :workout="loggedWorkout"
+      v-model="show"
     />
     <Home v-if="show.showRouter === 'home'" v-model="logged" />
+    <EquipSelection
+      v-if="
+        show.showRouter === 'equipselection' &&
+        loggedWorkout?.id &&
+        muscles &&
+        equips
+      "
+      :workoutId="loggedWorkout.id"
+      :muscles="muscles"
+      :equips="equips"
+      v-model="show"
+    />
   </div>
 </template>

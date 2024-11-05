@@ -96,20 +96,24 @@ export const addWorkout = async (userId: number) => {
 export const addExercise = async (newExercise: {
   workout_id: number;
   equip_id: number;
-  weight: string;
+  weight?: string;
 }) => {
   const pool = await connect();
 
   const sql = `
-      INSERT INTO Exercice (workout_id, equip_id, weight) VALUES (?, ?, ?)
+      INSERT INTO Exercice (workout_id, equip_id${
+        newExercise.weight !== undefined ? ", weight" : ""
+      }) VALUES (?, ?${newExercise.weight !== undefined ? ", ?" : ""})
     `;
 
+  const params = [newExercise.workout_id, newExercise.equip_id];
+
+  if (newExercise.weight !== undefined) {
+    params.push(Number(newExercise.weight));
+  }
+
   try {
-    const results = await query(pool, sql, [
-      newExercise.workout_id,
-      newExercise.equip_id,
-      newExercise.weight,
-    ]);
+    const results = await query(pool, sql, params);
     if (results.affectedRows > 0) {
       return {
         statusCode: 200,

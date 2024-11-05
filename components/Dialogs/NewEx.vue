@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import useAddExercise from "~/composables/Exercises/useAddExercise";
 
 const queryClient = useQueryClient();
 
@@ -33,35 +34,20 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const mutation = useMutation({
-  mutationFn: async (newEx: {
-    workout_id: number;
-    equip_id: number;
-    weight: string;
-  }) => {
-    const response = await fetch("/api/addExercise", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newEx),
-    });
-    return response.json();
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    queryClient.invalidateQueries({ queryKey: ["equips"] });
-    emit("close");
-  },
-});
+const mutation = useAddExercise();
 
 const addNewExercice = () => {
   if (newWorkoutWeight.value && props.workout.id && props.equip.id) {
-    mutation.mutate({
-      workout_id: props.workout.id,
-      equip_id: props.equip.id,
-      weight: newWorkoutWeight.value,
-    });
+    mutation.mutate(
+      {
+        workout_id: props.workout.id,
+        equip_id: props.equip.id,
+        weight: newWorkoutWeight.value,
+      },
+      {
+        onSuccess: () => emit("close"),
+      }
+    );
   }
 };
 </script>

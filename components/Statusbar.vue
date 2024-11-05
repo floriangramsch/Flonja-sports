@@ -36,10 +36,7 @@ const switchUser = () => {
 
 const queryClient = useQueryClient();
 const handleRefresh = async () => {
-  queryClient.invalidateQueries({ queryKey: ["users"] });
-  queryClient.invalidateQueries({ queryKey: ["muscles"] });
-  queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  queryClient.invalidateQueries({ queryKey: ["equips"] });
+  await queryClient.invalidateQueries();
 };
 
 // Funktion zum Ausloggen

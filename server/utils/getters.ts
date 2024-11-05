@@ -109,6 +109,21 @@ const getExercises = async (pool: mysql.Pool): Promise<ExerciseRow[]> => {
   return results;
 };
 
+export const getExercisesByWorkout = async (
+  workout_id: number
+): Promise<ExerciseRow[]> => {
+  const pool = await connect();
+
+  const sql = `
+    SELECT * 
+    FROM Exercice e
+    LEFT JOIN Equip eq ON eq.equip_id = e.equip_id
+    WHERE workout_id = ?
+    `;
+  const results: ExerciseRow[] = await query(pool, sql, [workout_id]);
+  return results;
+};
+
 const getPB = async (
   pool: mysql.Pool,
   equip_id: number,
