@@ -5,11 +5,11 @@
 </template>
 <style>
 .fade-enter-active {
-  transition: all 0.1s ease-out;
+  transition: all 0.12s ease-out;
 }
 
 .fade-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.12s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .fade-enter-from,
