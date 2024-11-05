@@ -1,38 +1,40 @@
 <template>
-  <div
-    class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
-  >
+  <div>
     <div
-      v-for="(equip, id) in sortedEquips"
-      :key="id"
-      class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
+      class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
     >
-      <div class="flex">
-        <Equip
-          :equip="{ ...equip, id: Number(id) }"
-          :users="users"
-          :workout="workout"
-        />
-        <div class="ml-auto mt-auto mr-2">
-          <button
-            @click.prevent="
-              exerciceFilter?.push(Number(id));
-              showRouter = 'exercises';
-            "
-          >
-            <i class="fa-solid fa-chart-line" />
-          </button>
+      <div
+        v-for="(equip, id) in sortedEquips"
+        :key="id"
+        class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
+      >
+        <div class="flex">
+          <Equip
+            :equip="{ ...equip, id: Number(id) }"
+            :users="users"
+            :workout="workout"
+          />
+          <div class="ml-auto mt-auto mr-2">
+            <button
+              @click.prevent="
+                exerciceFilter?.push(Number(id));
+                showRouter = 'exercises';
+              "
+            >
+              <i class="fa-solid fa-chart-line" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="absolute right-2 bottom-52 text-3xl">
-    <div class="absolute right-0 bottom-10">
-      <FilterEquips :equips="equips" v-model="searchFilter" />
-    </div>
-    <div class="absolute right-0 bottom-0">
-      <Filter :data="muscles" display-prop="muscle_name" v-model="filter" />
+    <div class="absolute right-2 bottom-52 text-3xl">
+      <div class="absolute right-0 bottom-10">
+        <FilterEquips :equips="equips" v-model="searchFilter" />
+      </div>
+      <div class="absolute right-0 bottom-0">
+        <Filter :data="muscles" display-prop="muscle_name" v-model="filter" />
+      </div>
     </div>
   </div>
 </template>

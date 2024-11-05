@@ -46,21 +46,42 @@ const addNewExercice = (equipId: number) => {
     class="grid grid-cols-3 gap-2 place-items-center mt-10"
   >
     <div
-      class="w-28 h-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer"
+      class="w-28 h-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
       @click="chooseMuscle(muscle.muscle_name)"
       v-for="muscle in muscles"
       :key="muscle.muscle_group_id"
     >
-      {{ muscle.muscle_name.substring(0, 5) }}
+      {{ muscle.muscle_name }}
     </div>
   </div>
-  <div v-if="showEquipOverview" class="flex flex-col">
-    <div
-      v-for="[id, equip] in equipsToShow"
-      @click="addNewExercice(Number(id))"
-      class="cursor-pointer flex justify-center py-2 border-b-4 border-sonja-bg-darker"
-    >
-      {{ equip.equip_name }}
+  <Transition name="fade" mode="out-in">
+    <div v-if="showEquipOverview" class="flex flex-col">
+      <div
+        v-for="[id, equip] in equipsToShow"
+        @click="addNewExercice(Number(id))"
+        class="cursor-pointer flex justify-center py-2 border-b-4 border-sonja-bg-darker"
+      >
+        {{ equip.equip_name }}
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
+<style>
+.fade-enter-active {
+  transition: all 0.1s ease-out;
+}
+
+.fade-leave-active {
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.no-x-scrollbar {
+  overflow-x: hidden;
+}
+</style>

@@ -52,7 +52,7 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20">
+  <div class="fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20 z-10">
     <h1
       v-if="logged?.user"
       class="absolute left-[18%] justify-center text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1"
@@ -172,16 +172,6 @@ const logout = () => {
 </template>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }

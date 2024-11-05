@@ -8,20 +8,10 @@ const props = defineProps<{
 
 const show = defineModel<any>();
 
-const filted = computed(() => {
-  return Object.entries(props.equips).filter(([id, _]) => {
-    return props.workout.equips[Number(id)] !== null;
-  });
-});
-
 const { data: exercises } = useExercisesByWorkout(props.workout.id);
 </script>
 
 <template>
-  <!-- <div v-for="[id, f] in filted">
-    {{ f.equip_name }}
-    {{ f.FloLast }}
-  </div> -->
   <div
     v-for="ex in exercises"
     class="border-b border-sonja-bg-darker flex justify-center py-2"
