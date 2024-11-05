@@ -53,12 +53,9 @@ const logged: Ref<LoggedType> = ref({
 
 const loggedWorkout = computed(() => {
   if (workouts.value) {
-    console.log("yay");
     const lWorkout = logged.value.loggedWorkout
       ? workouts.value[logged.value.loggedWorkout]
       : undefined;
-    console.log(logged.value.loggedWorkout);
-    console.log(lWorkout);
     if (lWorkout) {
       return { id: logged.value.loggedWorkout, ...lWorkout };
     }
