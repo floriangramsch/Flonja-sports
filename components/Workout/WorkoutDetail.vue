@@ -32,7 +32,7 @@ const exToShow = ref();
     </div>
   </Transition>
   <Transition name="fade" mode="out-in">
-    <EquipDetail
+    <WorkoutEquipDetail
       v-if="exToShow"
       :exercise="exToShow"
       @close="exToShow = undefined"

@@ -21,18 +21,14 @@ const show = defineModel<any>();
 
     <div class="flex-grow">
       <button
-        @click="show.showRouter = 'home'"
+        @click="show.showRouter = 'workoutdetail'"
         class="text-lg border-sonja-bg pt-2 pb-10 w-full"
       >
         <i
-          v-if="show.showRouter === 'home'"
+          v-if="show.showRouter === 'workoutdetail'"
           class="fa-solid fa-home text-4xl text-sonja-akz"
         />
         <i v-else class="fa-solid fa-home text-4xl" />
-        <i
-          v-if="show.showRouter === 'workoutdetail'"
-          class="fa-solid fa-cat text-4xl text-sonja-akz"
-        />
       </button>
     </div>
 

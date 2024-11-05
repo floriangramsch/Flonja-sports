@@ -87,9 +87,6 @@ const addNewExercice = (equipId: number) => {
       </div>
     </div>
   </Transition>
-  <Transition name="fade" mode="out-in">
-    <EquipDetail />
-  </Transition>
 </template>
 <style>
 .fade-enter-active {

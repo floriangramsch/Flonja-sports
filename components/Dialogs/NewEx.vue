@@ -18,10 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import useAddExercise from "~/composables/Exercises/useAddExercise";
-
-const queryClient = useQueryClient();
 
 const newWorkoutWeight = ref("");
 
