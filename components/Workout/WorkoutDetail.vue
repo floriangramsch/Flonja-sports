@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useExercisesByWorkout from "~/composables/Exercises/useExercisesByWorkout";
+import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   equips: EquipType;
@@ -14,7 +15,7 @@ const exToShow = ref();
 </script>
 
 <template>
-  <Transition name="fade" mode="out-in">
+  <SlideTransition>
     <div v-if="!exToShow" class="absolute inset-0">
       <div
         v-for="ex in exercises"
@@ -30,32 +31,12 @@ const exToShow = ref();
         <i class="fa-solid fa-plus text-3xl" />
       </button>
     </div>
-  </Transition>
-  <Transition name="fade" mode="out-in">
+  </SlideTransition>
+  <SlideTransition>
     <WorkoutEquipDetail
       v-if="exToShow"
       :exercise="exToShow"
       @close="exToShow = undefined"
     />
-  </Transition>
+  </SlideTransition>
 </template>
-
-<style>
-.fade-enter-active {
-  transition: all 0.1s ease-out;
-}
-
-.fade-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-.no-x-scrollbar {
-  overflow-x: hidden;
-}
-</style>

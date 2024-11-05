@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useAddExercise from "~/composables/Exercises/useAddExercise";
+import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   workoutId: number;
@@ -41,7 +42,7 @@ const addNewExercice = (equipId: number) => {
 </script>
 
 <template>
-  <Transition name="fade" mode="out-in">
+  <SlideTransition>
     <div
       v-if="showMuscleOverview"
       class="grid grid-cols-3 gap-2 place-items-center mt-10 absolute inset-0"
@@ -63,9 +64,9 @@ const addNewExercice = (equipId: number) => {
         </button>
       </div>
     </div>
-  </Transition>
+  </SlideTransition>
 
-  <Transition name="fade" mode="out-in">
+  <SlideTransition>
     <div v-if="showEquipOverview" class="flex flex-col absolute inset-0">
       <div
         v-for="[id, equip] in equipsToShow"
@@ -86,24 +87,5 @@ const addNewExercice = (equipId: number) => {
         </button>
       </div>
     </div>
-  </Transition>
+  </SlideTransition>
 </template>
-<style>
-.fade-enter-active {
-  transition: all 0.1s ease-out;
-}
-
-.fade-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-.no-x-scrollbar {
-  overflow-x: hidden;
-}
-</style>

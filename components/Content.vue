@@ -4,6 +4,7 @@ import EquipSelection from "./Workout/EquipSelection.vue";
 import WorkoutOverview from "./Workout/WorkoutOverview.vue";
 import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import Home from "./Home.vue";
+import SlideTransition from "./ui/transitions/SlideTransition.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType }>();
 
@@ -21,7 +22,7 @@ const exerciseFilter = ref<number[]>([]);
   <div
     class="flex flex-col bg-sonja-bg text-sonja-text text-2xl flex-1 mt-20 mb-[5.7rem] overflow-y-auto relative no-x-scrollbar"
   >
-    <Transition name="fade" mode="out-in">
+    <SlideTransition>
       <div
         class="absolute inset-0"
         v-if="show.showRouter === 'exercises' && users"
@@ -32,8 +33,8 @@ const exerciseFilter = ref<number[]>([]);
           v-model:filter="exerciseFilter"
         />
       </div>
-    </Transition>
-    <Transition name="fade" mode="out-in">
+    </SlideTransition>
+    <SlideTransition>
       <div
         v-if="show.showRouter === 'workouts' && users && workouts"
         class="absolute inset-0"
@@ -45,8 +46,8 @@ const exerciseFilter = ref<number[]>([]);
           v-model:showRouter="show.showRouter"
         />
       </div>
-    </Transition>
-    <Transition name="fade" mode="out-in">
+    </SlideTransition>
+    <SlideTransition>
       <div
         v-if="show.showRouter === 'equiplist' && equips && muscles && users"
         class="absolute inset-0"
@@ -60,8 +61,8 @@ const exerciseFilter = ref<number[]>([]);
           v-model:showRouter="show.showRouter"
         />
       </div>
-    </Transition>
-    <Transition name="fade" mode="out-in">
+    </SlideTransition>
+    <SlideTransition>
       <div
         v-if="show.showRouter === 'workoutdetail' && equips && loggedWorkout"
         class="absolute inset-0"
@@ -72,13 +73,13 @@ const exerciseFilter = ref<number[]>([]);
           v-model="show"
         />
       </div>
-    </Transition>
-    <Transition name="fade" mode="out-in">
+    </SlideTransition>
+    <SlideTransition>
       <div v-if="show.showRouter === 'home'" class="absolute inset-0">
         <Home v-model="logged" />
       </div>
-    </Transition>
-    <Transition name="fade" mode="out-in">
+    </SlideTransition>
+    <SlideTransition>
       <div
         v-if="
           show.showRouter === 'equipselection' &&
@@ -95,26 +96,6 @@ const exerciseFilter = ref<number[]>([]);
           v-model="show"
         />
       </div>
-    </Transition>
+    </SlideTransition>
   </div>
 </template>
-
-<style>
-.fade-enter-active {
-  transition: all 0.1s ease-out;
-}
-
-.fade-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-.no-x-scrollbar {
-  overflow-x: hidden;
-}
-</style>
