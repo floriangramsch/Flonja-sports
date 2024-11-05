@@ -47,6 +47,7 @@ const logout = () => {
     loggedWorkout: undefined,
   };
   show.value.showLogin = false;
+  show.value.showRouter = "home";
   localStorage.removeItem("logged");
 };
 </script>

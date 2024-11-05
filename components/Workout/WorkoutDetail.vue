@@ -15,7 +15,6 @@ const filted = computed(() => {
 });
 
 const { data: exercises } = useExercisesByWorkout(props.workout.id);
-console.log(exercises);
 </script>
 
 <template>
@@ -23,7 +22,10 @@ console.log(exercises);
     {{ f.equip_name }}
     {{ f.FloLast }}
   </div> -->
-  <div v-for="ex in exercises">
+  <div
+    v-for="ex in exercises"
+    class="border-b border-sonja-bg-darker flex justify-center py-2"
+  >
     {{ ex.name }}
     {{ ex.weight }}
   </div>

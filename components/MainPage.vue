@@ -83,4 +83,10 @@ onMounted(() => {
 
 // Beobachte Änderungen im Anmeldezustand und speichere diese
 watch(logged, saveLoggedState, { deep: true });
+
+watch(loggedWorkout, (newData) => {
+  if (newData?.id) {
+    show.value.showRouter = "workoutdetail";
+  }
+});
 </script>

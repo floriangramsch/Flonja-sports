@@ -54,11 +54,11 @@ const addNewExercice = (equipId: number) => {
       {{ muscle.muscle_name.substring(0, 5) }}
     </div>
   </div>
-  <div v-if="showEquipOverview">
+  <div v-if="showEquipOverview" class="flex flex-col">
     <div
       v-for="[id, equip] in equipsToShow"
       @click="addNewExercice(Number(id))"
-      class="cursor-pointer"
+      class="cursor-pointer flex justify-center py-2 border-b-4 border-sonja-bg-darker"
     >
       {{ equip.equip_name }}
     </div>

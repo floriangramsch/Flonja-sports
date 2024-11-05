@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sonja-bg flex justify-center items-center">
+  <div class="bg-sonja-bg flex justify-center items-center h-full">
     <div class="flex flex-col items-center">
       <button
         class="bg-sonja-akz text-white h-12 px-20 rounded-3xl shadow flex items-center justify-center"
