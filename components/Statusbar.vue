@@ -4,7 +4,6 @@ import Dialog from "./Dialogs/Dialog.vue";
 import NewMuskle from "./Dialogs/NewMuskle.vue";
 import NewEquip from "./Dialogs/NewEquip.vue";
 import Start from "./Dialogs/Start.vue";
-import type { ShowType } from "~/utils/types";
 
 const props = defineProps<{
   users: UserType | undefined;
@@ -93,13 +92,15 @@ const logout = () => {
       >
         <i class="fa-solid fa-dumbbell text-3xl"></i>
       </button>
-      <Start
-        v-if="show.showLogin"
-        v-outside
-        v-model="logged"
-        v-model:show="show"
-        :workouts="workouts"
-      />
+      <Transition name="slide-fade">
+        <Start
+          v-if="show.showLogin"
+          v-outside
+          v-model="logged"
+          v-model:show="show"
+          :workouts="workouts"
+        />
+      </Transition>
     </div>
     <div class="absolute right-10">
       <button
@@ -113,52 +114,85 @@ const logout = () => {
       >
         <i class="fa-solid fa-plus text-4xl"></i>
       </button>
-      <div v-if="show.showNew">
+      <Transition name="slide-fade">
         <div
+          v-if="show.showNew"
           class="absolute top-1 right-9 bg-sonja-akz text-xl text-sonja-text z-10 rounded-md shadow-lg"
         >
           <button
-            @click="show.showDialogEquip = !show.showDialogEquip"
+            @click="
+              show.showDialogEquip = !show.showDialogEquip;
+              show.showNew = false;
+            "
             class="flex px-4 py-2 cursor-pointer"
           >
             Neuer Muskle
           </button>
           <button
-            @click="show.showDialogMuskle = !show.showDialogMuskle"
+            @click="
+              show.showDialogMuskle = !show.showDialogMuskle;
+              show.showNew = false;
+            "
             class="flex px-4 py-2 cursor-pointer"
           >
             Neues Gerät
           </button>
         </div>
-        <Dialog
-          :isOpen="show.showDialogEquip"
-          @close="
-            show.showDialogEquip = false;
-            show.showNew = false;
-          "
-        >
-          <NewMuskle
-            @close="
-              show.showDialogMuskle = false;
-              show.showNew = false;
-            "
-          />
-        </Dialog>
-        <Dialog
-          :isOpen="show.showDialogMuskle"
+      </Transition>
+      <Dialog
+        :isOpen="show.showDialogEquip"
+        @close="
+          show.showDialogEquip = false;
+          show.showNew = false;
+        "
+      >
+        <NewMuskle
           @close="
             show.showDialogMuskle = false;
             show.showNew = false;
           "
-        >
-          <NewEquip
-            @close="
-              show.showDialogEquip = false;
-              show.showNew = false;
-            "
-          />
-        </Dialog>
-      </div>
+        />
+      </Dialog>
+      <Dialog
+        :isOpen="show.showDialogMuskle"
+        @close="
+          show.showDialogMuskle = false;
+          show.showNew = false;
+        "
+      >
+        <NewEquip
+          @close="
+            show.showDialogEquip = false;
+            show.showNew = false;
+          "
+        />
+      </Dialog>
     </div>
   </div>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>
