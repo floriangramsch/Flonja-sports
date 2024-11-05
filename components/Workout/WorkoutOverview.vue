@@ -3,7 +3,7 @@
     class="flex flex-col snap-y snap-mandatory overflow-y-auto no-scrollbar cursor-pointer"
   >
     <div
-      @click="editWorkout(workout)"
+      @click="editWorkout({ ...workout, id })"
       class="p-1 flex flex-col min-w-full snap-start bg-sonja-bg border-b border-sonja-akz"
       v-for="(workout, id) in workouts"
       :key="id"
@@ -13,6 +13,7 @@
       </div>
       <div class="pl-3">
         von
+        {{ id }}
         {{ workout.user.name }}
       </div>
     </div>
@@ -28,11 +29,16 @@ defineProps<{
 const logged = defineModel();
 const showRouter = defineModel("showRouter");
 
-const editWorkout = (workout: { start: Date; end: Date; user: LoggedUser }) => {
+const editWorkout = (workout: {
+  start: Date;
+  end: Date;
+  user: LoggedUser;
+  id: number;
+}) => {
   logged.value = {
     user: workout.user,
     isLogged: true,
-    workout: workout,
+    loggedWorkout: workout.id,
   };
   showRouter.value = "equiplist";
 };
