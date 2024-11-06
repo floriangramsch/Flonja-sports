@@ -1,11 +1,21 @@
 <script setup lang="ts">
-defineProps<{
+import useDeleteExercise from "~/composables/Exercises/useDeleteExercise";
+
+const props = defineProps<{
   exercise: any;
 }>();
 
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
+
+const mutation = useDeleteExercise();
+
+const removeExercise = () => {
+  mutation.mutate(props.exercise.exercice_id, {
+    onSuccess: () => emit("close"),
+  });
+};
 </script>
 
 <template>
@@ -25,6 +35,12 @@ const emit = defineEmits<{
         @click="emit('close')"
       >
         Close
+      </button>
+      <button
+        class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
+        @click="removeExercise"
+      >
+        Remove
       </button>
     </div>
   </div>

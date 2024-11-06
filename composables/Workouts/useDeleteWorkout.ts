@@ -1,20 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
-export default function useAddExercise() {
+export default function useDeleteWorkout() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newEx: {
-      workout_id: number;
-      equip_id: number;
-      weight?: string;
-    }) => {
-      const response = await fetch("/api/addExercise", {
-        method: "Post",
+    mutationFn: async (workout_id: number) => {
+      const response = await fetch("/api/workout", {
+        method: "Delete",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newEx),
+        body: JSON.stringify({ workout_id }),
       });
       return response.json();
     },
