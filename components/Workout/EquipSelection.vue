@@ -45,10 +45,10 @@ const addNewExercice = (equipId: number) => {
   <SlideTransition>
     <div
       v-if="showMuscleOverview"
-      class="grid grid-cols-3 gap-2 place-items-center mt-10 absolute inset-0"
+      class="grid grid-cols-3 place-items-center mt-10 absolute inset-0"
     >
       <div
-        class="w-28 h-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
+        class="size-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
         @click="chooseMuscle(muscle.muscle_name)"
         v-for="muscle in muscles"
         :key="muscle.muscle_group_id"
