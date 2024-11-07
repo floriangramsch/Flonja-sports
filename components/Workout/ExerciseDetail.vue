@@ -3,7 +3,6 @@ import useDeleteExercise from "~/composables/Exercises/useDeleteExercise";
 import { useGetSets } from "~/composables/useSets";
 import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
-import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   exercise: any;
@@ -14,6 +13,7 @@ const emit = defineEmits<{
 }>();
 
 const mutation = useDeleteExercise();
+const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSets(props.exercise.exercice_id);
 const addSetMutation = useAddSet();
 
@@ -21,6 +21,10 @@ const removeExercise = () => {
   mutation.mutate(props.exercise.exercice_id, {
     onSuccess: () => emit("close"),
   });
+};
+
+const removeSet = (id: number) => {
+  deleteSetMutation.mutate(id);
 };
 
 const addSet = () => {
@@ -31,6 +35,8 @@ const addSet = () => {
       weight: newWeight.value,
       reps: newReps.value,
     });
+    newWeight.value = undefined;
+    newReps.value = undefined;
   }
 };
 
@@ -53,9 +59,17 @@ watch(
 <template>
   <div class="absolute inset-0">
     <div>Name: {{ exercise.equipName }}</div>
-    <div v-for="set in sets" class="flex flex-col m-2">
-      <div>Gewicht: {{ set.weight }}</div>
-      <div>Reps: {{ set.reps }}</div>
+    <div
+      v-for="set in sets"
+      class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
+    >
+      <div class="flex flex-col">
+        <div>Gewicht: {{ set.weight }}</div>
+        <div>Reps: {{ set.reps }}</div>
+      </div>
+      <button @click="removeSet(set.id)">
+        <i class="fa-solid fa-close" />
+      </button>
     </div>
     <button @click="showDialog = true" class="flex w-full justify-center">
       <i class="fa-solid fa-plus text-4xl"></i>

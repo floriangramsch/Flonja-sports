@@ -14,6 +14,16 @@ export default defineEventHandler(async (event) => {
       const workouts = await getWorkouts();
       return workouts;
     }
+    if (method === "PUT") {
+      const connection = await connect();
+
+      const { workout_id, updatedData } = await readBody(event);
+      const [rows] = await connection.execute(
+        `UPDATE Workout SET ${updatedData} WHERE workout_id = ?`,
+        [workout_id]
+      );
+      return rows;
+    }
     if (method === "POST") {
       const body = await readBody(event); // Holt den Body der POST-Anfrage
       const { user } = body;

@@ -22,6 +22,7 @@ export type LoggedWorkout = {
   start: Date;
   end: Date;
   user: LoggedUser;
+  locker: number;
   equips: {
     [equip_id: number]: number | null;
   };
@@ -60,6 +61,7 @@ export type WorkoutType = {
     start: Date;
     end: Date;
     user: LoggedUser;
+    locker: number;
     equips: {
       [equip_id: number]: number | null;
     };

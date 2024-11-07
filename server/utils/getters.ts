@@ -84,6 +84,7 @@ export const getWorkouts = async () => {
     workouts[row.workout_id] = {
       start: row.start,
       end: row.end,
+      locker: row.locker,
       user: {
         id: row.user_id,
         name: row.name,

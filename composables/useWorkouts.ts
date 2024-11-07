@@ -33,3 +33,36 @@ export const useAddWorkout = () => {
     },
   });
 };
+
+export const useUpdateWorkout = (workout_id: number | undefined) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updatedData: any) => {
+      console.log("id");
+      if (workout_id) {
+        const response = await fetch("/api/workout", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            workout_id,
+            updatedData,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add workout");
+        }
+
+        return response.json();
+      } else {
+        return JSON.stringify("failed to update Workout");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    },
+  });
+};

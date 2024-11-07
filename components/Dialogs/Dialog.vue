@@ -3,12 +3,12 @@
     <div
       @click="handleOverlayClick"
       v-if="isOpen"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-xl z-50"
+      class="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 text-xl z-50"
     >
       <div
         @click.stop
         ref="dialog"
-        class="bg-sonja-bg text-sonja-text p-4 rounded shadow-md w-80"
+        class="absolute bg-sonja-bg text-sonja-text top-[15%] p-4 rounded shadow-md w-80"
       >
         <button @click="close" class="flex ml-auto bg-sonja-akz p-2 rounded">
           <i class="fa-solid fa-x"></i>

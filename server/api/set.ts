@@ -1,14 +1,15 @@
 import { defineEventHandler } from "h3";
 import { addSet } from "../utils/setters";
 import { getSets } from "../utils/getters";
+import { deleteSet } from "../utils/removers";
 
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
   try {
     if (method === "DELETE") {
-      // const { workout_id } = await readBody(event);
-      // const equips = await deleteWorkout(workout_id);
-      // return equips;
+      const { set_id } = await readBody(event);
+      const response = await deleteSet(set_id);
+      return response;
     }
     if (method === "GET") {
       const { exercise_id } = await getQuery(event);
