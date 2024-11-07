@@ -8,10 +8,13 @@ const props = defineProps<{
 }>();
 
 watch(
-  () => inputRef.value,
-  (newVal) => {
-    if (newVal) {
-      newVal.focus();
+  () => props.focus,
+  async (newVal) => {
+    if (newVal && props.focus) {
+      await nextTick();
+      if (inputRef.value) {
+        inputRef.value.focus();
+      }
     }
   }
 );
@@ -30,7 +33,7 @@ onMounted(() => {
     inputmode="numeric"
     pattern="[0-9]*"
     class="w-10 remove-arrow"
-    :ref="focus ? 'inputRef' : ''"
+    ref="inputRef"
   />
 </template>
 
