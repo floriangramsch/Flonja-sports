@@ -21,7 +21,7 @@
       </template>
     </div>
 
-    <div class="absolute right-2 bottom-52 text-3xl">
+    <div class="fixed right-2 bottom-52 text-3xl">
       <div class="absolute right-0 bottom-0">
         <Filter :data="equips" display-prop="equip_name" v-model="filter" />
       </div>

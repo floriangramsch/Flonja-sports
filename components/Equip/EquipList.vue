@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <div
       class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
     >

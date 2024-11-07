@@ -33,7 +33,7 @@ const exToShow = ref();
     </div>
   </SlideTransition>
   <SlideTransition>
-    <WorkoutEquipDetail
+    <WorkoutExerciseDetail
       v-if="exToShow"
       :exercise="exToShow"
       @close="exToShow = undefined"

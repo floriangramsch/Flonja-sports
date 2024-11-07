@@ -24,17 +24,19 @@ const removeExercise = () => {
 };
 
 const addSet = () => {
-  if (newWeight.value) {
+  if (newWeight.value && newReps.value) {
     showDialog.value = false;
     addSetMutation.mutate({
       exercise_id: props.exercise.exercice_id,
       weight: newWeight.value,
+      reps: newReps.value,
     });
   }
 };
 
 const showDialog = ref<boolean>(false);
 const newWeight = ref<number>();
+const newReps = ref<number>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
 
@@ -74,14 +76,28 @@ watch(
     </div>
     <Dialog :isOpen="showDialog" @close="showDialog = false">
       <div class="flex flex-col justify-center items-center gap-4">
-        <div class="flex gap-2">
-          Weight:
-          <input
-            v-model="newWeight"
-            type="number"
-            class="w-10 remove-arrow"
-            ref="inputRef"
-          />
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-2">
+            Weight:
+            <input
+              v-model="newWeight"
+              type="number"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              class="w-10 remove-arrow"
+              ref="inputRef"
+            />
+          </div>
+          <div class="flex gap-2">
+            Reps:
+            <input
+              v-model="newReps"
+              type="number"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              class="w-10 remove-arrow"
+            />
+          </div>
         </div>
         <Button @action="addSet"> Done </Button>
       </div>

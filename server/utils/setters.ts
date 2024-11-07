@@ -134,13 +134,18 @@ export const addExercise = async (newExercise: {
   }
 };
 
-export const addSet = async (exercise_id: number, weight: number) => {
+export const addSet = async (
+  exercise_id: number,
+  weight: number,
+  reps: number
+) => {
   const pool = await connect();
 
-  const sql = " INSERT INTO `Set` (exercise_id, weight) VALUES (?, ?) ";
+  const sql =
+    " INSERT INTO `Set` (exercise_id, weight, reps) VALUES (?, ?, ?) ";
 
   try {
-    const results = await query(pool, sql, [exercise_id, weight]);
+    const results = await query(pool, sql, [exercise_id, weight, reps]);
     if (results.affectedRows > 0) {
       return {
         statusCode: 200,

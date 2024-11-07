@@ -17,9 +17,9 @@ export default defineEventHandler(async (event) => {
       return sets;
     }
     if (method === "POST") {
-      const { exercise_id, weight } = await readBody(event);
+      const { exercise_id, weight, reps } = await readBody(event);
 
-      const response = await addSet(exercise_id, weight);
+      const response = await addSet(exercise_id, weight, reps);
       return response;
     }
   } catch (error) {

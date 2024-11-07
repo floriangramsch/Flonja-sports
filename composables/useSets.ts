@@ -22,9 +22,11 @@ export const useAddSet = () => {
     mutationFn: async ({
       exercise_id,
       weight,
+      reps,
     }: {
       exercise_id: number;
       weight: number;
+      reps: number;
     }) => {
       const response = await fetch("/api/set", {
         method: "POST",
@@ -34,6 +36,7 @@ export const useAddSet = () => {
         body: JSON.stringify({
           exercise_id,
           weight,
+          reps,
         }),
       });
 
