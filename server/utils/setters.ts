@@ -133,3 +133,30 @@ export const addExercise = async (newExercise: {
     };
   }
 };
+
+export const addSet = async (exercise_id: number, weight: number) => {
+  const pool = await connect();
+
+  const sql = " INSERT INTO `Set` (exercise_id, weight) VALUES (?, ?) ";
+
+  try {
+    const results = await query(pool, sql, [exercise_id, weight]);
+    if (results.affectedRows > 0) {
+      return {
+        statusCode: 200,
+        message: "Set added successfully",
+      };
+    } else {
+      return {
+        statusCode: 500,
+        message: "Failed to add Set",
+      };
+    }
+  } catch (error) {
+    return {
+      statusCode: 500,
+      message: "An error occurred",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};

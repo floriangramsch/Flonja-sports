@@ -22,7 +22,7 @@ const exToShow = ref();
         class="border-b border-sonja-bg-darker flex justify-center py-2 cursor-pointer"
         @click="exToShow = ex"
       >
-        {{ ex.name }}
+        {{ ex.equipName }}
       </div>
       <button
         class="w-full bg-sonja-bg-darker flex justify-center"

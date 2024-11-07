@@ -33,21 +33,15 @@
     >
       <div>Sure?</div>
       <div class="flex gap-4 mt-2">
-        <button
-          class="p-2 bg-sonja-text text-sonja-akz2 rounded"
-          @click="
+        <Button
+          @action="
             deleteWorkout();
             showConfirmation = false;
           "
         >
           Yes
-        </button>
-        <button
-          class="p-2 bg-sonja-text text-sonja-akz2 rounded"
-          @click="showConfirmation = false"
-        >
-          No
-        </button>
+        </Button>
+        <Button @action="showConfirmation = false"> No </Button>
       </div>
     </div>
   </div>
@@ -55,6 +49,7 @@
 
 <script setup lang="ts">
 import useDeleteWorkout from "~/composables/Workouts/useDeleteWorkout";
+import Button from "../ui/buttons/Button.vue";
 
 defineProps<{
   workouts: WorkoutType;

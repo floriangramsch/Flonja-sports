@@ -18,8 +18,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useQueryClient } from "@tanstack/vue-query";
-import { useMutation } from "@tanstack/vue-query";
 
 const newMuscleName = ref("");
 
@@ -27,28 +25,7 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const queryClient = useQueryClient();
-
-const addMuscleMutation = useMutation({
-  mutationFn: async (newMuscleName: string) => {
-    const response = await fetch("/api/addMuscle", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        newMuscle: newMuscleName,
-      }),
-    });
-    return response.json();
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["muscles"] });
-  },
-  onError: (error) => {
-    console.error("Mutation failed:", error);
-  },
-});
+const addMuscleMutation = useAddMuscle();
 
 const addMuscle = () => {
   if (newMuscleName.value) {

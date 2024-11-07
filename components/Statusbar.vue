@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useQueryClient } from "@tanstack/vue-query";
 import Dialog from "./Dialogs/Dialog.vue";
 import NewMuskle from "./Dialogs/NewMuskle.vue";
 import NewEquip from "./Dialogs/NewEquip.vue";
@@ -31,11 +30,6 @@ const switchUser = () => {
     logged.value.loggedWorkout = undefined;
     show.value.showLogin = false;
   }
-};
-
-const queryClient = useQueryClient();
-const handleRefresh = async () => {
-  await queryClient.invalidateQueries();
 };
 
 // Funktion zum Ausloggen
@@ -72,7 +66,7 @@ const logout = () => {
       </a>
     </div>
     <div class="absolute right-1">
-      <a @click.prevent="handleRefresh" class="ml-auto cursor-pointer">
+      <a @click.prevent="useRefresh" class="ml-auto cursor-pointer">
         <i class="fa-solid fa-rotate-right text-3xl"></i>
       </a>
     </div>
@@ -92,7 +86,7 @@ const logout = () => {
       >
         <i class="fa-solid fa-dumbbell text-3xl"></i>
       </button>
-      <Transition name="slide-fade">
+      <Transition name="slide-fade-dropdown">
         <Start
           v-if="show.showLogin"
           v-outside
@@ -114,7 +108,7 @@ const logout = () => {
       >
         <i class="fa-solid fa-plus text-4xl"></i>
       </button>
-      <Transition name="slide-fade">
+      <Transition name="slide-fade-dropdown">
         <div
           v-if="show.showNew"
           class="absolute top-1 right-9 bg-sonja-akz text-xl text-sonja-text z-10 rounded-md shadow-lg"
@@ -171,17 +165,17 @@ const logout = () => {
   </div>
 </template>
 
-<style>
-.slide-fade-enter-active {
+<style scoped>
+.slide-fade-dropdown-enter-active {
   transition: all 0.3s ease-out;
 }
 
-.slide-fade-leave-active {
+.slide-fade-dropdown-leave-active {
   transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
+.slide-fade-dropdown-enter-from,
+.slide-fade-dropdown-leave-to {
   transform: translateX(20px);
   opacity: 0;
 }

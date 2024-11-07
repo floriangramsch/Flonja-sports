@@ -12,11 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAddWorkoutMutation } from "~/composables/workoutMutations";
-
 const logged = defineModel<LoggedType>();
 
-const mutation = useAddWorkoutMutation();
+const mutation = useAddWorkout();
 
 const addWorkout = () => {
   mutation.mutate(1, {

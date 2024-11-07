@@ -114,12 +114,9 @@ export const getExercisesByWorkout = async (
 ): Promise<ExerciseRow[]> => {
   const pool = await connect();
 
-  const sql = `
-    SELECT * 
-    FROM Exercice e
-    LEFT JOIN Equip eq ON eq.equip_id = e.equip_id
-    WHERE workout_id = ?
-    `;
+  const sql =
+    // " SELECT * FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id LEFT JOIN `Set` s ON e.exercice_id = s.exercise_id WHERE workout_id = ? ";
+    " SELECT exercice_id, name AS equipName, e.equip_id FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id WHERE workout_id = ? ";
   const results: ExerciseRow[] = await query(pool, sql, [workout_id]);
   return results;
 };
@@ -169,4 +166,11 @@ const getWeight = async (
   const exerciceResults = await query(pool, sql, [workout_id, equip_id]);
 
   return exerciceResults.length > 0 ? exerciceResults[0].weight : null;
+};
+
+export const getSets = async (exercise_id: number) => {
+  const pool = await connect();
+  const sql = "SELECT * FROM `Set` WHERE exercise_id = ?";
+  const results = await query(pool, sql, [exercise_id]);
+  return results;
 };

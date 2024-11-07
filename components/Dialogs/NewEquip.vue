@@ -30,37 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-
 const newEquipName = ref("");
 const newEquipMuscleId = ref<number | undefined>(undefined);
 
-const { data: muscles } = useQuery<MuscleType>({
-  queryKey: ["muscles"],
-  queryFn: fetchMuscles,
-});
+const { data: muscles } = useMuscles();
+const mutation = useAddEquips();
 
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
-
-const queryClient = useQueryClient();
-
-const mutation = useMutation({
-  mutationFn: async (newEquip: { name: string; muscleGroupId: number }) => {
-    const response = await fetch("/api/addEquip", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newEquip),
-    });
-    return response.json();
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["equips"] });
-  },
-});
 
 const addNewEquip = () => {
   if (newEquipName.value && newEquipMuscleId.value) {
