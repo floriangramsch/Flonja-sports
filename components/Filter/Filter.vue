@@ -3,30 +3,33 @@
     <i class="fa-solid fa-filter text-sonja-akz"></i>
   </button>
 
-  <div
-    v-if="isOpen"
-    class="mr-8 bg-sonja-akz rounded-md shadow-lg overflow-auto h-80"
-  >
+  <DropdownSlideTransition>
     <div
-      v-for="(d, id) in data"
-      :key="id"
-      @click="filterData(Number(id))"
-      class="flex py-0.5 px-2 cursor-pointer"
-      :class="isFiltered(Number(id)) ? 'bg-sonja-akz2' : 'bg-sonja-akz'"
+      v-if="isOpen"
+      class="mr-8 bg-sonja-akz rounded-md shadow-lg overflow-auto h-80"
     >
-      {{ getDisplayName(d) }}
+      <div
+        v-for="(d, id) in data"
+        :key="id"
+        @click="filterData(Number(id))"
+        class="flex py-0.5 px-2 cursor-pointer"
+        :class="isFiltered(Number(id)) ? 'bg-sonja-akz2' : 'bg-sonja-akz'"
+      >
+        {{ getDisplayName(d) }}
+      </div>
+      <div
+        @click="reset"
+        class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer"
+      >
+        Reset
+      </div>
     </div>
-    <div
-      @click="reset"
-      class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer"
-    >
-      Reset
-    </div>
-  </div>
+  </DropdownSlideTransition>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import DropdownSlideTransition from "../ui/transitions/DropdownSlideTransition.vue";
 
 const filteredData = ref<number[]>([]);
 const isOpen = ref<boolean>(false);
