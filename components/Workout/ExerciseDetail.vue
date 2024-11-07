@@ -110,37 +110,12 @@ watch(
       <div class="flex flex-col justify-center items-center gap-4">
         <div class="grid grid-cols-2 gap-2">
           Weight:
-          <input
-            v-model="newWeight"
-            type="number"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            class="w-10 remove-arrow"
-            ref="inputRef"
-          />
+          <UiNumberInput v-model:modelValue="newWeight" focus />
           Reps:
-          <input
-            v-model="newReps"
-            type="number"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            class="w-10 remove-arrow"
-          />
+          <UiNumberInput v-model:modelValue="newReps" />
         </div>
         <Button @action="addSet"> Done </Button>
       </div>
     </Dialog>
   </div>
 </template>
-
-<style>
-.remove-arrow::-webkit-inner-spin-button,
-.remove-arrow::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.remove-arrow {
-  appearance: none;
-  -moz-appearance: textfield;
-}
-</style>
