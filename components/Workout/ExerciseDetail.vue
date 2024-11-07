@@ -93,7 +93,7 @@ watch(
     />
     <button
       @click="showUpdateExerciseDialog = true"
-      class="flex w-full justify-center"
+      class="flex w-full justify-center bg-sonja-bg-darker rounded-t rounded-full pt-1 -mt-2"
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
