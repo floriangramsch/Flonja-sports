@@ -115,7 +115,6 @@ export const getExercisesByWorkout = async (
   const pool = await connect();
 
   const sql =
-    // " SELECT * FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id LEFT JOIN `Set` s ON e.exercice_id = s.exercise_id WHERE workout_id = ? ";
     " SELECT exercice_id, name AS equipName, e.equip_id FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id WHERE workout_id = ? ";
   const results: ExerciseRow[] = await query(pool, sql, [workout_id]);
   return results;

@@ -8,13 +8,10 @@
           class="border-b border-sonja-akz"
         >
           {{ equip.equip_name }}
-          <div v-for="(exercise, user_id) in equip.exercises" :key="user_id">
-            <!-- Überprüfen, ob der Benutzer existiert -->
-            <div v-if="users[user_id]">
-              {{ users[user_id].name }}
-              <div v-for="user in exercise" :key="user.id">
-                {{ user.weight }} kg am {{ formatTime(user.start) }}
-              </div>
+          <div v-for="(user, user_id) in equip.exercises" :key="user_id">
+            {{ getUserName(Number(user_id)) }}
+            <div v-for="exercise in user" :key="exercise.id">
+              {{ exercise.weight }} kg am {{ formatTime(exercise.start) }}
             </div>
           </div>
         </div>
@@ -33,14 +30,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
 
-// const filter = ref<number[]>([]);
 const equips = defineModel<EquipType>();
 
-defineProps<{
-  users: UserType;
+const props = defineProps<{
+  users: any;
 }>();
 
 const filter = defineModel<number[]>("filter");
@@ -53,4 +49,9 @@ const filtered = computed(() => {
     )
   );
 });
+
+const getUserName = (id: number) => {
+  const user = props.users.find((user: any) => user.user_id === id);
+  return user ? user.name : "Unknown";
+};
 </script>
