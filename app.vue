@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout>
-    <MainPage />
+    <MainPage class="bg-sonja-bg" />
   </NuxtLayout>
 </template>
 
