@@ -121,7 +121,7 @@ const handleRefresh = async () => {
         >
           <button
             @click="
-              show.showDialogEquip = !show.showDialogEquip;
+              show.showDialogMuskle = true;
               show.showNew = false;
             "
             class="flex px-4 py-2 cursor-pointer"
@@ -130,7 +130,7 @@ const handleRefresh = async () => {
           </button>
           <button
             @click="
-              show.showDialogMuskle = !show.showDialogMuskle;
+              show.showDialogEquip = true;
               show.showNew = false;
             "
             class="flex px-4 py-2 cursor-pointer"
@@ -140,22 +140,25 @@ const handleRefresh = async () => {
         </div>
       </Transition>
       <Dialog
-        :isOpen="show.showDialogEquip"
+        :isOpen="show.showDialogMuskle"
         @close="
           show.showDialogEquip = false;
+          show.showDialogMuskle = false;
           show.showNew = false;
         "
       >
         <NewMuskle
           @close="
+            show.showDialogEquip = false;
             show.showDialogMuskle = false;
             show.showNew = false;
           "
         />
       </Dialog>
       <Dialog
-        :isOpen="show.showDialogMuskle"
+        :isOpen="show.showDialogEquip"
         @close="
+          show.showDialogEquip = false;
           show.showDialogMuskle = false;
           show.showNew = false;
         "
@@ -163,6 +166,7 @@ const handleRefresh = async () => {
         <NewEquip
           @close="
             show.showDialogEquip = false;
+            show.showDialogMuskle = false;
             show.showNew = false;
           "
         />

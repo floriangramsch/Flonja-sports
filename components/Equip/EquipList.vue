@@ -1,54 +1,24 @@
-<template>
-  <div class="relative">
-    <div
-      class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
-    >
-      <div
-        v-for="(equip, id) in sortedEquips"
-        :key="id"
-        class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
-      >
-        <div class="flex">
-          <Equip
-            :equip="{ ...equip, id: Number(id) }"
-            :users="users"
-            :workout="workout"
-          />
-          <div class="ml-auto mt-auto mr-2">
-            <button
-              @click.prevent="
-                exerciceFilter?.push(Number(id));
-                showRouter = 'exercises';
-              "
-            >
-              <i class="fa-solid fa-chart-line" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="fixed right-2 bottom-52 text-3xl">
-      <div class="absolute right-0 bottom-10">
-        <FilterEquips :equips="equips" v-model="searchFilter" />
-      </div>
-      <div class="absolute right-0 bottom-0">
-        <Filter :data="muscles" display-prop="muscle_name" v-model="filter" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Equip from "./Equip.vue";
 import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
+import Confirm from "../Dialogs/Confirm.vue";
 
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
 const showRouter = defineModel<string>("showRouter");
 const searchFilter = ref<string>("");
+
+const deleteEquipMutation = useDeleteEquip();
+const showConfirmDeleteEquip = ref<boolean>(false);
+
+const equipToDelete = ref<number>();
+const deleteEquip = (id: number) => {
+  deleteEquipMutation.mutate(id, {
+    onSuccess: () => (showConfirmDeleteEquip.value = false),
+  });
+};
 
 const props = defineProps<{
   equips: EquipType;
@@ -103,3 +73,58 @@ const sortedEquips = computed(() => {
   );
 });
 </script>
+
+<template>
+  <div class="relative">
+    <div
+      class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
+    >
+      <Confirm
+        v-model:isOpen="showConfirmDeleteEquip"
+        @yes="deleteEquip(Number(equipToDelete))"
+      />
+      <div
+        v-for="(equip, id) in sortedEquips"
+        :key="id"
+        class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
+      >
+        <div class="relative flex">
+          <Equip
+            :equip="{ ...equip, id: Number(id) }"
+            :users="users"
+            :workout="workout"
+          />
+          <div class="absolute bottom-7 right-2">
+            <button
+              @click="
+                equipToDelete = Number(id);
+                showConfirmDeleteEquip = true;
+              "
+            >
+              <i class="fa-solid fa-close" />
+            </button>
+          </div>
+          <div class="ml-auto mt-auto mr-2">
+            <button
+              @click.prevent="
+                exerciceFilter?.push(Number(id));
+                showRouter = 'exercises';
+              "
+            >
+              <i class="fa-solid fa-chart-line" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fixed right-2 bottom-52 text-3xl">
+      <div class="absolute right-0 bottom-10">
+        <FilterEquips :equips="equips" v-model="searchFilter" />
+      </div>
+      <div class="absolute right-0 bottom-0">
+        <Filter :data="muscles" display-prop="muscle_name" v-model="filter" />
+      </div>
+    </div>
+  </div>
+</template>

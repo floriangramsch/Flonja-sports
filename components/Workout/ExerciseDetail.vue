@@ -27,6 +27,7 @@ const removeExercise = () => {
   });
 };
 
+const setToDelete = ref<number>();
 const removeSet = (id: number) => {
   deleteSetMutation.mutate(id, {
     onSuccess: () => (showConfirmDeleteSet.value = false),
@@ -77,10 +78,19 @@ watch(
         <div>Reps: {{ set.reps }}</div>
       </div>
 
-      <Confirm v-model:isOpen="showConfirmDeleteSet" @yes="removeSet(set.id)">
+      <button
+        @click="
+          setToDelete = set.id;
+          showConfirmDeleteSet = true;
+        "
+      >
         <i class="fa-solid fa-close" />
-      </Confirm>
+      </button>
     </div>
+    <Confirm
+      v-model:isOpen="showConfirmDeleteSet"
+      @yes="removeSet(Number(setToDelete))"
+    />
     <button
       @click="showUpdateExerciseDialog = true"
       class="flex w-full justify-center"
