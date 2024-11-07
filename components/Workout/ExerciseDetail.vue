@@ -108,28 +108,24 @@ watch(
       @close="showUpdateExerciseDialog = false"
     >
       <div class="flex flex-col justify-center items-center gap-4">
-        <div class="flex flex-col gap-2">
-          <div class="flex gap-2">
-            Weight:
-            <input
-              v-model="newWeight"
-              type="number"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              class="w-10 remove-arrow"
-              ref="inputRef"
-            />
-          </div>
-          <div class="flex gap-2">
-            Reps:
-            <input
-              v-model="newReps"
-              type="number"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              class="w-10 remove-arrow"
-            />
-          </div>
+        <div class="grid grid-cols-2 gap-2">
+          Weight:
+          <input
+            v-model="newWeight"
+            type="number"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            class="w-10 remove-arrow"
+            ref="inputRef"
+          />
+          Reps:
+          <input
+            v-model="newReps"
+            type="number"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            class="w-10 remove-arrow"
+          />
         </div>
         <Button @action="addSet"> Done </Button>
       </div>
