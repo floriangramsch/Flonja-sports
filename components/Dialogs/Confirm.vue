@@ -22,7 +22,7 @@ const handleOverlayClick = (e: MouseEvent) => {
 </script>
 
 <template>
-  <button :class="class" @click.stop="isOpen = true">
+  <button v-if="$slots.default" :class="class" @click.stop="isOpen = true">
     <slot />
   </button>
   <div
