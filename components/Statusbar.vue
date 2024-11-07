@@ -43,6 +43,12 @@ const logout = () => {
   show.value.showRouter = "home";
   localStorage.removeItem("logged");
 };
+
+const refresh = useRefresh();
+
+const handleRefresh = async () => {
+  await refresh();
+};
 </script>
 
 <template>
@@ -66,7 +72,7 @@ const logout = () => {
       </a>
     </div>
     <div class="absolute right-1">
-      <a @click.prevent="useRefresh" class="ml-auto cursor-pointer">
+      <a @click.prevent="handleRefresh" class="ml-auto cursor-pointer">
         <i class="fa-solid fa-rotate-right text-3xl"></i>
       </a>
     </div>

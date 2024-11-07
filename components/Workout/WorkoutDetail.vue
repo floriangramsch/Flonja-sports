@@ -51,7 +51,7 @@ watch(
         {{ ex.equipName }}
       </div>
       <button
-        class="w-full bg-sonja-bg-darker flex justify-center"
+        class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-1"
         @click="() => (show.showRouter = 'equipselection')"
       >
         <i class="fa-solid fa-plus text-3xl" />

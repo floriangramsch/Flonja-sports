@@ -161,7 +161,6 @@ const getWeight = async (
   const sql = `
     SELECT weight FROM Exercice e
     WHERE e.workout_id = ? AND e.equip_id = ?
-    
   `;
   const exerciceResults = await query(pool, sql, [workout_id, equip_id]);
 

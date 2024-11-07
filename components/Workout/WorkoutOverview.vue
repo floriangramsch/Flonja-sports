@@ -11,15 +11,13 @@
       >
         <div class="flex">
           {{ formatTime(workout.start) }}
-          <button
+          <Confirm
+            v-bind:is-open="showConfirmation"
             class="ml-5"
-            @click.stop="
-              showConfirmation = true;
-              workoutToDelete = id;
-            "
+            @yes="deleteWorkout(id)"
           >
             <i class="fa-solid fa-close text-2xl text-sonja-akz" />
-          </button>
+          </Confirm>
         </div>
         <div class="pl-3">
           von
@@ -27,29 +25,12 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="showConfirmation"
-      class="flex flex-col justify-center items-center fixed bg-sonja-akz p-12 py-14 w-48 h-20 top-1/4 left-1/4 text-sonja-akz2 rounded shadow"
-    >
-      <div>Sure?</div>
-      <div class="flex gap-4 mt-2">
-        <Button
-          @action="
-            deleteWorkout();
-            showConfirmation = false;
-          "
-        >
-          Yes
-        </Button>
-        <Button @action="showConfirmation = false"> No </Button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import useDeleteWorkout from "~/composables/Workouts/useDeleteWorkout";
-import Button from "../ui/buttons/Button.vue";
+import Confirm from "../Dialogs/Confirm.vue";
 
 defineProps<{
   workouts: WorkoutType;
@@ -59,7 +40,6 @@ defineProps<{
 const logged = defineModel<LoggedType>();
 const showRouter = defineModel("showRouter");
 const showConfirmation = ref<boolean>(false);
-const workoutToDelete = ref<number>();
 
 const editWorkout = (workout: {
   start: Date;
@@ -76,13 +56,14 @@ const editWorkout = (workout: {
 };
 
 const mutation = useDeleteWorkout();
-const deleteWorkout = () => {
-  if (workoutToDelete.value) {
-    mutation.mutate(workoutToDelete.value, {
+const deleteWorkout = (id: number) => {
+  if (id) {
+    mutation.mutate(id, {
       onSuccess: () => {
         if (logged.value) {
           logged.value.isLogged = false;
           logged.value.loggedWorkout = undefined;
+          showConfirmation.value = false;
         }
       },
     });

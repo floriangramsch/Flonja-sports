@@ -3,6 +3,7 @@ import useDeleteExercise from "~/composables/Exercises/useDeleteExercise";
 import { useGetSets } from "~/composables/useSets";
 import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
+import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
   exercise: any;
@@ -19,17 +20,22 @@ const addSetMutation = useAddSet();
 
 const removeExercise = () => {
   mutation.mutate(props.exercise.exercice_id, {
-    onSuccess: () => emit("close"),
+    onSuccess: () => {
+      showConfirmDeleteExercise.value = false;
+      emit("close");
+    },
   });
 };
 
 const removeSet = (id: number) => {
-  deleteSetMutation.mutate(id);
+  deleteSetMutation.mutate(id, {
+    onSuccess: () => (showConfirmDeleteSet.value = false),
+  });
 };
 
 const addSet = () => {
   if (newWeight.value && newReps.value) {
-    showDialog.value = false;
+    showUpdateExerciseDialog.value = false;
     addSetMutation.mutate({
       exercise_id: props.exercise.exercice_id,
       weight: newWeight.value,
@@ -40,7 +46,10 @@ const addSet = () => {
   }
 };
 
-const showDialog = ref<boolean>(false);
+const showUpdateExerciseDialog = ref<boolean>(false);
+const showConfirmDeleteSet = ref<boolean>(false);
+const showConfirmDeleteExercise = ref<boolean>(false);
+
 const newWeight = ref<number>();
 const newReps = ref<number>();
 
@@ -67,28 +76,37 @@ watch(
         <div>Gewicht: {{ set.weight }}</div>
         <div>Reps: {{ set.reps }}</div>
       </div>
-      <button @click="removeSet(set.id)">
+
+      <Confirm v-model:isOpen="showConfirmDeleteSet" @yes="removeSet(set.id)">
         <i class="fa-solid fa-close" />
-      </button>
+      </Confirm>
     </div>
-    <button @click="showDialog = true" class="flex w-full justify-center">
+    <button
+      @click="showUpdateExerciseDialog = true"
+      class="flex w-full justify-center"
+    >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <div class="w-full flex justify-center">
+    <div class="w-full flex justify-center gap-2">
       <button
         class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
         @click="emit('close')"
       >
         Close
       </button>
-      <button
+
+      <Confirm
+        v-model:isOpen="showConfirmDeleteExercise"
+        @yes="removeExercise"
         class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
-        @click="removeExercise"
       >
         Remove
-      </button>
+      </Confirm>
     </div>
-    <Dialog :isOpen="showDialog" @close="showDialog = false">
+    <Dialog
+      :isOpen="showUpdateExerciseDialog"
+      @close="showUpdateExerciseDialog = false"
+    >
       <div class="flex flex-col justify-center items-center gap-4">
         <div class="flex flex-col gap-2">
           <div class="flex gap-2">

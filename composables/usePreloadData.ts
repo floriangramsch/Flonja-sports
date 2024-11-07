@@ -1,9 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
 
-export async function useRefresh() {
+export function useRefresh() {
   const queryClient = useQueryClient();
-  await queryClient.invalidateQueries();
+  return async () => {
+    await queryClient.invalidateQueries();
+  };
 }
 
 export default function usePreloadData() {
