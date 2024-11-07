@@ -9,9 +9,8 @@ const props = defineProps<{
 
 watch(
   () => props.focus,
-  async (newVal) => {
-    if (newVal && props.focus) {
-      await nextTick();
+  (newVal) => {
+    if (newVal) {
       if (inputRef.value) {
         inputRef.value.focus();
       }

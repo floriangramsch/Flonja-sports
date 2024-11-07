@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     head: {
       title: "Flonja Sports",
       meta: [
-        { name: "theme-color", content: "#97918e" },
+        // { name: "theme-color", content: "#97918e" },
         { name: "msapplication-TileColor", content: "#da532c" },
         { name: "description", content: "Fitness App für Se Bebis." },
         {
