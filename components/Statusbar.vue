@@ -55,20 +55,18 @@ const handleRefresh = async () => {
   <div
     class="flex justify-between items-center fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20 z-10"
   >
-    <div class="h-full">
-      <a @click.prevent="switchUser" class="cursor-pointer">
-        <img
-          v-if="logged?.user?.name === 'Florian'"
-          src="@/public/flo.jpg"
-          class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
-        />
-        <img
-          v-else
-          class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
-          src="@/public/sonja.jpg"
-        />
-      </a>
-    </div>
+    <a @click.prevent="switchUser" class="h-full cursor-pointer">
+      <img
+        v-if="logged?.user?.name === 'Florian'"
+        src="@/public/flo.jpg"
+        class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+      />
+      <img
+        v-else
+        class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+        src="@/public/sonja.jpg"
+      />
+    </a>
     <h1
       v-if="logged?.user"
       class="self-start text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1 shadow"
