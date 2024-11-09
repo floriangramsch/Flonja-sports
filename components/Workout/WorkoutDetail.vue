@@ -39,7 +39,7 @@ const updateWorkout = () => {
 };
 
 const newLocker = ref<number>();
-const { data: exercises } = useExercisesByWorkout(
+const { data: exercises, isSuccess } = useExercisesByWorkout(
   computed(() => props.workout?.workout_id)
 );
 
@@ -97,10 +97,10 @@ watch(
         {{ ex.equipName }}
       </div>
       <button
-        class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-1"
+        class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-3 pb-2"
         @click="() => (workoutShow.showRouter = 'equipselection')"
       >
-        <i class="fa-solid fa-plus text-3xl" />
+        <i class="fa-solid fa-plus text-5xl" />
       </button>
       <button
         @click="showDialog = true"
