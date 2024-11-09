@@ -5,6 +5,7 @@ const inputRef = ref<HTMLInputElement | null>(null);
 
 const props = defineProps<{
   focus?: boolean;
+  placeholder?: string;
 }>();
 
 watch(
@@ -33,6 +34,7 @@ onMounted(() => {
     pattern="[0-9]*"
     class="w-10 remove-arrow"
     ref="inputRef"
+    :placeholder="placeholder"
   />
 </template>
 

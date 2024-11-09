@@ -1,18 +1,33 @@
 <script setup lang="ts">
-import useExercisesByWorkout from "~/composables/Exercises/useExercisesByWorkout";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
+import EquipSelection from "./EquipSelection.vue";
+import type {
+  workoutRouterTypes,
+  workoutShowType,
+  WorkoutType,
+} from "~/utils/types";
+import { useExercisesByWorkout } from "~/composables/Exercises/useExercisesByWorkout";
 
 const props = defineProps<{
-  equips: EquipType;
-  workout: LoggedWorkout;
+  equips: EquipType | undefined;
+  muscles: MuscleType | undefined;
+  workout: WorkoutType | undefined;
 }>();
 
-const show = defineModel<any>();
 const showDialog = ref<boolean>(false);
+const logged = defineModel<LoggedType | undefined>("logged");
 
-const updateWorkoutMutation = useUpdateWorkout(props.workout.id);
+const workoutShow = ref<workoutShowType>({
+  showRouter: logged.value?.loggedWorkoutId ? "workoutdetail" : "home",
+});
+
+const switchRouter = (route: workoutRouterTypes) => {
+  workoutShow.value.showRouter = route;
+};
+
+const updateWorkoutMutation = useUpdateWorkout(props.workout?.workout_id);
 
 const updateWorkout = () => {
   updateWorkoutMutation.mutate(`locker = ${newLocker.value}`, {
@@ -24,17 +39,37 @@ const updateWorkout = () => {
 };
 
 const newLocker = ref<number>();
-const { data: exercises } = useExercisesByWorkout(props.workout.id);
+const { data: exercises } = useExercisesByWorkout(
+  computed(() => props.workout?.workout_id)
+);
 
 const exToShow = ref();
 
-const dialogRef = ref<HTMLInputElement | null>(null);
+watch(
+  () => logged.value,
+  (newVal) => {
+    if (newVal?.loggedWorkoutId) {
+      switchRouter("workoutdetail");
+    } else {
+      switchRouter("home");
+    }
+  }
+);
 
 watch(
-  () => dialogRef.value,
+  () => logged.value?.user,
+  () => {
+    if (!logged.value?.loggedWorkoutId) {
+      switchRouter("home");
+    }
+  }
+);
+
+watch(
+  () => exToShow.value,
   (newVal) => {
     if (newVal) {
-      newVal.focus();
+      switchRouter("exercisedetail");
     }
   }
 );
@@ -42,17 +77,28 @@ watch(
 
 <template>
   <SlideTransition>
-    <div v-if="!exToShow" class="absolute inset-0">
+    <div v-if="workoutShow.showRouter === 'home'" class="absolute inset-0">
+      <Home v-model="logged" @switch="switchRouter('workoutdetail')" />
+    </div>
+  </SlideTransition>
+  <SlideTransition>
+    <div
+      v-if="workoutShow.showRouter === 'workoutdetail'"
+      class="absolute inset-0"
+    >
       <div
         v-for="ex in exercises"
         class="border-b border-sonja-bg-darker rounded-full flex justify-center py-2 cursor-pointer"
-        @click="exToShow = ex"
+        @click="
+          exToShow = ex;
+          workoutShow.showRouter = 'exercisedetail';
+        "
       >
         {{ ex.equipName }}
       </div>
       <button
         class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-1"
-        @click="() => (show.showRouter = 'equipselection')"
+        @click="() => (workoutShow.showRouter = 'equipselection')"
       >
         <i class="fa-solid fa-plus text-3xl" />
       </button>
@@ -66,25 +112,45 @@ watch(
   </SlideTransition>
   <SlideTransition>
     <WorkoutExerciseDetail
-      v-if="exToShow"
+      v-if="workoutShow.showRouter === 'exercisedetail'"
       :exercise="exToShow"
-      @close="exToShow = undefined"
+      v-model:workout-show="workoutShow"
+      @close="
+        exToShow = undefined;
+        workoutShow.showRouter = 'workoutdetail';
+      "
     />
+  </SlideTransition>
+  <SlideTransition>
+    <div
+      v-if="
+        workoutShow.showRouter === 'equipselection' &&
+        workout?.workout_id &&
+        muscles &&
+        equips
+      "
+      class="absolute inset-0"
+    >
+      <EquipSelection
+        :workoutId="workout.workout_id"
+        :muscles="muscles"
+        :equips="equips"
+        @close="workoutShow.showRouter = 'workoutdetail'"
+      />
+    </div>
   </SlideTransition>
   <Dialog :isOpen="showDialog" @close="showDialog = false">
     <div class="flex flex-col justify-center items-center gap-4">
       <div class="flex flex-col gap-2">
         <div class="flex gap-2">
           Lockernummer:
-          <input
-            v-model="newLocker"
-            :placeholder="String(workout.locker)"
-            type="number"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            class="w-10 remove-arrow"
-            ref="dialogRef"
+          <UiNumberInput
+            v-if="!workout?.locker"
+            v-model:modelValue="newLocker"
+            :placeholder="String(workout?.locker)"
+            focus
           />
+          <div v-else>{{ workout?.locker }}</div>
         </div>
       </div>
       <Button @action="updateWorkout"> Done </Button>

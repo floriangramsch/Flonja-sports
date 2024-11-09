@@ -73,31 +73,61 @@ export const getWorkouts = async () => {
       SELECT *
       FROM Workout w
       JOIN User u ON w.user_id = u.user_id
+      ORDER BY start DESC
     `;
 
   const results = await query(pool, sql, []);
 
-  const workouts: { [key: number]: any } = {};
-  const equipList = await getEquips();
-
-  for (const row of results) {
-    workouts[row.workout_id] = {
-      start: row.start,
-      end: row.end,
-      locker: row.locker,
-      user: {
-        id: row.user_id,
-        name: row.name,
-      },
-      equips: {},
-    };
-    for (const [key, value] of Object.entries(equipList)) {
-      const weight = await getWeight(pool, row.workout_id, Number(key));
-      workouts[row.workout_id].equips[key] = weight;
-    }
-  }
-  return workouts;
+  return results;
 };
+
+export const getWorkout = async (id: number) => {
+  const pool = await connect();
+
+  const sql = `
+      SELECT *
+      FROM Workout w
+      JOIN User u ON w.user_id = u.user_id
+      WHERE workout_id = ?
+    `;
+
+  const results = await query(pool, sql, [id]);
+
+  return results[0];
+};
+
+// export const getWorkouts = async () => {
+//   const pool = await connect();
+
+//   const sql = `
+//       SELECT *
+//       FROM Workout w
+//       JOIN User u ON w.user_id = u.user_id
+//     `;
+
+//   const results = await query(pool, sql, []);
+
+//   const workouts: { [key: number]: any } = {};
+//   const equipList = await getEquips();
+
+//   for (const row of results) {
+//     workouts[row.workout_id] = {
+//       start: row.start,
+//       end: row.end,
+//       locker: row.locker,
+//       user: {
+//         id: row.user_id,
+//         name: row.name,
+//       },
+//       equips: {},
+//     };
+//     for (const [key, value] of Object.entries(equipList)) {
+//       const weight = await getWeight(pool, row.workout_id, Number(key));
+//       workouts[row.workout_id].equips[key] = weight;
+//     }
+//   }
+//   return workouts;
+// };
 
 const getExercises = async (pool: mysql.Pool): Promise<ExerciseRow[]> => {
   const sql = `
@@ -111,13 +141,13 @@ const getExercises = async (pool: mysql.Pool): Promise<ExerciseRow[]> => {
 };
 
 export const getExercisesByWorkout = async (
-  workout_id: number
+  id: number
 ): Promise<ExerciseRow[]> => {
   const pool = await connect();
 
   const sql =
     " SELECT exercice_id, name AS equipName, e.equip_id FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id WHERE workout_id = ? ";
-  const results: ExerciseRow[] = await query(pool, sql, [workout_id]);
+  const results: ExerciseRow[] = await query(pool, sql, [id]);
   return results;
 };
 

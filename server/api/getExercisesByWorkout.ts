@@ -4,9 +4,9 @@ import { getExercisesByWorkout } from "../utils/getters";
 // API-Handler für die Ausrüstung
 export default defineEventHandler(async (event) => {
   try {
-    const { workoutId } = await readBody(event); // Holt den Body der POST-Anfrage
+    const { id } = await readBody(event); // Holt den Body der POST-Anfrage
 
-    const response = await getExercisesByWorkout(workoutId);
+    const response = await getExercisesByWorkout(id);
     return response;
   } catch (error) {
     console.error(error);

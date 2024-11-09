@@ -24,7 +24,7 @@ const newWorkoutWeight = ref("");
 
 const props = defineProps<{
   equip: EquipSpecialType;
-  workout: LoggedWorkout;
+  workout: WorkoutType;
 }>();
 
 const emit = defineEmits<{
@@ -34,10 +34,10 @@ const emit = defineEmits<{
 const mutation = useAddExercise();
 
 const addNewExercice = () => {
-  if (newWorkoutWeight.value && props.workout.id && props.equip.id) {
+  if (newWorkoutWeight.value && props.workout.workout_id && props.equip.id) {
     mutation.mutate(
       {
-        workout_id: props.workout.id,
+        workout_id: props.workout.workout_id,
         equip_id: props.equip.id,
         weight: newWorkoutWeight.value,
       },

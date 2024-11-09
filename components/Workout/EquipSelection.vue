@@ -8,7 +8,9 @@ const props = defineProps<{
   equips: EquipType;
 }>();
 
-const show = defineModel<any>();
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 const chosenMuscle = ref<string>();
 const chooseMuscle = (id: string) => {
@@ -35,7 +37,7 @@ const addNewExercice = (equipId: number) => {
       equip_id: equipId,
     },
     {
-      onSuccess: () => (show.value.showRouter = "workoutdetail"),
+      onSuccess: () => emit("close"),
     }
   );
 };
@@ -58,7 +60,7 @@ const addNewExercice = (equipId: number) => {
       <div class="w-full flex justify-center">
         <button
           class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
-          @click="show.showRouter = 'workoutdetail'"
+          @click="emit('close')"
         >
           Close
         </button>

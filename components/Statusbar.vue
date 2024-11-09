@@ -6,7 +6,7 @@ import Start from "./Dialogs/Start.vue";
 
 const props = defineProps<{
   users: UserType | undefined;
-  workouts: WorkoutType | undefined;
+  workouts: WorkoutType[] | undefined;
   workoutStart: Date | undefined;
 }>();
 
@@ -27,7 +27,7 @@ const switchUser = () => {
       };
     }
     logged.value.isLogged = false;
-    logged.value.loggedWorkout = undefined;
+    logged.value.loggedWorkoutId = undefined;
     show.value.showLogin = false;
   }
 };
@@ -37,10 +37,10 @@ const logout = () => {
   logged.value = {
     isLogged: false,
     user: logged.value?.user,
-    loggedWorkout: undefined,
+    loggedWorkoutId: undefined,
   };
   show.value.showLogin = false;
-  show.value.showRouter = "home";
+  show.value.showRouter = "workoutdetail";
   localStorage.removeItem("logged");
 };
 

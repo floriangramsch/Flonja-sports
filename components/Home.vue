@@ -14,15 +14,23 @@
 <script setup lang="ts">
 const logged = defineModel<LoggedType>();
 
+const emit = defineEmits<{
+  (e: "switch"): void;
+}>();
+
 const mutation = useAddWorkout();
 
 const addWorkout = () => {
-  mutation.mutate(1, {
-    onSuccess: ({ workoutId }) => {
-      if (logged.value) {
-        logged.value.loggedWorkout = workoutId;
-      }
-    },
-  });
+  if (logged.value?.user?.id) {
+    mutation.mutate(logged.value?.user?.id, {
+      onSuccess: ({ workoutId }) => {
+        if (logged.value) {
+          logged.value.isLogged = true;
+          logged.value.loggedWorkoutId = workoutId;
+          emit("switch");
+        }
+      },
+    });
+  }
 };
 </script>

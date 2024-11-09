@@ -53,17 +53,6 @@ const showConfirmDeleteExercise = ref<boolean>(false);
 
 const newWeight = ref<number>();
 const newReps = ref<number>();
-
-const inputRef = ref<HTMLInputElement | null>(null);
-
-watch(
-  () => inputRef.value,
-  (newVal) => {
-    if (newVal) {
-      newVal.focus();
-    }
-  }
-);
 </script>
 
 <template>

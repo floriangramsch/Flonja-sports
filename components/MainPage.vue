@@ -3,7 +3,7 @@
     <Statusbar
       :users="users"
       :workouts="workouts"
-      :workout-start="loggedWorkout?.start"
+      :workout-start="workout?.start"
       v-model:logged="logged"
       v-model:show="show"
     />
@@ -11,7 +11,7 @@
       v-if="users && workouts && logged && show"
       :users="users"
       :workouts="workouts"
-      v-model:logged-workout="loggedWorkout"
+      v-model:workout="workout"
       v-model:logged="logged"
       v-model:show="show"
     />
@@ -28,39 +28,33 @@
 
 <script setup lang="ts">
 import useWorkouts from "~/composables/useWorkouts";
+import type { LoggedType, showType } from "~/utils/types";
 
 const { isSuccess } = usePreloadData();
 
 const { data: users } = useUsers();
 const { data: workouts } = useWorkouts();
 
-const show = ref({
+const show = ref<showType>({
   showNew: false, // show dropdown
   showDialogEquip: false, // show equip dialog
   showDialogMuskle: false, // show muscle dialog
   showLogin: false, // show login
-  showRouter: "home",
+  showRouter: "workoutdetail",
 });
 
-const logged: Ref<LoggedType> = ref({
+const logged = ref<LoggedType>({
   isLogged: false,
   user: {
     id: 1,
     name: "Florian",
   },
-  loggedWorkout: undefined,
+  loggedWorkoutId: undefined,
 });
 
-const loggedWorkout = computed(() => {
-  if (workouts.value) {
-    const lWorkout = logged.value.loggedWorkout
-      ? workouts.value[logged.value.loggedWorkout]
-      : undefined;
-    if (lWorkout) {
-      return { id: logged.value.loggedWorkout, ...lWorkout };
-    }
-  }
-});
+const { data: workout } = useGetWorkout(
+  computed(() => logged.value.loggedWorkoutId)
+);
 
 // Funktion zum Speichern des Anmeldezustands im Local Storage
 const saveLoggedState = () => {
@@ -83,10 +77,4 @@ onMounted(() => {
 
 // Beobachte Änderungen im Anmeldezustand und speichere diese
 watch(logged, saveLoggedState, { deep: true });
-
-watch(loggedWorkout, (newData) => {
-  if (newData?.id) {
-    show.value.showRouter = "workoutdetail";
-  }
-});
 </script>

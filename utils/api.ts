@@ -17,8 +17,30 @@ export const fetchWorkouts = async () => {
   return response.json();
 };
 
+export const fetchWorkout = async (id: number | undefined) => {
+  if (id) {
+    const response = await fetch("/api/workout" + "?workout_id=" + id);
+    if (!response.ok) throw new Error("Fehler beim Abrufen der Workouts");
+    return response.json();
+  }
+};
+
 export const fetchMuscles = async () => {
   const response = await fetch("/api/muscle");
   if (!response.ok) throw new Error("Fehler beim Abrufen der Muskeln");
   return response.json();
+};
+
+export const fetchExercisesByWorkout = async (id: number) => {
+  if (id) {
+    const response = await fetch("/api/getExercisesByWorkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+    if (!response.ok) throw new Error("Fehler beim Abrufen der Exercises");
+    return response.json();
+  }
 };

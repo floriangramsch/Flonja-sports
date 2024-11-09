@@ -7,7 +7,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
-const showRouter = defineModel<string>("showRouter");
+const show = defineModel<showType | undefined>("show");
 const searchFilter = ref<string>("");
 
 const deleteEquipMutation = useDeleteEquip();
@@ -24,7 +24,7 @@ const props = defineProps<{
   equips: EquipType;
   muscles: MuscleType;
   users: UserType;
-  workout: LoggedWorkout | undefined;
+  workout: WorkoutType | undefined;
 }>();
 
 const filteredEquips = computed(() => {
@@ -108,7 +108,7 @@ const sortedEquips = computed(() => {
             <button
               @click.prevent="
                 exerciceFilter?.push(Number(id));
-                showRouter = 'exercises';
+                if (show) show.showRouter = 'exercises';
               "
             >
               <i class="fa-solid fa-chart-line" />

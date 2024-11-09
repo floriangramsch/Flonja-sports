@@ -1,5 +1,6 @@
 import { defineEventHandler } from "h3";
 import { deleteWorkout } from "../utils/removers";
+import { getWorkout } from "../utils/getters";
 
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
@@ -11,8 +12,14 @@ export default defineEventHandler(async (event) => {
       return response;
     }
     if (method === "GET") {
-      const workouts = await getWorkouts();
-      return workouts;
+      const { workout_id } = getQuery(event);
+      if (workout_id) {
+        const workout = await getWorkout(Number(workout_id));
+        return workout;
+      } else {
+        const workouts = await getWorkouts();
+        return workouts;
+      }
     }
     if (method === "PUT") {
       const connection = await connect();

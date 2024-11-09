@@ -1,16 +1,12 @@
 import { useQuery } from "@tanstack/vue-query";
 
-export default function useExercisesByWorkout(workoutId?: number) {
-  return useQuery({
-    queryKey: ["exercises", workoutId],
-    queryFn: async () =>
-      await fetch("/api/getExercisesByWorkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ workoutId }),
-      }).then((res) => res.json()),
-    enabled: !!workoutId,
+export function useExercisesByWorkout(workoutId: Ref<number | undefined>) {
+  return useQuery<any>({
+    queryKey: computed(() => ["exercises", workoutId.value]),
+    queryFn: () => {
+      if (!workoutId.value) throw new Error("Exercises ID is undefined");
+      return fetchExercisesByWorkout(workoutId.value);
+    },
+    enabled: computed(() => workoutId.value !== undefined),
   });
 }

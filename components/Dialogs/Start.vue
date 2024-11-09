@@ -15,8 +15,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQueryClient } from "@tanstack/vue-query";
+
 const props = defineProps<{
-  workouts: WorkoutType | undefined;
+  workouts: WorkoutType[] | undefined;
 }>();
 
 const logged = defineModel<LoggedType>();
@@ -31,7 +33,7 @@ const newWorkout = () => {
       logged.value = {
         isLogged: true,
         user: logged.value?.user,
-        loggedWorkout: data.workoutId,
+        loggedWorkoutId: data.workoutId,
       };
     },
   });
@@ -39,17 +41,18 @@ const newWorkout = () => {
 
 const resumeWorkout = () => {
   if (props.workouts) {
-    const [latestKey, latestWorkout] = Object.entries(props.workouts || {})
-      .filter(([key, workout]) => workout.user.id === logged.value?.user?.id)
-      .reduce(([latestKey, latestWorkout], [currentKey, currentWorkout]) => {
-        return new Date(currentWorkout.start) > new Date(latestWorkout.start)
-          ? [currentKey, currentWorkout]
-          : [latestKey, latestWorkout];
+    const latestWorkout = props.workouts
+      .filter((workout) => workout.user_id === logged.value?.user?.id)
+      .reduce((prev, curr) => {
+        return new Date(prev.start) < new Date(curr.start) ? curr : prev;
       });
     logged.value = {
       isLogged: true,
-      user: logged.value?.user,
-      loggedWorkout: Number(latestKey),
+      user: {
+        id: latestWorkout.user_id,
+        name: latestWorkout.name,
+      },
+      loggedWorkoutId: Number(latestWorkout.workout_id),
     };
     show.value.showRouter = "workoutdetail";
   }

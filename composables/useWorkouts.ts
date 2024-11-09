@@ -1,9 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 export default function useWorkouts() {
-  return useQuery<WorkoutType>({
+  return useQuery<WorkoutType[]>({
     queryKey: ["workouts"],
     queryFn: fetchWorkouts,
+  });
+}
+export function useGetWorkout(workoutId: Ref<number | undefined>) {
+  return useQuery<WorkoutType>({
+    queryKey: computed(() => ["workout", workoutId.value]),
+    queryFn: () => {
+      if (!workoutId.value) throw new Error("Workout ID is undefined");
+      return fetchWorkout(workoutId.value);
+    },
+    enabled: computed(() => workoutId.value !== undefined),
   });
 }
 
@@ -39,7 +49,6 @@ export const useUpdateWorkout = (workout_id: number | undefined) => {
 
   return useMutation({
     mutationFn: async (updatedData: any) => {
-      console.log("id");
       if (workout_id) {
         const response = await fetch("/api/workout", {
           method: "PUT",
@@ -62,7 +71,7 @@ export const useUpdateWorkout = (workout_id: number | undefined) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+      queryClient.invalidateQueries({ queryKey: ["workout", workout_id] });
     },
   });
 };
