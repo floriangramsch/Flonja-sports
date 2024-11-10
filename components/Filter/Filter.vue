@@ -1,32 +1,3 @@
-<template>
-  <button class="absolute right-0 bottom-0" @click="isOpen = !isOpen">
-    <i class="fa-solid fa-filter text-sonja-akz"></i>
-  </button>
-
-  <DropdownSlideTransition>
-    <div
-      v-if="isOpen"
-      class="mr-8 bg-sonja-akz rounded-md shadow-lg overflow-auto h-80"
-    >
-      <div
-        v-for="(d, id) in data"
-        :key="id"
-        @click="filterData(Number(id))"
-        class="flex py-0.5 px-2 cursor-pointer"
-        :class="isFiltered(Number(id)) ? 'bg-sonja-akz2' : 'bg-sonja-akz'"
-      >
-        {{ getDisplayName(d) }}
-      </div>
-      <div
-        @click="reset"
-        class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer"
-      >
-        Reset
-      </div>
-    </div>
-  </DropdownSlideTransition>
-</template>
-
 <script setup lang="ts">
 import { ref } from "vue";
 import DropdownSlideTransition from "../ui/transitions/DropdownSlideTransition.vue";
@@ -34,14 +5,9 @@ import DropdownSlideTransition from "../ui/transitions/DropdownSlideTransition.v
 const filteredData = ref<number[]>([]);
 const isOpen = ref<boolean>(false);
 
-const props = defineProps<{
-  data: any;
-  displayProp: string;
+defineProps<{
+  data: { id: number; name: string }[] | undefined;
 }>();
-
-const getDisplayName = (item: any) => {
-  return item[props.displayProp];
-};
 
 const isFiltered = (id: number) => {
   return filteredData.value.includes(id);
@@ -66,3 +32,32 @@ const reset = () => {
   isOpen.value = false;
 };
 </script>
+
+<template>
+  <button class="absolute right-0 bottom-0" @click="isOpen = !isOpen">
+    <i class="fa-solid fa-filter text-sonja-akz"></i>
+  </button>
+
+  <DropdownSlideTransition>
+    <div
+      v-if="isOpen"
+      class="mr-8 bg-sonja-akz rounded-md shadow-lg overflow-auto h-80"
+    >
+      <div
+        v-for="d in data"
+        :key="d.id"
+        @click="filterData(d.id)"
+        class="flex py-0.5 px-2 cursor-pointer"
+        :class="isFiltered(d.id) ? 'bg-sonja-akz2' : 'bg-sonja-akz'"
+      >
+        {{ d.name }}
+      </div>
+      <div
+        @click="reset"
+        class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer"
+      >
+        Reset
+      </div>
+    </div>
+  </DropdownSlideTransition>
+</template>

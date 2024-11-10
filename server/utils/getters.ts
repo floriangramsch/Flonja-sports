@@ -19,7 +19,7 @@ export const getEquips = async (): Promise<any> => {
   const pool = await connect();
   // export const getEquips = async (pool: mysql.Pool): Promise<any> => {
   const sql = `
-    SELECT equip_id, eq.name AS equip_name, m.name as muscle_name, info
+    SELECT equip_id, eq.name AS equip_name, m.muscle_group_id as muscle_id, m.name as muscle_name, info
     FROM Equip eq
     LEFT JOIN MuscleGroup m 
     ON m.muscle_group_id = eq.muscle_group_id

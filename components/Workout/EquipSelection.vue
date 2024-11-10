@@ -4,7 +4,7 @@ import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   workoutId: number;
-  muscles: MuscleType;
+  muscles: MuscleType[];
   equips: EquipType[];
 }>();
 
@@ -20,7 +20,6 @@ const chooseMuscle = (id: string) => {
 };
 
 const equipsToShow = computed(() => {
-  console.log(chosenMuscle.value);
   return props.equips.filter(
     (equip) => equip.muscle_name === chosenMuscle.value
   );

@@ -4,6 +4,7 @@ import Equip from "./Equip.vue";
 import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
+import muscle from "~/server/api/muscle";
 
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
@@ -22,42 +23,41 @@ const deleteEquip = (id: number) => {
 
 const props = defineProps<{
   equips: EquipType[];
-  muscles: MuscleType;
+  muscles: MuscleType[];
   users: UserType;
   workout: WorkoutType | undefined;
 }>();
 
 const filteredEquips = computed(() => {
   return props.equips.filter((equip) => {
+    return filter.value.includes(equip.muscle_id);
     // Filter nach Muskeln
-    let muscleId;
+    // let muscleId;
 
-    if (filter.value.length !== 0) {
-      // Finde die Muskel-ID, wenn ein Filter gesetzt ist
-      muscleId = Object.keys(props.muscles).find(
-        (key) =>
-          // @ts-ignore
-          props.muscles[Number(key)].muscle_name === equip.equip_muscle_name
-      );
-    }
+    // if (filter.value.length !== 0) {
+    //   // Finde die Muskel-ID, wenn ein Filter gesetzt ist
+    //   muscleId = props.muscles.find(
+    //     (muscle) => muscle.muscle_name === equip.muscle_name
+    //   );
+    // }
+    // // console.log(muscleId);
 
-    // Bestimme, ob das Equipment dem Muskel-Filter entspricht
-    const matchesMuscleFilter =
-      filter.value.length === 0 ||
-      (muscleId !== undefined && filter.value.includes(Number(muscleId)));
+    // // Bestimme, ob das Equipment dem Muskel-Filter entspricht
+    // const matchesMuscleFilter =
+    //   filter.value.length === 0 ||
+    //   (muscleId !== undefined && filter.value.includes(Number(muscleId)));
 
-    // Filter nach Suchbegriff
-    const matchesSearchFilter =
-      searchFilter.value === "" ||
-      equip.equip_name
-        .toLowerCase()
-        .includes(searchFilter.value.toLowerCase()) ||
-      // @ts-ignore
-      equip.equip_muscle_name
-        .toLowerCase()
-        .includes(searchFilter.value.toLowerCase());
+    // // Filter nach Suchbegriff
+    // const matchesSearchFilter =
+    //   searchFilter.value === "" ||
+    //   equip.equip_name
+    //     .toLowerCase()
+    //     .includes(searchFilter.value.toLowerCase()) ||
+    //   equip.muscle_name
+    //     .toLowerCase()
+    //     .includes(searchFilter.value.toLowerCase());
 
-    return matchesMuscleFilter && matchesSearchFilter;
+    // return matchesMuscleFilter && matchesSearchFilter;
   });
   // @ts-ignore
   // .reduce((acc: EquipType, [id, equip]) => {
@@ -70,7 +70,6 @@ const filteredEquips = computed(() => {
 const sortedEquips = computed(() => {
   return filteredEquips.value.sort((a, b) => {
     return a.equip_name.localeCompare(b.equip_name);
-    // return a.FloPB - b.FloPB;
   });
 });
 </script>
@@ -80,6 +79,7 @@ const sortedEquips = computed(() => {
     <div
       class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
     >
+      {{ filter }}
       <Confirm
         v-model:isOpen="showConfirmDeleteEquip"
         @yes="deleteEquip(Number(equipToDelete))"
@@ -104,7 +104,7 @@ const sortedEquips = computed(() => {
           <div class="ml-auto mt-auto mr-2">
             <button
               @click.prevent="
-                exerciceFilter?.push(Number(equip.equip_id));
+                exerciceFilter?.push(equip.equip_id);
                 if (show) show.showRouter = 'exercises';
               "
             >
@@ -120,7 +120,15 @@ const sortedEquips = computed(() => {
         <FilterEquips :equips="equips" v-model="searchFilter" />
       </div>
       <div class="absolute right-0 bottom-0">
-        <Filter :data="muscles" display-prop="muscle_name" v-model="filter" />
+        <Filter
+          :data="
+            muscles.map((muscle) => ({
+              id: muscle.muscle_group_id,
+              name: muscle.muscle_name,
+            }))
+          "
+          v-model="filter"
+        />
       </div>
     </div>
   </div>

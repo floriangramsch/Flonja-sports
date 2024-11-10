@@ -13,7 +13,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
   equips: EquipType[] | undefined;
-  muscles: MuscleType | undefined;
+  muscles: MuscleType[] | undefined;
   workout: WorkoutType | undefined;
 }>();
 

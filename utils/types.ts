@@ -28,10 +28,9 @@ export type UserType = {
 };
 
 export type MuscleType = {
-  [id: number]: {
-    muscle_name: string;
-    muscle_group_id: number;
-  };
+  // [id: number]: {
+  muscle_name: string;
+  muscle_group_id: number;
 };
 
 export type EquipSpecialType = {
@@ -49,6 +48,7 @@ export type EquipType = {
   equip_id: number;
   equip_name: string;
   muscle_name: string;
+  muscle_id: number;
   info: string;
 };
 

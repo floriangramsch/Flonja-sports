@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import Filter from "../Filter/Filter.vue";
+
+const equips = defineModel<EquipType[]>();
+
+const props = defineProps<{
+  users: any;
+}>();
+
+const filter = defineModel<number[]>("filter");
+
+const filtered = computed(() => {
+  return equips.value?.filter((equip) =>
+    filter.value?.includes(Number(equip.equip_id))
+  );
+});
+
+const getUserName = (id: number) => {
+  const user = props.users.find((user: any) => user.user_id === id);
+  return user ? user.name : "Unknown";
+};
+</script>
+
 <template>
   <div>
     <div class="bg-sonja-bg text-sonja-text">
@@ -23,32 +47,16 @@
 
     <div class="fixed right-2 bottom-52 text-3xl">
       <div class="absolute right-0 bottom-0">
-        <Filter :data="equips" display-prop="equip_name" v-model="filter" />
+        <Filter
+          :data="
+            equips?.map((equip) => ({
+              id: equip.equip_id,
+              name: equip.equip_name,
+            }))
+          "
+          v-model="filter"
+        />
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import Filter from "../Filter/Filter.vue";
-
-const equips = defineModel<EquipType[]>();
-
-const props = defineProps<{
-  users: any;
-}>();
-
-const filter = defineModel<number[]>("filter");
-
-const filtered = computed(() => {
-  return equips.value?.filter((equip) =>
-    filter.value?.includes(Number(equip.equip_id))
-  );
-});
-
-const getUserName = (id: number) => {
-  const user = props.users.find((user: any) => user.user_id === id);
-  return user ? user.name : "Unknown";
-};
-</script>

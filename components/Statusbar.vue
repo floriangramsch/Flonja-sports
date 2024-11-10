@@ -55,7 +55,7 @@ const handleRefresh = async () => {
 
 <template>
   <div
-    class="flex justify-between items-center fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20 z-10"
+    class="flex justify-between items-center fixed text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow"
   >
     <!-- Profilepic -->
     <a @click.prevent="switchUser" class="h-full cursor-pointer">
@@ -71,10 +71,7 @@ const handleRefresh = async () => {
       />
     </a>
     <!-- Status -->
-    <h1
-      v-if="logged?.user"
-      class="self-start text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1 shadow"
-    >
+    <h1 v-if="logged?.user" class="text-sonja-akz2 text-2xl">
       Hallo Se Bebi {{ logged.user?.name }}
       <br />
       {{ formatTime(workoutStart) }}
