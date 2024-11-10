@@ -9,6 +9,7 @@ import type {
   WorkoutType,
 } from "~/utils/types";
 import { useExercisesByWorkout } from "~/composables/Exercises/useExercisesByWorkout";
+import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
   equips: EquipType[] | undefined;
@@ -17,6 +18,8 @@ const props = defineProps<{
 }>();
 
 const logged = defineModel<LoggedType | undefined>("logged");
+
+const showConfirmEndWorkout = ref<boolean>(false);
 
 const workoutShow = ref<workoutShowType>({
   showRouter: logged.value?.loggedWorkoutId ? "workoutdetail" : "home",
@@ -31,6 +34,52 @@ const { data: exercises } = useExercisesByWorkout(
 );
 
 const exToShow = ref();
+
+const showLockerDialog = ref<boolean>(false);
+const newLocker = ref<number>();
+const updateLockerMutation = useUpdateWorkout();
+
+const updateWorkout = () => {
+  if (props.workout?.workout_id)
+    updateLockerMutation.mutate(
+      {
+        updatedData: `locker = ${newLocker.value}`,
+        workout_id: props.workout?.workout_id,
+      },
+      {
+        onSuccess: () => {
+          showLockerDialog.value = false;
+          newLocker.value = undefined;
+        },
+      }
+    );
+};
+
+const endWorkout = () => {
+  if (props.workout?.workout_id && !props.workout.end) {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    const end = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    updateLockerMutation.mutate(
+      {
+        updatedData: `end = '${end}'`,
+        workout_id: props.workout?.workout_id,
+      },
+      {
+        onSuccess: () => {
+          showConfirmEndWorkout.value = false;
+        },
+      }
+    );
+  }
+};
 
 watch(
   () => logged.value,
@@ -74,6 +123,44 @@ watch(
       v-if="workoutShow.showRouter === 'workoutdetail'"
       class="absolute inset-0"
     >
+      <!-- Header -->
+      <div class="w-full flex justify-evenly py-4 px-2">
+        <!-- End Workout -->
+        <Confirm
+          v-model:isOpen="showConfirmEndWorkout"
+          @yes="endWorkout"
+          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          :disabled="workout?.end ? true : false"
+        >
+          <i
+            class="fa-solid fa-cat"
+            :class="workout?.end ? 'opacity-50' : ''"
+          />
+        </Confirm>
+        <div class="text-4xl font-bold text-center">Exercises</div>
+        <!-- Locker -->
+        <button
+          @click="showLockerDialog = true"
+          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        >
+          <i class="fa-solid fa-lock" />
+        </button>
+        <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
+          <div class="flex flex-col justify-center items-center gap-4">
+            <div class="flex gap-2">
+              Lockernummer:
+              <UiNumberInput
+                v-if="!workout?.locker"
+                v-model:modelValue="newLocker"
+                :placeholder="workout?.locker ? String(workout?.locker) : ''"
+                focus
+              />
+              <div v-else>{{ workout?.locker }}</div>
+            </div>
+            <Button @action="updateWorkout"> Done </Button>
+          </div>
+        </Dialog>
+      </div>
       <div
         v-if="exercises?.length !== 0"
         v-for="ex in exercises"

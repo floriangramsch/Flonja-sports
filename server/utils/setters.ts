@@ -67,11 +67,11 @@ export const addWorkout = async (userId: number) => {
   const dateTime = new Date();
 
   const sql = `
-      INSERT INTO Workout (user_id, start, end) VALUES (?, ?, ?)
+      INSERT INTO Workout (user_id, start) VALUES (?, ?)
     `;
 
   try {
-    const results = await query(pool, sql, [userId, dateTime, dateTime]);
+    const results = await query(pool, sql, [userId, dateTime]);
     if (results.affectedRows > 0) {
       return {
         statusCode: 200,

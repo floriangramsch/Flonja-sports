@@ -5,6 +5,7 @@ const isOpen = defineModel("isOpen");
 
 defineProps<{
   class?: string;
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -22,7 +23,12 @@ const handleOverlayClick = (e: MouseEvent) => {
 </script>
 
 <template>
-  <button v-if="$slots.default" :class="class" @click.stop="isOpen = true">
+  <button
+    v-if="$slots.default"
+    :class="class"
+    @click.stop="isOpen = true"
+    :disabled="disabled"
+  >
     <slot />
   </button>
   <div

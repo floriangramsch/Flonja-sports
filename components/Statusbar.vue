@@ -15,26 +15,6 @@ const props = defineProps<{
 const logged = defineModel<LoggedType>("logged");
 const show = defineModel<any>("show");
 
-const showLockerDialog = ref<boolean>(false);
-const newLocker = ref<number>();
-const updateLockerMutation = useUpdateWorkout();
-
-const updateWorkout = () => {
-  if (props.workout?.workout_id)
-    updateLockerMutation.mutate(
-      {
-        updatedData: `locker = ${newLocker.value}`,
-        workout_id: props.workout?.workout_id,
-      },
-      {
-        onSuccess: () => {
-          showLockerDialog.value = false;
-          newLocker.value = undefined;
-        },
-      }
-    );
-};
-
 const switchUser = () => {
   if (props.users && Object.keys(props.users).length === 2 && logged.value) {
     if (logged.value.user?.name === "Florian") {
@@ -100,7 +80,7 @@ const handleRefresh = async () => {
       {{ formatTime(workoutStart) }}
     </h1>
     <!-- Buttons -->
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-2 text-3xl">
       <!-- New Muscle/Equip -->
       <div>
         <button
@@ -181,7 +161,8 @@ const handleRefresh = async () => {
       <!-- Start/End Workout -->
       <div v-if="logged?.isLogged" class="col-start-2 row-start-2">
         <button @click.prevent="logout">
-          <i class="fa-solid fa-cat text-3xl"></i>
+          <i class="fa-solid fa-right-from-bracket" />
+          <!-- <i class="fa-solid fa-cat text-3xl"></i> -->
         </button>
       </div>
       <div v-else class="col-start-2 row-start-2">
@@ -193,7 +174,7 @@ const handleRefresh = async () => {
             }
           "
         >
-          <i class="fa-solid fa-dumbbell text-3xl"></i>
+          <i class="fa-solid fa-dumbbell"></i>
         </button>
         <Transition name="slide-fade-dropdown">
           <Start
@@ -205,27 +186,6 @@ const handleRefresh = async () => {
           />
         </Transition>
       </div>
-      <!-- Locker -->
-      <div v-if="workout" class="col-start-1 row-start-2">
-        <button @click="showLockerDialog = true">
-          <i class="fa-solid fa-lock text-3xl" />
-        </button>
-      </div>
-      <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
-        <div class="flex flex-col justify-center items-center gap-4">
-          <div class="flex gap-2">
-            Lockernummer:
-            <UiNumberInput
-              v-if="!workout?.locker"
-              v-model:modelValue="newLocker"
-              :placeholder="workout?.locker ? String(workout?.locker) : ''"
-              focus
-            />
-            <div v-else>{{ workout?.locker }}</div>
-          </div>
-          <Button @action="updateWorkout"> Done </Button>
-        </div>
-      </Dialog>
     </div>
   </div>
 </template>
