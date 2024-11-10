@@ -3,15 +3,37 @@ import Dialog from "./Dialogs/Dialog.vue";
 import NewMuskle from "./Dialogs/NewMuskle.vue";
 import NewEquip from "./Dialogs/NewEquip.vue";
 import Start from "./Dialogs/Start.vue";
+import Button from "./ui/buttons/Button.vue";
 
 const props = defineProps<{
   users: UserType | undefined;
   workouts: WorkoutType[] | undefined;
+  workout: WorkoutType | undefined;
   workoutStart: Date | undefined;
 }>();
 
 const logged = defineModel<LoggedType>("logged");
 const show = defineModel<any>("show");
+
+const showLockerDialog = ref<boolean>(false);
+const newLocker = ref<number>();
+const updateLockerMutation = useUpdateWorkout();
+
+const updateWorkout = () => {
+  if (props.workout?.workout_id)
+    updateLockerMutation.mutate(
+      {
+        updatedData: `locker = ${newLocker.value}`,
+        workout_id: props.workout?.workout_id,
+      },
+      {
+        onSuccess: () => {
+          showLockerDialog.value = false;
+          newLocker.value = undefined;
+        },
+      }
+    );
+};
 
 const switchUser = () => {
   if (props.users && Object.keys(props.users).length === 2 && logged.value) {
@@ -55,6 +77,7 @@ const handleRefresh = async () => {
   <div
     class="flex justify-between items-center fixed text-sonja-akz top-0 w-full bg-sonja-fg h-20 z-10"
   >
+    <!-- Profilepic -->
     <a @click.prevent="switchUser" class="h-full cursor-pointer">
       <img
         v-if="logged?.user?.name === 'Florian'"
@@ -67,6 +90,7 @@ const handleRefresh = async () => {
         src="@/public/sonja.jpg"
       />
     </a>
+    <!-- Status -->
     <h1
       v-if="logged?.user"
       class="self-start text-sonja-text text-2xl rounded bg-sonja-bg bg-opacity-25 backdrop-blur-md p-1 shadow"
@@ -75,7 +99,9 @@ const handleRefresh = async () => {
       <br />
       {{ formatTime(workoutStart) }}
     </h1>
+    <!-- Buttons -->
     <div class="grid grid-cols-2">
+      <!-- New Muscle/Equip -->
       <div>
         <button
           @click="
@@ -146,11 +172,13 @@ const handleRefresh = async () => {
           />
         </Dialog>
       </div>
+      <!-- Refresh -->
       <div>
         <a @click.prevent="handleRefresh" class="ml-auto cursor-pointer">
           <i class="fa-solid fa-rotate-right text-3xl"></i>
         </a>
       </div>
+      <!-- Start/End Workout -->
       <div v-if="logged?.isLogged" class="col-start-2 row-start-2">
         <button @click.prevent="logout">
           <i class="fa-solid fa-cat text-3xl"></i>
@@ -177,6 +205,27 @@ const handleRefresh = async () => {
           />
         </Transition>
       </div>
+      <!-- Locker -->
+      <div v-if="workout" class="col-start-1 row-start-2">
+        <button @click="showLockerDialog = true">
+          <i class="fa-solid fa-lock text-3xl" />
+        </button>
+      </div>
+      <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
+        <div class="flex flex-col justify-center items-center gap-4">
+          <div class="flex gap-2">
+            Lockernummer:
+            <UiNumberInput
+              v-if="!workout?.locker"
+              v-model:modelValue="newLocker"
+              :placeholder="workout?.locker ? String(workout?.locker) : ''"
+              focus
+            />
+            <div v-else>{{ workout?.locker }}</div>
+          </div>
+          <Button @action="updateWorkout"> Done </Button>
+        </div>
+      </Dialog>
     </div>
   </div>
 </template>

@@ -16,9 +16,6 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-console.log(props.equips);
-
-const showDialog = ref<boolean>(false);
 const logged = defineModel<LoggedType | undefined>("logged");
 
 const workoutShow = ref<workoutShowType>({
@@ -29,26 +26,7 @@ const switchRouter = (route: workoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
 
-const updateWorkoutMutation = useUpdateWorkout();
-
-const updateWorkout = () => {
-  if (props.workout?.workout_id)
-    updateWorkoutMutation.mutate(
-      {
-        updatedData: `locker = ${newLocker.value}`,
-        workout_id: props.workout?.workout_id,
-      },
-      {
-        onSuccess: () => {
-          showDialog.value = false;
-          newLocker.value = undefined;
-        },
-      }
-    );
-};
-
-const newLocker = ref<number>();
-const { data: exercises, isSuccess } = useExercisesByWorkout(
+const { data: exercises } = useExercisesByWorkout(
   computed(() => props.workout?.workout_id)
 );
 
@@ -90,12 +68,14 @@ watch(
       <Home v-model="logged" @switch="switchRouter('workoutdetail')" />
     </div>
   </SlideTransition>
+  <!-- Exercises List -->
   <SlideTransition>
     <div
       v-if="workoutShow.showRouter === 'workoutdetail'"
       class="absolute inset-0"
     >
       <div
+        v-if="exercises?.length !== 0"
         v-for="ex in exercises"
         class="border-b border-sonja-bg-darker rounded-full flex justify-center py-2 cursor-pointer"
         @click="
@@ -105,17 +85,19 @@ watch(
       >
         {{ ex.equipName }}
       </div>
+      <div v-else>
+        <div
+          class="bg-sonja-bg-darker w-full h-20 flex justify-center items-center text-3xl font-bold cursor-pointer"
+          @click="() => (workoutShow.showRouter = 'equipselection')"
+        >
+          Start Workout
+        </div>
+      </div>
       <button
         class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-3 pb-2"
         @click="() => (workoutShow.showRouter = 'equipselection')"
       >
         <i class="fa-solid fa-plus text-5xl" />
-      </button>
-      <button
-        @click="showDialog = true"
-        class="w-full flex justify-end pr-2 pt-2"
-      >
-        <i class="fa-solid fa-lock text-3xl" />
       </button>
     </div>
   </SlideTransition>
@@ -153,21 +135,4 @@ watch(
       />
     </div>
   </SlideTransition>
-  <Dialog :isOpen="showDialog" @close="showDialog = false">
-    <div class="flex flex-col justify-center items-center gap-4">
-      <div class="flex flex-col gap-2">
-        <div class="flex gap-2">
-          Lockernummer:
-          <UiNumberInput
-            v-if="!workout?.locker"
-            v-model:modelValue="newLocker"
-            :placeholder="String(workout?.locker)"
-            focus
-          />
-          <div v-else>{{ workout?.locker }}</div>
-        </div>
-      </div>
-      <Button @action="updateWorkout"> Done </Button>
-    </div>
-  </Dialog>
 </template>

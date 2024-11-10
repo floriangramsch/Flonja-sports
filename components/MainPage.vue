@@ -4,6 +4,7 @@
       :users="users"
       :workouts="workouts"
       :workout-start="workout?.start"
+      :workout="workout"
       v-model:logged="logged"
       v-model:show="show"
     />
