@@ -65,15 +65,33 @@ const newReps = ref<number>();
 </script>
 
 <template>
-  <div class="absolute inset-0">
-    <div>Name: {{ exercise.equipName }}</div>
+  <div class="absolute inset-0 pb-52">
+    <div class="w-full flex justify-evenly py-4">
+      <button
+        class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        @click="emit('close')"
+      >
+        <i class="fa-solid fa-arrow-left" />
+      </button>
+      <div class="text-4xl font-bold text-center">
+        {{ exercise.equipName }}
+      </div>
+      <Confirm
+        v-model:isOpen="showConfirmDeleteExercise"
+        @yes="removeExercise"
+        class="flex items-center bg-sonja-bg-darker text-red-800 h-10 px-4 rounded-full shadow"
+      >
+        <i class="fa-solid fa-close" />
+      </Confirm>
+    </div>
+    <!-- Current Sets -->
     <div
       v-for="set in sets"
       class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
     >
       <div class="flex flex-col">
-        <div>Gewicht: {{ set.weight }}</div>
         <div>Reps: {{ set.reps }}</div>
+        <div>Gewicht: {{ set.weight }}</div>
       </div>
 
       <button
@@ -85,51 +103,42 @@ const newReps = ref<number>();
         <i class="fa-solid fa-close" />
       </button>
     </div>
-    <div
-      v-for="set in lastSets"
-      class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
-    >
-      <div class="flex flex-col">
-        <div>Gewicht: {{ set.weight }}</div>
-        <div>Reps: {{ set.reps }}</div>
-      </div>
-    </div>
+    <!-- Delete Set -->
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"
       @yes="removeSet(Number(setToDelete))"
     />
+    <!-- Add Equip -->
     <button
       @click="showUpdateExerciseDialog = true"
       class="flex w-full justify-center bg-sonja-bg-darker rounded-t rounded-full pt-1 -mt-2"
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <div class="w-full flex justify-center gap-2">
-      <button
-        class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
-        @click="emit('close')"
-      >
-        Close
-      </button>
-
-      <Confirm
-        v-model:isOpen="showConfirmDeleteExercise"
-        @yes="removeExercise"
-        class="bg-sonja-akz mt-10 text-white h-8 px-10 rounded-3xl shadow"
-      >
-        Remove
-      </Confirm>
+    <!-- Last Sets -->
+    <div
+      v-for="set in lastSets"
+      class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
+    >
+      <div class="flex flex-col">
+        <div>Reps: {{ set.reps }}</div>
+        <div>Gewicht: {{ set.weight }}</div>
+      </div>
     </div>
+
+    <!-- Close/Delete Exercise -->
+    <div class="w-full flex justify-center gap-2 mb-5"></div>
+    <!-- New Rep/Weigt -->
     <Dialog
       :isOpen="showUpdateExerciseDialog"
       @close="showUpdateExerciseDialog = false"
     >
       <div class="flex flex-col justify-center items-center gap-4">
         <div class="grid grid-cols-2 gap-2">
-          Weight:
-          <UiNumberInput v-model:modelValue="newWeight" focus />
           Reps:
-          <UiNumberInput v-model:modelValue="newReps" />
+          <UiNumberInput v-model:modelValue="newReps" focus />
+          Weight:
+          <UiNumberInput v-model:modelValue="newWeight" />
         </div>
         <Button @action="addSet"> Done </Button>
       </div>
