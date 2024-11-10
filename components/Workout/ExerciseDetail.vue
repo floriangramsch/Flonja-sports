@@ -45,20 +45,28 @@ const removeSet = (id: number) => {
 
 const addSet = () => {
   if (newWeight.value && newReps.value) {
-    showUpdateExerciseDialog.value = false;
-    addSetMutation.mutate({
-      exercise_id: props.exercise.exercice_id,
-      weight: newWeight.value,
-      reps: newReps.value,
-    });
-    newWeight.value = undefined;
-    newReps.value = undefined;
+    addSetMutation.mutate(
+      {
+        exercise_id: props.exercise.exercice_id,
+        weight: newWeight.value,
+        reps: newReps.value,
+      },
+      {
+        onSuccess: () => {
+          showOldSets.value = false;
+          showUpdateExerciseDialog.value = false;
+          // newWeight.value = undefined;
+          newReps.value = undefined;
+        },
+      }
+    );
   }
 };
 
 const showUpdateExerciseDialog = ref<boolean>(false);
 const showConfirmDeleteSet = ref<boolean>(false);
 const showConfirmDeleteExercise = ref<boolean>(false);
+const showOldSets = ref<boolean>(false);
 
 const newWeight = ref<number>();
 const newReps = ref<number>();
@@ -66,6 +74,7 @@ const newReps = ref<number>();
 
 <template>
   <div class="absolute inset-0 pb-52">
+    <!-- Header -->
     <div class="w-full flex justify-evenly py-4">
       <button
         class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
@@ -84,50 +93,72 @@ const newReps = ref<number>();
         <i class="fa-solid fa-close" />
       </Confirm>
     </div>
-    <!-- Current Sets -->
-    <div
-      v-for="set in sets"
-      class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
-    >
-      <div class="flex flex-col">
-        <div>Reps: {{ set.reps }}</div>
-        <div>Gewicht: {{ set.weight }}</div>
-      </div>
-
+    <!-- Switch between current and old sets -->
+    <div class="flex w-full justify-center mb-5">
       <button
-        @click="
-          setToDelete = set.id;
-          showConfirmDeleteSet = true;
-        "
+        class="text-3xl disabled"
+        :class="lastSets?.length === 0 ? 'opacity-50' : ''"
+        :disabled="lastSets?.length === 0"
+        @click="showOldSets = !showOldSets"
       >
-        <i class="fa-solid fa-close" />
+        <i class="fa-solid fa-repeat" />
       </button>
     </div>
-    <!-- Delete Set -->
-    <Confirm
-      v-model:isOpen="showConfirmDeleteSet"
-      @yes="removeSet(Number(setToDelete))"
-    />
-    <!-- Add Equip -->
+    <!-- Sets -->
+    <div>
+      <!-- Current Sets -->
+      <div
+        v-if="!showOldSets"
+        v-for="set in sets"
+        class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
+      >
+        <div class="flex flex-col">
+          <div>Reps: {{ set.reps }}</div>
+          <div>Gewicht: {{ set.weight }}</div>
+        </div>
+
+        <button
+          @click="
+            setToDelete = set.id;
+            showConfirmDeleteSet = true;
+          "
+        >
+          <i class="fa-solid fa-close" />
+        </button>
+      </div>
+      <!-- Last Sets -->
+      <div
+        v-if="showOldSets"
+        v-for="set in lastSets"
+        class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
+      >
+        <div class="flex flex-col">
+          <div>Reps: {{ set.reps }}</div>
+          <div>Gewicht: {{ set.weight }}</div>
+        </div>
+      </div>
+    </div>
+    <div v-if="sets?.length === 0 && !showOldSets">
+      <div
+        class="bg-sonja-bg-darker rounded-t-3xl w-full h-20 flex justify-center items-center text-3xl font-bold cursor-pointer"
+        @click="() => (showUpdateExerciseDialog = true)"
+      >
+        New Set
+      </div>
+    </div>
+    <!-- Add Set -->
     <button
+      v-if="!showOldSets"
       @click="showUpdateExerciseDialog = true"
       class="flex w-full justify-center bg-sonja-bg-darker rounded-t rounded-full pt-1 -mt-2"
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <!-- Last Sets -->
-    <div
-      v-for="set in lastSets"
-      class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
-    >
-      <div class="flex flex-col">
-        <div>Reps: {{ set.reps }}</div>
-        <div>Gewicht: {{ set.weight }}</div>
-      </div>
-    </div>
-
-    <!-- Close/Delete Exercise -->
-    <div class="w-full flex justify-center gap-2 mb-5"></div>
+    <!-- Delete Set Confirmation -->
+    <Confirm
+      v-model:isOpen="showConfirmDeleteSet"
+      @yes="removeSet(Number(setToDelete))"
+    />
     <!-- New Rep/Weigt -->
     <Dialog
       :isOpen="showUpdateExerciseDialog"
