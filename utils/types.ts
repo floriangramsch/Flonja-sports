@@ -37,7 +37,7 @@ export type MuscleType = {
 export type EquipSpecialType = {
   id: number;
   equip_name: string;
-  equip_muscle_name: string;
+  muscle_name: string;
   FloPB: number | null;
   SonjaPB: number | null;
   FloLast: number | null;
@@ -46,7 +46,9 @@ export type EquipSpecialType = {
 };
 
 export type EquipType = {
-  [id: number]: EquipSpecialType;
+  equip_id: number;
+  equip_name: string;
+  muscle_name: string;
 };
 
 export type WorkoutType = {

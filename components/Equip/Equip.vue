@@ -1,12 +1,12 @@
 <template>
   <div class="p-1" @click.prevent="showDialogWeight = workout ? true : false">
     <div class="font-bold">
-      {{ equip.equip_name }} [{{ equip.equip_muscle_name }}]
+      {{ equip.equip_name }} [{{ equip.muscle_name }}]
     </div>
     <div>
       <!-- <div v-if="workout">this: {{ workout.equips[equip.id] }} kg</div> -->
-      <div>Flo: {{ equip.FloLast }} kg (PB: {{ equip.FloPB }} kg)</div>
-      <div>Sonja: {{ equip.SonjaLast }} kg (PB: {{ equip.SonjaPB }} kg)</div>
+      <!-- <div>Flo: {{ equip.FloLast }} kg (PB: {{ equip.FloPB }} kg)</div>
+      <div>Sonja: {{ equip.SonjaLast }} kg (PB: {{ equip.SonjaPB }} kg)</div> -->
     </div>
   </div>
   <Dialog
@@ -30,7 +30,7 @@ import NewEx from "../Dialogs/NewEx.vue";
 const showDialogWeight = ref(false);
 
 defineProps<{
-  equip: EquipSpecialType;
+  equip: EquipType;
   users: UserType;
   workout: WorkoutType | undefined;
 }>();

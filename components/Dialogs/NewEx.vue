@@ -1,7 +1,7 @@
 <template>
   <form>
     <div>
-      {{ equip?.equip_name }} [{{ equip.equip_muscle_name }}]
+      {{ equip?.equip_name }} [{{ equip.muscle_name }}]
       <input
         v-model="newWorkoutWeight"
         style="width: 64px"
@@ -23,7 +23,7 @@ import useAddExercise from "~/composables/Exercises/useAddExercise";
 const newWorkoutWeight = ref("");
 
 const props = defineProps<{
-  equip: EquipSpecialType;
+  equip: EquipType;
   workout: WorkoutType;
 }>();
 
@@ -34,11 +34,15 @@ const emit = defineEmits<{
 const mutation = useAddExercise();
 
 const addNewExercice = () => {
-  if (newWorkoutWeight.value && props.workout.workout_id && props.equip.id) {
+  if (
+    newWorkoutWeight.value &&
+    props.workout.workout_id &&
+    props.equip.equip_id
+  ) {
     mutation.mutate(
       {
         workout_id: props.workout.workout_id,
-        equip_id: props.equip.id,
+        equip_id: props.equip.equip_id,
         weight: newWorkoutWeight.value,
       },
       {

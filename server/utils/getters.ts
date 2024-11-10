@@ -26,44 +26,44 @@ export const getEquips = async (): Promise<any> => {
 `;
   const equipResults: EquipRow[] = await query(pool, sql, []);
 
-  const equips: { [key: number]: any } = {};
+  // const equips: { [key: number]: any } = {};
 
-  for (const row of equipResults) {
-    equips[Number(row.equip_id)] = {
-      equip_name: row.equip_name,
-      equip_muscle_name: row.muscle_name,
-      exercises: {},
-    };
+  // for (const row of equipResults) {
+  //   equips[Number(row.equip_id)] = {
+  //     equip_name: row.equip_name,
+  //     equip_muscle_name: row.muscle_name,
+  //     exercises: {},
+  //   };
 
-    // Parallelisierung der Abfragen
-    const [FloPB, SonjaPB, FloLast, SonjaLast] = await Promise.all([
-      getPB(pool, row.equip_id, 1),
-      getPB(pool, row.equip_id, 2),
-      getLast(pool, row.equip_id, 1),
-      getLast(pool, row.equip_id, 2),
-    ]);
+  //   // Parallelisierung der Abfragen
+  //   const [FloPB, SonjaPB, FloLast, SonjaLast] = await Promise.all([
+  //     getPB(pool, row.equip_id, 1),
+  //     getPB(pool, row.equip_id, 2),
+  //     getLast(pool, row.equip_id, 1),
+  //     getLast(pool, row.equip_id, 2),
+  //   ]);
 
-    equips[Number(row.equip_id)].FloPB = FloPB;
-    equips[Number(row.equip_id)].SonjaPB = SonjaPB;
-    equips[Number(row.equip_id)].FloLast = FloLast;
-    equips[Number(row.equip_id)].SonjaLast = SonjaLast;
-  }
+  //   equips[Number(row.equip_id)].FloPB = FloPB;
+  //   equips[Number(row.equip_id)].SonjaPB = SonjaPB;
+  //   equips[Number(row.equip_id)].FloLast = FloLast;
+  //   equips[Number(row.equip_id)].SonjaLast = SonjaLast;
+  // }
 
-  const exercises: ExerciseRow[] = await getExercises(pool);
-  for (const row of exercises) {
-    const equipId = row.equip_id;
-    if (row.exercice_id) {
-      if (!equips[equipId]["exercises"][row.user_id]) {
-        equips[equipId]["exercises"][row.user_id] = {};
-      }
-      equips[equipId]["exercises"][row.user_id][row.exercice_id] = {
-        weight: row.weight,
-        start: row.start,
-      };
-    }
-  }
+  // const exercises: ExerciseRow[] = await getExercises(pool);
+  // for (const row of exercises) {
+  //   const equipId = row.equip_id;
+  //   if (row.exercice_id) {
+  //     if (!equips[equipId]["exercises"][row.user_id]) {
+  //       equips[equipId]["exercises"][row.user_id] = {};
+  //     }
+  //     equips[equipId]["exercises"][row.user_id][row.exercice_id] = {
+  //       weight: row.weight,
+  //       start: row.start,
+  //     };
+  //   }
+  // }
 
-  return equips;
+  return equipResults;
 };
 
 export const getWorkouts = async () => {

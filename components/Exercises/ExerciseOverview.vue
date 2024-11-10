@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="bg-sonja-bg text-sonja-text">
-      <template v-if="Object.keys(filtered).length !== 0">
+      <template v-if="filtered?.length !== 0">
         <div
           v-for="equip in filtered"
-          :key="equip.id"
+          :key="equip.equip_id"
           class="border-b border-sonja-akz"
         >
           {{ equip.equip_name }}
-          <div v-for="(user, user_id) in equip.exercises" :key="user_id">
+          <!-- <div v-for="(user, user_id) in equip.exercises" :key="user_id">
             {{ getUserName(Number(user_id)) }}
             <div v-for="exercise in user" :key="exercise.id">
               {{ exercise.weight }} kg am {{ formatTime(exercise.start) }}
             </div>
-          </div>
+          </div> -->
         </div>
       </template>
       <template v-else>
@@ -33,7 +33,7 @@
 import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
 
-const equips = defineModel<EquipType>();
+const equips = defineModel<EquipType[]>();
 
 const props = defineProps<{
   users: any;
@@ -42,11 +42,8 @@ const props = defineProps<{
 const filter = defineModel<number[]>("filter");
 
 const filtered = computed(() => {
-  const validEquips = equips.value ?? {};
-  return Object.fromEntries(
-    Object.entries(validEquips).filter(([id, equip]) =>
-      filter.value?.includes(Number(id))
-    )
+  return equips.value?.filter((equip) =>
+    filter.value?.includes(Number(equip.equip_id))
   );
 });
 

@@ -21,56 +21,57 @@ const deleteEquip = (id: number) => {
 };
 
 const props = defineProps<{
-  equips: EquipType;
+  equips: EquipType[];
   muscles: MuscleType;
   users: UserType;
   workout: WorkoutType | undefined;
 }>();
 
 const filteredEquips = computed(() => {
-  return Object.entries(props.equips)
-    .filter(([id, equip]) => {
-      // Filter nach Muskeln
-      let muscleId;
+  return props.equips.filter((equip) => {
+    // Filter nach Muskeln
+    let muscleId;
 
-      if (filter.value.length !== 0) {
-        // Finde die Muskel-ID, wenn ein Filter gesetzt ist
-        muscleId = Object.keys(props.muscles).find(
-          (key) =>
-            props.muscles[Number(key)].muscle_name === equip.equip_muscle_name
-        );
-      }
+    if (filter.value.length !== 0) {
+      // Finde die Muskel-ID, wenn ein Filter gesetzt ist
+      muscleId = Object.keys(props.muscles).find(
+        (key) =>
+          // @ts-ignore
+          props.muscles[Number(key)].muscle_name === equip.equip_muscle_name
+      );
+    }
 
-      // Bestimme, ob das Equipment dem Muskel-Filter entspricht
-      const matchesMuscleFilter =
-        filter.value.length === 0 ||
-        (muscleId !== undefined && filter.value.includes(Number(muscleId)));
+    // Bestimme, ob das Equipment dem Muskel-Filter entspricht
+    const matchesMuscleFilter =
+      filter.value.length === 0 ||
+      (muscleId !== undefined && filter.value.includes(Number(muscleId)));
 
-      // Filter nach Suchbegriff
-      const matchesSearchFilter =
-        searchFilter.value === "" ||
-        equip.equip_name
-          .toLowerCase()
-          .includes(searchFilter.value.toLowerCase()) ||
-        equip.equip_muscle_name
-          .toLowerCase()
-          .includes(searchFilter.value.toLowerCase());
+    // Filter nach Suchbegriff
+    const matchesSearchFilter =
+      searchFilter.value === "" ||
+      equip.equip_name
+        .toLowerCase()
+        .includes(searchFilter.value.toLowerCase()) ||
+      // @ts-ignore
+      equip.equip_muscle_name
+        .toLowerCase()
+        .includes(searchFilter.value.toLowerCase());
 
-      return matchesMuscleFilter && matchesSearchFilter;
-    })
-    .reduce((acc: EquipType, [id, equip]) => {
-      acc[Number(id)] = equip;
-      return acc;
-    }, {});
+    return matchesMuscleFilter && matchesSearchFilter;
+  });
+  // @ts-ignore
+  // .reduce((acc: EquipType, [id, equip]) => {
+  //   // @ts-ignore
+  //   acc[Number(id)] = equip;
+  //   return acc;
+  // }, {})
 });
 
 const sortedEquips = computed(() => {
-  return Object.fromEntries(
-    Object.entries(filteredEquips.value).sort(([, a], [, b]) => {
-      return a.equip_name.localeCompare(b.equip_name);
-      // return a.FloPB - b.FloPB;
-    })
-  );
+  return filteredEquips.value.sort((a, b) => {
+    return a.equip_name.localeCompare(b.equip_name);
+    // return a.FloPB - b.FloPB;
+  });
 });
 </script>
 
@@ -84,20 +85,16 @@ const sortedEquips = computed(() => {
         @yes="deleteEquip(Number(equipToDelete))"
       />
       <div
-        v-for="(equip, id) in sortedEquips"
-        :key="id"
+        v-for="equip in sortedEquips"
+        :key="equip.equip_id"
         class="flex flex-col snap-start border-b border-sonja-akz min-w-full bg-sonja-bg cursor-pointer"
       >
         <div class="relative flex">
-          <Equip
-            :equip="{ ...equip, id: Number(id) }"
-            :users="users"
-            :workout="workout"
-          />
+          <Equip :equip="equip" :users="users" :workout="workout" />
           <div class="absolute bottom-7 right-2">
             <button
               @click="
-                equipToDelete = Number(id);
+                equipToDelete = Number(equip.equip_id);
                 showConfirmDeleteEquip = true;
               "
             >
@@ -107,7 +104,7 @@ const sortedEquips = computed(() => {
           <div class="ml-auto mt-auto mr-2">
             <button
               @click.prevent="
-                exerciceFilter?.push(Number(id));
+                exerciceFilter?.push(Number(equip.equip_id));
                 if (show) show.showRouter = 'exercises';
               "
             >

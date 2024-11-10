@@ -11,10 +11,12 @@ import type {
 import { useExercisesByWorkout } from "~/composables/Exercises/useExercisesByWorkout";
 
 const props = defineProps<{
-  equips: EquipType | undefined;
+  equips: EquipType[] | undefined;
   muscles: MuscleType | undefined;
   workout: WorkoutType | undefined;
 }>();
+
+console.log(props.equips);
 
 const showDialog = ref<boolean>(false);
 const logged = defineModel<LoggedType | undefined>("logged");

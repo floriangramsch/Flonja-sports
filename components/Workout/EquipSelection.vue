@@ -5,7 +5,7 @@ import SlideTransition from "../ui/transitions/SlideTransition.vue";
 const props = defineProps<{
   workoutId: number;
   muscles: MuscleType;
-  equips: EquipType;
+  equips: EquipType[];
 }>();
 
 const emit = defineEmits<{
@@ -20,8 +20,9 @@ const chooseMuscle = (id: string) => {
 };
 
 const equipsToShow = computed(() => {
-  return Object.entries(props.equips).filter(
-    ([, equip]) => equip.equip_muscle_name === chosenMuscle.value
+  console.log(chosenMuscle.value);
+  return props.equips.filter(
+    (equip) => equip.muscle_name === chosenMuscle.value
   );
 });
 
@@ -71,8 +72,8 @@ const addNewExercice = (equipId: number) => {
   <SlideTransition>
     <div v-if="showEquipOverview" class="flex flex-col absolute inset-0">
       <div
-        v-for="[id, equip] in equipsToShow"
-        @click="addNewExercice(Number(id))"
+        v-for="equip in equipsToShow"
+        @click="addNewExercice(Number(equip.equip_id))"
         class="cursor-pointer flex justify-center py-2 border-b-4 border-sonja-bg-darker"
       >
         {{ equip.equip_name }}

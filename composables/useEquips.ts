@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 export default function useEquips() {
-  return useQuery<EquipType>({
+  return useQuery<EquipType[]>({
     queryKey: ["equips"],
     queryFn: fetchEquipment,
   });
