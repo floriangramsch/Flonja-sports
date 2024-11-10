@@ -76,3 +76,27 @@ export function useDeleteSet() {
     },
   });
 }
+
+export function useGetLastSets({
+  equip_id,
+  user_id,
+  start,
+}: {
+  equip_id: number;
+  user_id: number;
+  start: Date;
+}) {
+  return useQuery({
+    queryKey: ["sets", equip_id, user_id, start],
+    queryFn: async () =>
+      await fetch(`/api/lastSets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ equip_id: equip_id, user_id, start }),
+      })
+        .then((res) => res.json())
+        .catch((error) => console.log(error)),
+  });
+}

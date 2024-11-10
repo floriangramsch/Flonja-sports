@@ -203,3 +203,35 @@ export const getSets = async (exercise_id: number) => {
   const results = await query(pool, sql, [exercise_id]);
   return results;
 };
+
+export const getLastSets = async (
+  equip_id: number,
+  user_id: number,
+  start: Date
+): Promise<ExerciseRow[]> => {
+  const pool = await connect();
+
+  const sql = `
+    SELECT * FROM \`Set\` s
+    LEFT JOIN Exercice e ON e.exercice_id = s.exercise_id
+    RIGHT JOIN Workout w ON w.workout_id = e.workout_id
+    WHERE equip_id = ?
+    AND user_id = ?
+    AND start = (
+    SELECT MAX(start) FROM \`Set\` s
+      LEFT JOIN Exercice e ON e.exercice_id = s.exercise_id
+      RIGHT JOIN Workout w ON w.workout_id = e.workout_id
+      WHERE equip_id = ?
+      AND user_id = ?
+      AND start < ?
+    );
+    `;
+  const results = await query(pool, sql, [
+    equip_id,
+    user_id,
+    equip_id,
+    user_id,
+    start,
+  ]);
+  return results;
+};

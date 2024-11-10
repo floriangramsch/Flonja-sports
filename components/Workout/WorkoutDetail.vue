@@ -112,8 +112,13 @@ watch(
   </SlideTransition>
   <SlideTransition>
     <WorkoutExerciseDetail
-      v-if="workoutShow.showRouter === 'exercisedetail'"
+      v-if="
+        workoutShow.showRouter === 'exercisedetail' &&
+        workout?.start &&
+        workout.user_id
+      "
       :exercise="exToShow"
+      :workout-info="{ start: workout.start, user_id: workout.user_id }"
       v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;

@@ -7,6 +7,10 @@ import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
   exercise: any;
+  workoutInfo: {
+    start: Date;
+    user_id: number;
+  };
 }>();
 
 const emit = defineEmits<{
@@ -17,6 +21,11 @@ const mutation = useDeleteExercise();
 const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSets(props.exercise.exercice_id);
 const addSetMutation = useAddSet();
+const { data: lastSets } = useGetLastSets({
+  equip_id: props.exercise.equip_id,
+  user_id: props.workoutInfo?.user_id,
+  start: props.workoutInfo?.start,
+});
 
 const removeExercise = () => {
   mutation.mutate(props.exercise.exercice_id, {
@@ -75,6 +84,15 @@ const newReps = ref<number>();
       >
         <i class="fa-solid fa-close" />
       </button>
+    </div>
+    <div
+      v-for="set in lastSets"
+      class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
+    >
+      <div class="flex flex-col">
+        <div>Gewicht: {{ set.weight }}</div>
+        <div>Reps: {{ set.reps }}</div>
+      </div>
     </div>
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"
