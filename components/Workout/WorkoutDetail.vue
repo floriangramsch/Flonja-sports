@@ -29,15 +29,22 @@ const switchRouter = (route: workoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
 
-const updateWorkoutMutation = useUpdateWorkout(props.workout?.workout_id);
+const updateWorkoutMutation = useUpdateWorkout();
 
 const updateWorkout = () => {
-  updateWorkoutMutation.mutate(`locker = ${newLocker.value}`, {
-    onSuccess: () => {
-      showDialog.value = false;
-      newLocker.value = undefined;
-    },
-  });
+  if (props.workout?.workout_id)
+    updateWorkoutMutation.mutate(
+      {
+        updatedData: `locker = ${newLocker.value}`,
+        workout_id: props.workout?.workout_id,
+      },
+      {
+        onSuccess: () => {
+          showDialog.value = false;
+          newLocker.value = undefined;
+        },
+      }
+    );
 };
 
 const newLocker = ref<number>();

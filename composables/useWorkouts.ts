@@ -44,11 +44,17 @@ export const useAddWorkout = () => {
   });
 };
 
-export const useUpdateWorkout = (workout_id: number | undefined) => {
+export const useUpdateWorkout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (updatedData: any) => {
+    mutationFn: async ({
+      updatedData,
+      workout_id,
+    }: {
+      updatedData: any;
+      workout_id: number;
+    }) => {
       if (workout_id) {
         const response = await fetch("/api/workout", {
           method: "PUT",
@@ -65,12 +71,12 @@ export const useUpdateWorkout = (workout_id: number | undefined) => {
           throw new Error("Failed to add workout");
         }
 
-        return response.json();
+        return workout_id;
       } else {
-        return JSON.stringify("failed to update Workout");
+        throw new Error("Failed to update workout");
       }
     },
-    onSuccess: () => {
+    onSuccess: (workout_id: number) => {
       queryClient.invalidateQueries({ queryKey: ["workout", workout_id] });
     },
   });
