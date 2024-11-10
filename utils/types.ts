@@ -49,6 +49,7 @@ export type EquipType = {
   equip_id: number;
   equip_name: string;
   muscle_name: string;
+  info: string;
 };
 
 export type WorkoutType = {

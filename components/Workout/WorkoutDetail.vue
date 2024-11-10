@@ -101,6 +101,7 @@ watch(
       </button>
     </div>
   </SlideTransition>
+  <!-- Exercise Detail -->
   <SlideTransition>
     <WorkoutExerciseDetail
       v-if="
@@ -110,6 +111,7 @@ watch(
       "
       :exercise="exToShow"
       :workout-info="{ start: workout.start, user_id: workout.user_id }"
+      :equip="equips?.find((e) => e.equip_id === exToShow.equip_id)"
       v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;
