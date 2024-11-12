@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss"],
   plugins: ["~/plugins/vue-query"],
+  css: ["~/assets/global.css"],
   app: {
     head: {
       title: "Flonja Sports",
