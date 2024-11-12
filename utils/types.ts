@@ -1,24 +1,12 @@
 export type LoggedType = {
   isLogged: boolean;
-  user: LoggedUser | undefined;
+  user:
+    | {
+        id: number;
+        name: string;
+      }
+    | undefined;
   loggedWorkoutId: number | undefined;
-  // loggedWorkoutTest: ComputedRef<LoggedWorkout | undefined>;
-};
-
-export type LoggedUser = {
-  id: number;
-  name: string;
-};
-
-export type LoggedWorkout = {
-  id: number | undefined;
-  start: Date;
-  end: Date;
-  user: LoggedUser;
-  locker: number;
-  equips: {
-    [equip_id: number]: number | null;
-  };
 };
 
 export type UserType = {
@@ -28,20 +16,8 @@ export type UserType = {
 };
 
 export type MuscleType = {
-  // [id: number]: {
   muscle_name: string;
   muscle_group_id: number;
-};
-
-export type EquipSpecialType = {
-  id: number;
-  equip_name: string;
-  muscle_name: string;
-  FloPB: number | null;
-  SonjaPB: number | null;
-  FloLast: number | null;
-  SonjaLast: number | null;
-  exercises: Record<number, any>;
 };
 
 export type EquipType = {
@@ -83,31 +59,24 @@ export type WorkoutType = {
   locker: number;
 };
 
-export type AllType = {
-  equips: EquipType;
-  users: UserType;
-  muscles: MuscleType;
-  workouts: WorkoutType;
-};
-
-export type routerTypes =
+export type RouterTypes =
   | "workoutdetail"
   | "equiplist"
   | "workouts"
   | "exercises";
-export type showType = {
+export type ShowType = {
   showNew: false; // show dropdown
   showDialogEquip: false; // show equip dialog
   showDialogMuskle: false; // show muscle dialog
   showLogin: false; // show login
-  showRouter: routerTypes;
+  showRouter: RouterTypes;
 };
 
-export type workoutRouterTypes =
+export type WorkoutRouterTypes =
   | "home"
   | "equipselection"
   | "workoutdetail"
   | "exercisedetail";
 export type workoutShowType = {
-  showRouter: workoutRouterTypes;
+  showRouter: WorkoutRouterTypes;
 };

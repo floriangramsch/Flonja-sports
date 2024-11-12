@@ -4,7 +4,7 @@ import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import EquipSelection from "./EquipSelection.vue";
 import type {
-  workoutRouterTypes,
+  WorkoutRouterTypes,
   workoutShowType,
   WorkoutType,
 } from "~/utils/types";
@@ -25,7 +25,7 @@ const workoutShow = ref<workoutShowType>({
   showRouter: logged.value?.loggedWorkoutId ? "workoutdetail" : "home",
 });
 
-const switchRouter = (route: workoutRouterTypes) => {
+const switchRouter = (route: WorkoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
 

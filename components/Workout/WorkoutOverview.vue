@@ -8,7 +8,7 @@ defineProps<{
 }>();
 
 const logged = defineModel<LoggedType>();
-const show = defineModel<showType>("show");
+const show = defineModel<ShowType>("show");
 const showConfirmation = ref<boolean>(false);
 
 const editWorkout = (workout: WorkoutType) => {

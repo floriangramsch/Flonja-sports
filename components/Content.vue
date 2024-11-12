@@ -7,7 +7,7 @@ import SlideTransition from "./ui/transitions/SlideTransition.vue";
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
 const logged = defineModel<LoggedType>("logged");
-const show = defineModel<showType>("show");
+const show = defineModel<ShowType>("show");
 const workout = defineModel<WorkoutType | undefined>("workout");
 
 const { data: equips } = useEquips();

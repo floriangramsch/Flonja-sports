@@ -29,14 +29,14 @@
 
 <script setup lang="ts">
 import useWorkouts from "~/composables/useWorkouts";
-import type { LoggedType, showType } from "~/utils/types";
+import type { LoggedType, ShowType } from "~/utils/types";
 
 const { isSuccess } = usePreloadData();
 
 const { data: users } = useUsers();
 const { data: workouts } = useWorkouts();
 
-const show = ref<showType>({
+const show = ref<ShowType>({
   showNew: false, // show dropdown
   showDialogEquip: false, // show equip dialog
   showDialogMuskle: false, // show muscle dialog

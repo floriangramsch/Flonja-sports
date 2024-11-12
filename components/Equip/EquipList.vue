@@ -15,7 +15,7 @@ defineProps<{
 
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
-const show = defineModel<showType | undefined>("show");
+const show = defineModel<ShowType | undefined>("show");
 const searchFilter = ref<string>("");
 
 const deleteEquipMutation = useDeleteEquip();
