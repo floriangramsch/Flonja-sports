@@ -18,46 +18,42 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <div>
-    <div class="bg-sonja-bg text-sonja-text">
-      <div
-        v-for="equip in filtered"
-        class="p-1 border-b border-sonja-akz"
-        :key="equip.equip_id"
-      >
-        <div class="font-bold">
-          {{ equip.equip_name }}
-        </div>
-        <div v-for="user in equip.users" class="flex flex-wrap">
-          <div class="mr-1">{{ user.user_name }}:</div>
-          <div v-for="(set, index) in user.sets" class="flex">
-            <div class="flex mx-2">
-              <div>{{ set.weight }}</div>
-              <div v-if="set.reps">({{ set.reps }})</div>
-            </div>
-            <i
-              v-if="index !== user.sets.length - 1"
-              class="fa-solid fa-arrow-right"
-            />
-            <!-- {{ set.start }} -->
+  <div class="bg-sonja-bg text-sonja-text">
+    <div
+      v-for="equip in filtered"
+      class="p-1 border-b border-sonja-akz"
+      :key="equip.equip_id"
+    >
+      <div class="font-bold">
+        {{ equip.equip_name }}
+      </div>
+      <div v-for="user in equip.users" class="flex flex-wrap">
+        <div class="mr-1">{{ user.user_name }}:</div>
+        <div v-for="(set, index) in user.sets" class="flex">
+          <div class="flex mx-2">
+            <div>{{ set.weight }}</div>
+            <div v-if="set.reps">({{ set.reps }})</div>
           </div>
+          <i
+            v-if="index !== user.sets.length - 1"
+            class="fa-solid fa-arrow-right"
+          />
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Filter -->
-    <div class="fixed right-2 bottom-52 text-3xl">
-      <div class="absolute right-0 bottom-0">
-        <Filter
-          :data="
-            equips?.map((equip) => ({
-              id: equip.equip_id,
-              name: equip.equip_name,
-            }))
-          "
-          v-model="filter"
-        />
-      </div>
-    </div>
+  <!-- Filter -->
+  <div class="fixed right-2 bottom-52 text-3xl">
+    <!-- s -->
+    <Filter
+      :data="
+        equips?.map((equip) => ({
+          id: equip.equip_id,
+          name: equip.equip_name,
+        }))
+      "
+      v-model="filter"
+    />
   </div>
 </template>

@@ -21,10 +21,7 @@ const exerciseFilter = ref<number[]>([]);
     class="flex flex-col bg-sonja-bg text-sonja-text text-2xl flex-1 mt-20 mb-[5.7rem] overflow-y-auto relative no-x-scrollbar"
   >
     <SlideTransition>
-      <div
-        class="absolute inset-0"
-        v-if="show.showRouter === 'exercises' && users"
-      >
+      <div v-if="show.showRouter === 'exercises' && users">
         <ExerciseOverview v-model="equips" v-model:filter="exerciseFilter" />
       </div>
     </SlideTransition>
@@ -39,10 +36,7 @@ const exerciseFilter = ref<number[]>([]);
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div
-        v-if="show.showRouter === 'equiplist' && equips && muscles && users"
-        class="absolute inset-0"
-      >
+      <div v-if="show.showRouter === 'equiplist' && equips && muscles && users">
         <EquipList
           :equips="equips"
           :muscles="muscles"
@@ -54,10 +48,7 @@ const exerciseFilter = ref<number[]>([]);
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div
-        v-if="show.showRouter === 'workouts' && users && workouts"
-        class="absolute inset-0"
-      >
+      <div v-if="show.showRouter === 'workouts' && users && workouts">
         <WorkoutOverview
           :workouts="workouts"
           :users="users"
