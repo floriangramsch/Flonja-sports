@@ -25,12 +25,16 @@ const filtered = computed(() => {
         class="p-1 border-b border-sonja-akz"
         :key="equip.equip_id"
       >
-        {{ equip.equip_name }}
+        <div class="font-bold">
+          {{ equip.equip_name }}
+        </div>
         <div v-for="user in equip.users" class="flex flex-wrap">
           <div class="mr-1">{{ user.user_name }}:</div>
           <div v-for="(set, index) in user.sets" class="flex">
-            {{ set.weight }}
-            <div v-if="set.reps">({{ set.reps }})</div>
+            <div class="flex mx-2">
+              <div>{{ set.weight }}</div>
+              <div v-if="set.reps">({{ set.reps }})</div>
+            </div>
             <i
               v-if="index !== user.sets.length - 1"
               class="fa-solid fa-arrow-right"
@@ -41,6 +45,7 @@ const filtered = computed(() => {
       </div>
     </div>
 
+    <!-- Filter -->
     <div class="fixed right-2 bottom-52 text-3xl">
       <div class="absolute right-0 bottom-0">
         <Filter

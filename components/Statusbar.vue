@@ -71,7 +71,7 @@ const handleRefresh = async () => {
       />
     </a>
     <!-- Status -->
-    <h1 v-if="logged?.user" class="text-sonja-akz2 text-2xl">
+    <h1 v-if="logged?.user" class="text-sonja-akz2 font-bold text-2xl">
       Hallo Se Bebi {{ logged.user?.name }}
       <br />
       {{ formatTime(workoutStart) }}
@@ -89,7 +89,7 @@ const handleRefresh = async () => {
           "
           class="cursor-pointer"
         >
-          <i class="fa-solid fa-plus text-4xl"></i>
+          <i class="fa-solid fa-plus" />
         </button>
         <Transition name="slide-fade-dropdown">
           <div
@@ -150,18 +150,17 @@ const handleRefresh = async () => {
         </Dialog>
       </div>
       <!-- Refresh -->
-      <div>
-        <a @click.prevent="handleRefresh" class="ml-auto cursor-pointer">
-          <i class="fa-solid fa-rotate-right text-3xl"></i>
-        </a>
-      </div>
+      <a @click.prevent="handleRefresh" class="cursor-pointer">
+        <i class="fa-solid fa-rotate-right" />
+      </a>
       <!-- Start/End Workout -->
-      <div v-if="logged?.isLogged" class="col-start-2 row-start-2">
-        <button @click.prevent="logout">
-          <i class="fa-solid fa-right-from-bracket" />
-          <!-- <i class="fa-solid fa-cat text-3xl"></i> -->
-        </button>
-      </div>
+      <button
+        v-if="logged?.isLogged"
+        class="col-start-2 row-start-2"
+        @click.prevent="logout"
+      >
+        <i class="fa-solid fa-right-from-bracket" />
+      </button>
       <div v-else class="col-start-2 row-start-2">
         <button
           @click="
