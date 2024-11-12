@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSuccess" class="flex flex-col h-screen">
+  <div v-if="isSuccess" class="flex flex-col h-dvh">
     <Statusbar
       :users="users"
       :workouts="workouts"
@@ -21,7 +21,7 @@
   <!-- loading -->
   <div
     v-else
-    class="flex justify-center items-center text-5xl bg-sonja-bg h-screen"
+    class="flex justify-center items-center text-5xl bg-sonja-bg h-dvh"
   >
     Loading...
   </div>
