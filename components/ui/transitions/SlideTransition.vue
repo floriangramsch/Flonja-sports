@@ -1,20 +1,20 @@
 <template>
-  <Transition name="slide-fade" mode="out-in">
+  <Transition name="slide-fade" mode="in-out">
     <slot />
   </Transition>
 </template>
 <style>
-.slide-fade-enter-active {
-  transition: all 0.12s ease-out;
-}
-
+.slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.12s cubic-bezier(1, 0.5, 0.8, 1);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(20px);
+  transform: translateX(40px);
   opacity: 0;
 }
 

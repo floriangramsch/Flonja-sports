@@ -1,4 +1,5 @@
 <template>
+  <slot name="trigger" />
   <Transition name="fade">
     <div
       @click="handleOverlayClick"

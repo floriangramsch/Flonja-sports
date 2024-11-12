@@ -6,6 +6,10 @@ import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
 import muscle from "~/server/api/muscle";
 import { useEquipStats } from "~/composables/useEquips";
+import NewMuskle from "../Dialogs/NewMuskle.vue";
+import NewEquip from "../Dialogs/NewEquip.vue";
+import Dialog from "../Dialogs/Dialog.vue";
+import Button from "../ui/buttons/Button.vue";
 
 defineProps<{
   muscles: MuscleType[];
@@ -16,6 +20,8 @@ defineProps<{
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
 const show = defineModel<ShowType | undefined>("show");
+const showDialogMuscle = ref<boolean>(false);
+const showDialogEquip = ref<boolean>(false);
 const searchFilter = ref<string>("");
 
 const deleteEquipMutation = useDeleteEquip();
@@ -95,17 +101,49 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
 
 <template>
   <div class="relative">
+    <!-- Add new Equip/Muscle -->
+    <div class="flex w-full justify-center my-2 gap-2">
+      <Dialog
+        :isOpen="showDialogMuscle"
+        @close="
+          showDialogEquip = false;
+          showDialogMuscle = false;
+        "
+      >
+        <template v-slot:trigger>
+          <Button @action="showDialogMuscle = true"> Neuer Muskle </Button>
+        </template>
+        <NewMuskle
+          @close="
+            showDialogEquip = false;
+            showDialogMuscle = false;
+          "
+        />
+      </Dialog>
+      <Dialog
+        :isOpen="showDialogEquip"
+        @close="
+          showDialogEquip = false;
+          showDialogMuscle = false;
+        "
+      >
+        <template v-slot:trigger>
+          <Button @action="showDialogEquip = true"> Neues Gerät </Button>
+        </template>
+        <NewEquip
+          @close="
+            showDialogEquip = false;
+            showDialogMuscle = false;
+          "
+        />
+      </Dialog>
+    </div>
     <div
       class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
     >
-      <Confirm
-        v-model:isOpen="showConfirmDeleteEquip"
-        @yes="deleteEquip(Number(equipToDelete))"
-      />
-      {{ searchFilter }}
       <div v-for="equip in equipList" class="p-1">
         <div
-          class="text-2xl font-bold"
+          class="text-2xl font-bold cursor-pointer"
           @click.prevent="
             exerciceFilter?.push(equip[0].equip_id);
             if (show) show.showRouter = 'exercises';
@@ -139,6 +177,11 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
         </div>
       </div>
     </div>
+
+    <Confirm
+      v-model:isOpen="showConfirmDeleteEquip"
+      @yes="deleteEquip(Number(equipToDelete))"
+    />
 
     <div class="fixed right-2 bottom-52 text-3xl">
       <div class="absolute right-0 bottom-10">

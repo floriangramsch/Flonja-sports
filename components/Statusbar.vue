@@ -77,91 +77,16 @@ const handleRefresh = async () => {
       {{ formatTime(workoutStart) }}
     </h1>
     <!-- Buttons -->
-    <div class="grid grid-cols-2 text-3xl">
-      <!-- New Muscle/Equip -->
-      <div>
-        <button
-          @click="
-            {
-              show.showNew = !show.showNew;
-              show.showLogin = false;
-            }
-          "
-          class="cursor-pointer"
-        >
-          <i class="fa-solid fa-plus" />
-        </button>
-        <Transition name="slide-fade-dropdown">
-          <div
-            v-if="show.showNew"
-            class="absolute top-1 right-20 bg-sonja-akz text-xl text-sonja-text z-10 rounded-md shadow-lg"
-          >
-            <button
-              @click="
-                show.showDialogMuskle = true;
-                show.showNew = false;
-              "
-              class="flex px-4 py-2 cursor-pointer"
-            >
-              Neuer Muskle
-            </button>
-            <button
-              @click="
-                show.showDialogEquip = true;
-                show.showNew = false;
-              "
-              class="flex px-4 py-2 cursor-pointer"
-            >
-              Neues Gerät
-            </button>
-          </div>
-        </Transition>
-        <Dialog
-          :isOpen="show.showDialogMuskle"
-          @close="
-            show.showDialogEquip = false;
-            show.showDialogMuskle = false;
-            show.showNew = false;
-          "
-        >
-          <NewMuskle
-            @close="
-              show.showDialogEquip = false;
-              show.showDialogMuskle = false;
-              show.showNew = false;
-            "
-          />
-        </Dialog>
-        <Dialog
-          :isOpen="show.showDialogEquip"
-          @close="
-            show.showDialogEquip = false;
-            show.showDialogMuskle = false;
-            show.showNew = false;
-          "
-        >
-          <NewEquip
-            @close="
-              show.showDialogEquip = false;
-              show.showDialogMuskle = false;
-              show.showNew = false;
-            "
-          />
-        </Dialog>
-      </div>
+    <div class="flex flex-col mr-3 text-3xl">
       <!-- Refresh -->
       <a @click.prevent="handleRefresh" class="cursor-pointer">
         <i class="fa-solid fa-rotate-right" />
       </a>
       <!-- Start/End Workout -->
-      <button
-        v-if="logged?.isLogged"
-        class="col-start-2 row-start-2"
-        @click.prevent="logout"
-      >
+      <button v-if="logged?.isLogged" @click.prevent="logout">
         <i class="fa-solid fa-right-from-bracket" />
       </button>
-      <div v-else class="col-start-2 row-start-2">
+      <div v-else>
         <button
           @click="
             {
@@ -170,7 +95,7 @@ const handleRefresh = async () => {
             }
           "
         >
-          <i class="fa-solid fa-dumbbell"></i>
+          <i class="fa-solid fa-dumbbell" />
         </button>
         <Transition name="slide-fade-dropdown">
           <Start

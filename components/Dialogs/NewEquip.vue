@@ -23,13 +23,14 @@
         </option>
       </select>
     </div>
-    <button @click.prevent="addNewEquip" class="mt-4 bg-sonja-akz p-2 rounded">
-      Neues Gerät!
-    </button>
+
+    <Button @click="addNewEquip">Neues Gerät!</Button>
   </form>
 </template>
 
 <script setup lang="ts">
+import Button from "../ui/buttons/Button.vue";
+
 const newEquipName = ref("");
 const newEquipMuscleId = ref<number | undefined>(undefined);
 

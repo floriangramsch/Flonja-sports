@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import useAddExercise from "~/composables/Exercises/useAddExercise";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
+import Dialog from "../Dialogs/Dialog.vue";
+import Button from "../ui/buttons/Button.vue";
+import NewMuskle from "../Dialogs/NewMuskle.vue";
+import NewEquip from "../Dialogs/NewEquip.vue";
 
 const props = defineProps<{
   workoutId: number;
@@ -26,7 +30,9 @@ const equipsToShow = computed(() => {
 });
 
 const showMuscleOverview = ref<boolean>(true);
+const showDialogMuscle = ref<boolean>(false);
 const showEquipOverview = ref<boolean>(false);
+const showDialogEquip = ref<boolean>(false);
 
 const mutation = useAddExercise();
 
@@ -57,7 +63,9 @@ const addNewExercice = (equipId: number) => {
         <div class="text-4xl font-bold text-center">Muskel</div>
         <div></div>
       </div>
-      <div class="grid grid-cols-3 place-items-center mt-10 absolute inset-0">
+      <div
+        class="grid grid-cols-3 place-items-center gap-2 inset-0 overflow-auto"
+      >
         <div
           class="size-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
           @click="chooseMuscle(muscle.muscle_name)"
@@ -66,6 +74,17 @@ const addNewExercice = (equipId: number) => {
         >
           {{ muscle.muscle_name }}
         </div>
+        <Dialog :isOpen="showDialogMuscle" @close="showDialogMuscle = false">
+          <template v-slot:trigger>
+            <div
+              class="size-28 flex text-center items-center bg-sonja-text text-sonja-akz2 border-4 border-black cursor-pointer overflow-auto"
+              @click="showDialogMuscle = true"
+            >
+              Neuer Muskle
+            </div>
+          </template>
+          <NewMuskle @close="showDialogMuscle = false" />
+        </Dialog>
       </div>
     </div>
   </SlideTransition>
@@ -94,6 +113,12 @@ const addNewExercice = (equipId: number) => {
         >
           {{ equip.equip_name }}
         </div>
+        <Dialog :isOpen="showDialogEquip" @close="showDialogEquip = false">
+          <template v-slot:trigger>
+            <Button @action="showDialogEquip = true"> Neues Gerät </Button>
+          </template>
+          <NewEquip @close="showDialogEquip = false" />
+        </Dialog>
       </div>
     </div>
   </SlideTransition>
