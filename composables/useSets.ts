@@ -1,6 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
-export function useGetSets(exercise_id: number) {
+export function useGetSets() {
+  return useQuery({
+    queryKey: ["sets"],
+    queryFn: async () =>
+      await fetch("/api/set", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .catch((error) => console.log(error)),
+  });
+}
+
+export function useGetSetsByExerciseId(exercise_id: number) {
   return useQuery({
     queryKey: ["sets", exercise_id],
     queryFn: async () =>

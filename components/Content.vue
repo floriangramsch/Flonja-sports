@@ -25,11 +25,7 @@ const exerciseFilter = ref<number[]>([]);
         class="absolute inset-0"
         v-if="show.showRouter === 'exercises' && users"
       >
-        <ExerciseOverview
-          :users="users"
-          v-model="equips"
-          v-model:filter="exerciseFilter"
-        />
+        <ExerciseOverview v-model="equips" v-model:filter="exerciseFilter" />
       </div>
     </SlideTransition>
     <SlideTransition>

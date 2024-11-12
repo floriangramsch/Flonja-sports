@@ -4,45 +4,41 @@ import Filter from "../Filter/Filter.vue";
 
 const equips = defineModel<EquipType[]>();
 
-const props = defineProps<{
-  users: any;
-}>();
+const { data: sets } = useGetSets();
 
 const filter = defineModel<number[]>("filter");
 
 const filtered = computed(() => {
-  return equips.value?.filter((equip) =>
-    filter.value?.includes(Number(equip.equip_id))
+  return sets.value?.filter(
+    (equip: any) =>
+      filter.value?.length === 0 ||
+      filter.value?.includes(Number(equip.equip_id))
   );
 });
-
-const getUserName = (id: number) => {
-  const user = props.users.find((user: any) => user.user_id === id);
-  return user ? user.name : "Unknown";
-};
 </script>
 
 <template>
   <div>
     <div class="bg-sonja-bg text-sonja-text">
-      <template v-if="filtered?.length !== 0">
-        <div
-          v-for="equip in filtered"
-          :key="equip.equip_id"
-          class="border-b border-sonja-akz"
-        >
-          {{ equip.equip_name }}
-          <!-- <div v-for="(user, user_id) in equip.exercises" :key="user_id">
-            {{ getUserName(Number(user_id)) }}
-            <div v-for="exercise in user" :key="exercise.id">
-              {{ exercise.weight }} kg am {{ formatTime(exercise.start) }}
-            </div>
-          </div> -->
+      <div
+        v-for="equip in filtered"
+        class="p-1 border-b border-sonja-akz"
+        :key="equip.equip_id"
+      >
+        {{ equip.equip_name }}
+        <div v-for="user in equip.users" class="flex flex-wrap">
+          <div class="mr-1">{{ user.user_name }}:</div>
+          <div v-for="(set, index) in user.sets" class="flex">
+            {{ set.weight }}
+            <div v-if="set.reps">({{ set.reps }})</div>
+            <i
+              v-if="index !== user.sets.length - 1"
+              class="fa-solid fa-arrow-right"
+            />
+            <!-- {{ set.start }} -->
+          </div>
         </div>
-      </template>
-      <template v-else>
-        <div class="text-center">Filter nach etwas!</div>
-      </template>
+      </div>
     </div>
 
     <div class="fixed right-2 bottom-52 text-3xl">

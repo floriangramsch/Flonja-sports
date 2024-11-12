@@ -59,6 +59,15 @@ export type WorkoutType = {
   locker: number;
 };
 
+export type SetType = {
+  weight: number;
+  reps: number;
+  equip_id: number;
+  equip_name: string;
+  start: Date;
+  user_name: string;
+};
+
 export type RouterTypes =
   | "workoutdetail"
   | "equiplist"

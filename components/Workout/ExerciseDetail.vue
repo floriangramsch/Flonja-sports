@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import useDeleteExercise from "~/composables/Exercises/useDeleteExercise";
-import { useGetSets } from "~/composables/useSets";
+import { useGetSetsByExerciseId } from "~/composables/useSets";
 import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Confirm from "../Dialogs/Confirm.vue";
@@ -21,7 +21,7 @@ const emit = defineEmits<{
 
 const mutation = useDeleteExercise();
 const deleteSetMutation = useDeleteSet();
-const { data: sets } = useGetSets(props.exercise.exercice_id);
+const { data: sets } = useGetSetsByExerciseId(props.exercise.exercice_id);
 const addSetMutation = useAddSet();
 const { data: lastSets } = useGetLastSets({
   equip_id: props.exercise.equip_id,
