@@ -7,6 +7,13 @@ export default function useEquips() {
   });
 }
 
+export function useEquipStats() {
+  return useQuery<EquipStatsType[]>({
+    queryKey: ["equipStats"],
+    queryFn: fetchEquipStats,
+  });
+}
+
 export const useAddEquips = () => {
   const queryClient = useQueryClient();
 

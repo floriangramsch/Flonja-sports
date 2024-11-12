@@ -11,6 +11,12 @@ export const fetchEquipment = async () => {
   return response.json();
 };
 
+export const fetchEquipStats = async () => {
+  const response = await fetch("/api/equipStats");
+  if (!response.ok) throw new Error("Fehler beim Abrufen der Equip Stats");
+  return response.json();
+};
+
 export const fetchWorkouts = async () => {
   const response = await fetch("/api/workout");
   if (!response.ok) throw new Error("Fehler beim Abrufen der Workouts");
