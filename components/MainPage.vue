@@ -21,8 +21,9 @@
   <!-- loading -->
   <div
     v-else
-    class="flex justify-center items-center text-5xl bg-sonja-bg h-dvh"
+    class="flex justify-center items-center text-5xl bg-sonja-bg h-dvh gap-4"
   >
+    <i class="fa-solid fa-dumbbell fa-spin" />
     Loading...
   </div>
 </template>
