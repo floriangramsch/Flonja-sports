@@ -19,6 +19,10 @@ const filtered = computed(() => {
 
 <template>
   <div class="bg-sonja-bg text-sonja-text">
+    <!-- Header -->
+    <div class="w-full flex justify-evenly py-4 px-2">
+      <div class="text-4xl font-bold text-center">Exercise List</div>
+    </div>
     <div
       v-for="equip in filtered"
       class="p-1 border-b border-sonja-akz"

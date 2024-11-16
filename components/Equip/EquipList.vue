@@ -101,8 +101,12 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
 
 <template>
   <div class="relative">
+    <!-- Header -->
+    <div class="w-full flex justify-evenly py-4 px-2">
+      <div class="text-4xl font-bold text-center">Equip List</div>
+    </div>
     <!-- Add new Equip/Muscle -->
-    <div class="flex w-full justify-center my-2 gap-2">
+    <div class="flex w-full justify-center mb-2 gap-2">
       <Dialog
         :isOpen="showDialogMuscle"
         @close="
@@ -111,7 +115,9 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
         "
       >
         <template v-slot:trigger>
-          <Button @action="showDialogMuscle = true"> Neuer Muskle </Button>
+          <Button class="h-10 text-xl" @action="showDialogMuscle = true">
+            Neuer Muskle
+          </Button>
         </template>
         <NewMuskle
           @close="
@@ -128,7 +134,9 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
         "
       >
         <template v-slot:trigger>
-          <Button @action="showDialogEquip = true"> Neues Gerät </Button>
+          <Button class="h-10 text-xl" @action="showDialogEquip = true">
+            Neues Gerät
+          </Button>
         </template>
         <NewEquip
           @close="

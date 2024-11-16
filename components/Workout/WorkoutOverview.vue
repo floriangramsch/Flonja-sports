@@ -43,6 +43,11 @@ const deleteWorkout = (id: number) => {
   <div
     class="flex flex-col snap-y snap-mandatory overflow-y-auto no-scrollbar cursor-pointer"
   >
+    <!-- Header -->
+    <div class="w-full flex justify-evenly py-4 px-2">
+      <div class="text-4xl font-bold text-center">Workout List</div>
+    </div>
+    <!-- workout list -->
     <div
       v-for="workout in workouts"
       @click="editWorkout(workout)"
