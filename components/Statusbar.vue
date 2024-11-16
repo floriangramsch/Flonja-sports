@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import Dialog from "./Dialogs/Dialog.vue";
-import NewMuskle from "./Dialogs/NewMuskle.vue";
-import NewEquip from "./Dialogs/NewEquip.vue";
 import Start from "./Dialogs/Start.vue";
-import Button from "./ui/buttons/Button.vue";
 
 const props = defineProps<{
   users: UserType | undefined;
@@ -55,7 +51,7 @@ const handleRefresh = async () => {
 
 <template>
   <div
-    class="flex justify-between items-center fixed text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow"
+    class="fixed flex justify-between items-center text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow"
   >
     <!-- Profilepic -->
     <a @click.prevent="switchUser" class="h-full cursor-pointer">
