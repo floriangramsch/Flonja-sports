@@ -4,6 +4,7 @@ import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import EquipSelection from "./EquipSelection.vue";
 import type {
+  ExerciseType,
   WorkoutRouterTypes,
   workoutShowType,
   WorkoutType,
@@ -33,7 +34,7 @@ const { data: exercises } = useExercisesByWorkout(
   computed(() => props.workout?.workout_id)
 );
 
-const exToShow = ref();
+const exToShow = ref<ExerciseType>();
 
 const showLockerDialog = ref<boolean>(false);
 const newLocker = ref<number>();
@@ -104,6 +105,7 @@ watch(
 watch(
   () => exToShow.value,
   (newVal) => {
+    console.log(newVal);
     if (newVal) {
       switchRouter("exercisedetail");
     }
@@ -198,7 +200,7 @@ watch(
       "
       :exercise="exToShow"
       :workout-info="{ start: workout.start, user_id: workout.user_id }"
-      :equip="equips?.find((e) => e.equip_id === exToShow.equip_id)"
+      :equip="equips?.find((e) => e.equip_id === exToShow?.equip_id)"
       v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;
@@ -220,6 +222,7 @@ watch(
         :workoutId="workout.workout_id"
         :muscles="muscles"
         :equips="equips"
+        v-model="exToShow"
         @close="workoutShow.showRouter = 'workoutdetail'"
       />
     </div>

@@ -12,6 +12,8 @@ const props = defineProps<{
   equips: EquipType[];
 }>();
 
+const exToShow = defineModel();
+
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
@@ -43,7 +45,15 @@ const addNewExercice = (equipId: number) => {
       equip_id: equipId,
     },
     {
-      onSuccess: () => emit("close"),
+      onSuccess: (res) => {
+        exToShow.value = {
+          equipName: props.equips.find((equip) => equip.equip_id === equipId)
+            ?.equip_name,
+          equipId,
+          exercice_id: res.id,
+        };
+        emit("close");
+      },
     }
   );
 };

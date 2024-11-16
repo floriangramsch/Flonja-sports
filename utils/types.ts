@@ -68,6 +68,12 @@ export type SetType = {
   user_name: string;
 };
 
+export type ExerciseType = {
+  equipName: string;
+  equip_id: number;
+  exercice_id: number;
+};
+
 export type RouterTypes =
   | "workoutdetail"
   | "equiplist"

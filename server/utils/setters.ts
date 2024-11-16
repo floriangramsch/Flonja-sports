@@ -118,6 +118,7 @@ export const addExercise = async (newExercise: {
       return {
         statusCode: 200,
         message: "Exercice added successfully",
+        id: results.insertId,
       };
     } else {
       return {
