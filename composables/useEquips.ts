@@ -77,8 +77,6 @@ export const useDeleteEquip = () => {
 
   return useMutation({
     mutationFn: async (equip_id: number) => {
-      console.log("middle", equip_id);
-
       const response = await fetch("/api/equip", {
         method: "Delete",
         headers: {

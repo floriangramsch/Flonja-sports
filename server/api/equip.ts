@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
       const connection = await connect();
 
       const { equip_id, updatedData } = await readBody(event);
-      console.log(equip_id, updatedData);
       const [rows] = await connection.execute(
         `UPDATE Equip SET ${updatedData} WHERE equip_id = ?`,
         [equip_id]

@@ -32,7 +32,6 @@ export default defineEventHandler(async (event) => {
         GROUP BY name, user_id`,
         []
       );
-      console.log(rows);
       return rows;
     }
   } catch (error) {
