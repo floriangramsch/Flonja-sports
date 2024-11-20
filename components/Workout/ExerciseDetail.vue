@@ -23,6 +23,7 @@ const mutation = useDeleteExercise();
 const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSetsByExerciseId(props.exercise.exercice_id);
 const addSetMutation = useAddSet();
+const updateSetMutaiton = useUpdateSet();
 const { data: lastSets } = useGetLastSets({
   equip_id: props.exercise.equip_id,
   user_id: props.workoutInfo?.user_id,
@@ -45,23 +46,41 @@ const removeSet = (id: number) => {
   });
 };
 
-const addSet = () => {
-  if (newWeight.value && newReps.value) {
-    addSetMutation.mutate(
-      {
-        exercise_id: props.exercise.exercice_id,
-        weight: newWeight.value,
-        reps: newReps.value,
-      },
-      {
-        onSuccess: () => {
-          showOldSets.value = false;
-          showUpdateExerciseDialog.value = false;
-          // newWeight.value = undefined;
-          newReps.value = undefined;
+const handleSet = () => {
+  if (newWeight.value !== undefined && newReps.value !== undefined) {
+    if (setIdToUpdate.value) {
+      updateSetMutaiton.mutate(
+        {
+          set_id: setIdToUpdate.value,
+          weight: newWeight.value,
+          reps: newReps.value,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            showOldSets.value = false;
+            showUpdateExerciseDialog.value = false;
+            // newWeight.value = undefined;
+            newReps.value = undefined;
+          },
+        }
+      );
+    } else {
+      addSetMutation.mutate(
+        {
+          exercise_id: props.exercise.exercice_id,
+          weight: newWeight.value,
+          reps: newReps.value,
+        },
+        {
+          onSuccess: () => {
+            showOldSets.value = false;
+            showUpdateExerciseDialog.value = false;
+            // newWeight.value = undefined;
+            newReps.value = undefined;
+          },
+        }
+      );
+    }
   }
 };
 
@@ -92,6 +111,7 @@ const editInfo = ref<boolean>(!props.equip?.info);
 const newInfo = ref<string | undefined>(props.equip?.info);
 const newWeight = ref<number>();
 const newReps = ref<number>();
+const setIdToUpdate = ref<number>();
 
 const infoRef = ref<HTMLTextAreaElement | null>(null);
 
@@ -99,6 +119,14 @@ watch(
   () => infoRef.value,
   (newVal) => {
     if (newVal) newVal.focus();
+  }
+);
+
+watch(
+  () => sets.value,
+  (newVal) => {
+    showOldSets.value =
+      newVal.length === 0 && lastSets.value && lastSets.value?.length !== 0;
   }
 );
 </script>
@@ -151,11 +179,22 @@ watch(
         v-for="set in sets"
         class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
       >
-        <div class="flex flex-col">
+        <button
+          @click="
+            () => {
+              setIdToUpdate = set.id;
+              showUpdateExerciseDialog = true;
+              newReps = set.reps;
+              newWeight = set.weight;
+            }
+          "
+          class="flex flex-col items-start"
+        >
           <div>Reps: {{ set.reps }}</div>
           <div>Gewicht: {{ set.weight }}</div>
-        </div>
+        </button>
 
+        <!-- Delete Set -->
         <button
           @click="
             setToDelete = set.id;
@@ -169,7 +208,7 @@ watch(
       <div
         v-if="showOldSets"
         v-for="set in lastSets"
-        class="flex justify-between m-2 pr-6 pb-2 border-b-2 bg-sonja-akz rounded-lg"
+        class="flex justify-between m-2 pr-6 p-2 border-b-2 bg-sonja-text text-sonja-akz2 rounded-lg"
       >
         <div class="flex flex-col">
           <div>Reps: {{ set.reps }}</div>
@@ -201,16 +240,24 @@ watch(
     <!-- New Rep/Weigt -->
     <Dialog
       :isOpen="showUpdateExerciseDialog"
-      @close="showUpdateExerciseDialog = false"
+      @close="
+        {
+          showUpdateExerciseDialog = false;
+          newReps = undefined;
+          newWeight = undefined;
+          setIdToUpdate = undefined;
+        }
+      "
     >
       <div class="flex flex-col justify-center items-center gap-4">
+        {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
         <div class="grid grid-cols-2 gap-2">
           Reps:
           <UiNumberInput v-model:modelValue="newReps" focus />
           Weight:
           <UiNumberInput v-model:modelValue="newWeight" />
         </div>
-        <Button @action="addSet"> Done </Button>
+        <Button @action="handleSet"> Done </Button>
       </div>
     </Dialog>
     <!-- Info -->

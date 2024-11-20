@@ -105,7 +105,6 @@ watch(
 watch(
   () => exToShow.value,
   (newVal) => {
-    console.log(newVal);
     if (newVal) {
       switchRouter("exercisedetail");
     }

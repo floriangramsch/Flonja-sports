@@ -12,6 +12,20 @@ export default defineEventHandler(async (event) => {
       const response = await deleteSet(set_id);
       return response;
     }
+    if (method === "PUT") {
+      const connection = await connect();
+
+      const { set_id, weight, reps } = await readBody(event);
+      const [rows] = await connection.execute(
+        `
+        UPDATE \`Set\`
+        SET weight = ?, reps = ?
+        WHERE id = ?;
+        `,
+        [weight, reps, set_id]
+      );
+      return rows;
+    }
     if (method === "GET") {
       const { exercise_id } = await getQuery(event);
       if (exercise_id) {

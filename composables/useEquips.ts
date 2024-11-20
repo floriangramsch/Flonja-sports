@@ -68,6 +68,7 @@ export const useUpdateEquip = () => {
     },
     onSuccess: (equip_id: number) => {
       queryClient.invalidateQueries({ queryKey: ["equips"] });
+      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
     },
   });
 };

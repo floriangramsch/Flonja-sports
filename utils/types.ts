@@ -29,17 +29,6 @@ export type EquipType = {
 };
 
 export type EquipStatsType = {
-  max_weight: number;
-  user_id: number;
-  name: string;
-  muscle_name: string;
-  muscle_id: number;
-  equip_id: number;
-  user_name: string;
-  last_weight: number;
-};
-
-export type GroupedEquipStatsType = {
   equip_name: string;
   equip_id: number;
   muscle_id: number;
@@ -48,7 +37,8 @@ export type GroupedEquipStatsType = {
   max_weight: number;
   user_id: number;
   user_name: string;
-}[];
+  info: string;
+};
 
 export type WorkoutType = {
   workout_id: number;

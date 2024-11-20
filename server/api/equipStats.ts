@@ -10,11 +10,12 @@ export default defineEventHandler(async (event) => {
         `SELECT
             MAX(s.weight) AS max_weight,
             w.user_id,
-            eq.name,
+            eq.name AS equip_name,
             m.muscle_group_id AS muscle_id,
             m.name AS muscle_name,
             eq.equip_id,
             u.name AS user_name,
+            eq.info,
         (SELECT s2.weight
             FROM \`Set\` s2
             LEFT JOIN Exercice e2 ON s2.exercise_id = e2.exercice_id
@@ -29,7 +30,7 @@ export default defineEventHandler(async (event) => {
         LEFT JOIN Workout w ON w.workout_id = e.workout_id
         LEFT JOIN MuscleGroup m ON m.muscle_group_id = eq.muscle_group_id
         LEFT JOIN User u ON u.user_id = w.user_id
-        GROUP BY name, user_id`,
+        GROUP BY equip_name, user_id`,
         []
       );
       return rows;

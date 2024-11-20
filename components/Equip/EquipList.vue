@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Equip from "./Equip.vue";
 import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
-import muscle from "~/server/api/muscle";
 import { useEquipStats } from "~/composables/useEquips";
 import NewMuskle from "../Dialogs/NewMuskle.vue";
 import NewEquip from "../Dialogs/NewEquip.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
+import Select from "../ui/select/Select.vue";
 
 defineProps<{
   muscles: MuscleType[];
@@ -22,10 +21,45 @@ const exerciceFilter = defineModel<number[]>("filter");
 const show = defineModel<ShowType | undefined>("show");
 const showDialogMuscle = ref<boolean>(false);
 const showDialogEquip = ref<boolean>(false);
+const showDialogUpdateEquip = ref<boolean>(false);
 const searchFilter = ref<string>("");
 
 const deleteEquipMutation = useDeleteEquip();
 const showConfirmDeleteEquip = ref<boolean>(false);
+
+const equipForm = ref<{
+  equip_name?: string;
+  equip_id?: number;
+  muscle_id?: number;
+  info?: string;
+}>({
+  equip_name: undefined,
+  equip_id: undefined,
+  muscle_id: undefined,
+  info: undefined,
+});
+const updateEquipMutation = useUpdateEquip();
+const updateEquip = () => {
+  if (equipForm.value && equipForm.value.equip_id) {
+    updateEquipMutation.mutate(
+      {
+        updatedData: `name = '${equipForm.value.equip_name}', muscle_group_id = '${equipForm.value.muscle_id}', info = '${equipForm.value.info}'`,
+        equip_id: equipForm.value.equip_id,
+      },
+      {
+        onSuccess: () => {
+          showDialogUpdateEquip.value = false;
+          equipForm.value = {
+            equip_name: undefined,
+            equip_id: undefined,
+            muscle_id: undefined,
+            info: undefined,
+          };
+        },
+      }
+    );
+  }
+};
 
 const equipToDelete = ref<number>();
 const deleteEquip = (id: number) => {
@@ -43,7 +77,9 @@ const filteredEquips = computed(() => {
 
     const matchesSearchFilter =
       searchFilter.value === "" ||
-      equip.name.toLowerCase().includes(searchFilter.value.toLowerCase()) ||
+      equip.equip_name
+        .toLowerCase()
+        .includes(searchFilter.value.toLowerCase()) ||
       equip.muscle_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase());
@@ -52,7 +88,7 @@ const filteredEquips = computed(() => {
   });
 });
 
-const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
+const equipList = computed<EquipStatsType[][] | undefined>(() => {
   if (filteredEquips.value) {
     const groupedData = filteredEquips.value?.reduce(
       (acc: { [key: number]: any[] }, curr) => {
@@ -70,10 +106,11 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
         // Falls es das erste Element ist, fügen wir die gemeinsamen Informationen hinzu
         if (!firstEntry) {
           acc[equipId].push({
-            equip_name: curr.name,
+            equip_name: curr.equip_name,
             equip_id: curr.equip_id,
             muscle_name: curr.muscle_name,
             muscle_id: curr.muscle_id,
+            info: curr.info,
           });
         }
 
@@ -105,7 +142,7 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
     <div class="w-full flex justify-evenly py-4 px-2">
       <div class="text-4xl font-bold text-center">Equip List</div>
     </div>
-    <!-- Add new Equip/Muscle -->
+    <!-- Add/Handle new Equip/Muscle -->
     <div class="flex w-full justify-center mb-2 gap-2">
       <Dialog
         :isOpen="showDialogMuscle"
@@ -145,19 +182,61 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
           "
         />
       </Dialog>
+      <!-- Update Equip -->
+      <Dialog
+        :isOpen="showDialogUpdateEquip"
+        @close="
+          showDialogEquip = false;
+          showDialogMuscle = false;
+          showDialogUpdateEquip = false;
+        "
+      >
+        <div class="grid grid-cols-2">
+          {{ equipForm?.equip_name }}
+          <input v-model="equipForm.equip_name" />
+
+          Muscle:
+          <Select
+            v-model="equipForm.muscle_id"
+            default="Muskle..."
+            :options="muscles"
+          />
+
+          Info
+          <input v-model="equipForm.info" />
+        </div>
+        <Button @action="updateEquip">Update</Button>
+      </Dialog>
     </div>
+    <!-- Equip List -->
     <div
       class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
     >
       <div v-for="equip in equipList" class="p-1">
         <div
-          class="text-2xl font-bold cursor-pointer"
-          @click.prevent="
-            exerciceFilter?.push(equip[0].equip_id);
-            if (show) show.showRouter = 'exercises';
+          @click="
+            {
+              equipForm = {
+                equip_name: equip[0].equip_name,
+                equip_id: equip[0].equip_id,
+                muscle_id: equip[0].muscle_id,
+                info: equip[0].info,
+              };
+              showDialogUpdateEquip = true;
+            }
           "
+          class="text-2xl font-bold cursor-pointer"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
+          <button
+            class="ml-2"
+            @click.stop="
+              exerciceFilter?.push(equip[0].equip_id);
+              if (show) show.showRouter = 'exercises';
+            "
+          >
+            <i class="fa-solid fa-chart-line text-sonja-akz" />
+          </button>
           <!-- Delete Equip -->
           <button
             class="ml-2"
@@ -168,15 +247,6 @@ const equipList = computed<GroupedEquipStatsType[] | undefined>(() => {
           >
             <i class="fa-solid fa-close text-red-800" />
           </button>
-          <!-- <button
-            class="ml-2"
-            @click.prevent="
-              exerciceFilter?.push(equip[0].equip_id);
-              if (show) show.showRouter = 'exercises';
-            "
-          >
-            <i class="fa-solid fa-chart-line" />
-          </button> -->
         </div>
         <div v-for="user in equip.slice(1)" class="flex gap-2">
           <div>{{ user.user_name }}:</div>

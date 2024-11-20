@@ -62,8 +62,43 @@ export const useAddSet = () => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+      queryClient.invalidateQueries({ queryKey: ["sets"] });
+    },
+  });
+};
+
+export const useUpdateSet = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      set_id,
+      weight,
+      reps,
+    }: {
+      set_id: number;
+      weight: number;
+      reps: number;
+    }) => {
+      const response = await fetch("/api/set", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          set_id,
+          weight,
+          reps,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update set");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sets"] });
     },
   });
@@ -84,9 +119,6 @@ export function useDeleteSet() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workouts"] });
-      queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
       queryClient.invalidateQueries({ queryKey: ["sets"] });
     },
   });

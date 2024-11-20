@@ -4,7 +4,7 @@ const activeBounce = ref<string>("");
 let bounceTimeout: ReturnType<typeof setTimeout> | undefined;
 
 watch(show.value, (newVal) => {
-  const timeout = 1800;
+  const timeout = 900;
   activeBounce.value = newVal.showRouter;
 
   if (bounceTimeout) {

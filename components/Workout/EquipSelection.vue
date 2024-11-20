@@ -18,16 +18,16 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const chosenMuscle = ref<string>();
-const chooseMuscle = (id: string) => {
-  chosenMuscle.value = id;
+const chosenMuscle = ref<MuscleType>();
+const chooseMuscle = (muscle: MuscleType) => {
+  chosenMuscle.value = muscle;
   showMuscleOverview.value = false;
   showEquipOverview.value = true;
 };
 
 const equipsToShow = computed(() => {
   return props.equips.filter(
-    (equip) => equip.muscle_name === chosenMuscle.value
+    (equip) => equip.muscle_name === chosenMuscle.value?.muscle_name
   );
 });
 
@@ -49,7 +49,7 @@ const addNewExercice = (equipId: number) => {
         exToShow.value = {
           equipName: props.equips.find((equip) => equip.equip_id === equipId)
             ?.equip_name,
-          equipId,
+          equip_id: equipId,
           exercice_id: res.id,
         };
         emit("close");
@@ -78,7 +78,7 @@ const addNewExercice = (equipId: number) => {
       >
         <div
           class="size-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
-          @click="chooseMuscle(muscle.muscle_name)"
+          @click="chooseMuscle(muscle)"
           v-for="muscle in muscles"
           :key="muscle.muscle_group_id"
         >
@@ -127,7 +127,10 @@ const addNewExercice = (equipId: number) => {
           <template v-slot:trigger>
             <Button @action="showDialogEquip = true"> Neues Gerät </Button>
           </template>
-          <NewEquip @close="showDialogEquip = false" />
+          <NewEquip
+            @close="showDialogEquip = false"
+            :muscleId="chosenMuscle?.muscle_group_id"
+          />
         </Dialog>
       </div>
     </div>

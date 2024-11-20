@@ -8,20 +8,11 @@
           class="p-1 m-1 rounded-md ml-1 bg-sonja-akz2"
         />
       </div>
-      <select
+      <Select
         v-model="newEquipMuscleId"
-        class="p-1 m-1 rounded-md bg-sonja-akz"
-      >
-        <option value="undefined" disabled selected>Muskle..</option>
-        <option
-          v-for="muscle in muscles"
-          :key="muscle.muscle_group_id"
-          :value="muscle.muscle_group_id"
-          class="py-1"
-        >
-          {{ muscle.muscle_name }}
-        </option>
-      </select>
+        default="Muskle..."
+        :options="muscles"
+      />
     </div>
 
     <Button @click="addNewEquip">Neues Gerät!</Button>
@@ -30,9 +21,14 @@
 
 <script setup lang="ts">
 import Button from "../ui/buttons/Button.vue";
+import Select from "../ui/select/Select.vue";
+
+const props = defineProps<{
+  muscleId?: number;
+}>();
 
 const newEquipName = ref("");
-const newEquipMuscleId = ref<number | undefined>(undefined);
+const newEquipMuscleId = ref<number | undefined>(props.muscleId && undefined);
 
 const { data: muscles } = useMuscles();
 const mutation = useAddEquips();
