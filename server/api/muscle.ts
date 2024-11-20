@@ -24,6 +24,29 @@ export default defineEventHandler(async (event) => {
       const response = await addMuscle(newMuscle);
       return response;
     }
+    if (method === "DELETE") {
+      const { muscle_id } = await readBody(event);
+
+      const connection = await connect();
+      const [rows] = await connection.execute(
+        `DELETE FROM MuscleGroup WHERE muscle_group_id = ?`,
+        [muscle_id]
+      );
+
+      return rows;
+    }
+    if (method === "PUT") {
+      const connection = await connect();
+      const body = await readBody(event);
+      const { name, muscle_id } = body;
+
+      const [rows] = await connection.execute(
+        "UPDATE MuscleGroup SET name = ? WHERE muscle_group_id = ?",
+        [name, muscle_id]
+      );
+
+      return rows;
+    }
   } catch (error) {
     console.error(error);
     return { error: "Failed to handle workout" };

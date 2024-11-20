@@ -141,28 +141,7 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
     <!-- Header -->
     <div class="w-full flex justify-evenly py-4 px-2">
       <div class="text-4xl font-bold text-center">Equip List</div>
-    </div>
-    <!-- Add/Handle new Equip/Muscle -->
-    <div class="flex w-full justify-center mb-2 gap-2">
-      <Dialog
-        :isOpen="showDialogMuscle"
-        @close="
-          showDialogEquip = false;
-          showDialogMuscle = false;
-        "
-      >
-        <template v-slot:trigger>
-          <Button class="h-10 text-xl" @action="showDialogMuscle = true">
-            Neuer Muskle
-          </Button>
-        </template>
-        <NewMuskle
-          @close="
-            showDialogEquip = false;
-            showDialogMuscle = false;
-          "
-        />
-      </Dialog>
+      <!-- New Equip -->
       <Dialog
         :isOpen="showDialogEquip"
         @close="
@@ -171,9 +150,12 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
         "
       >
         <template v-slot:trigger>
-          <Button class="h-10 text-xl" @action="showDialogEquip = true">
-            Neues Gerät
-          </Button>
+          <button
+            class="absolute right-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+            @click="showDialogEquip = true"
+          >
+            <i class="fa-solid fa-plus" />
+          </button>
         </template>
         <NewEquip
           @close="
@@ -182,32 +164,32 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
           "
         />
       </Dialog>
-      <!-- Update Equip -->
-      <Dialog
-        :isOpen="showDialogUpdateEquip"
-        @close="
-          showDialogEquip = false;
-          showDialogMuscle = false;
-          showDialogUpdateEquip = false;
-        "
-      >
-        <div class="grid grid-cols-2">
-          {{ equipForm?.equip_name }}
-          <input v-model="equipForm.equip_name" />
-
-          Muscle:
-          <Select
-            v-model="equipForm.muscle_id"
-            default="Muskle..."
-            :options="muscles"
-          />
-
-          Info
-          <input v-model="equipForm.info" />
-        </div>
-        <Button @action="updateEquip">Update</Button>
-      </Dialog>
     </div>
+    <!-- Update Equip -->
+    <Dialog
+      :isOpen="showDialogUpdateEquip"
+      @close="
+        showDialogEquip = false;
+        showDialogMuscle = false;
+        showDialogUpdateEquip = false;
+      "
+    >
+      <div class="grid grid-cols-2">
+        {{ equipForm?.equip_name }}
+        <input v-model="equipForm.equip_name" />
+
+        Muscle:
+        <Select
+          v-model="equipForm.muscle_id"
+          default="Muskle..."
+          :options="muscles"
+        />
+
+        Info
+        <input v-model="equipForm.info" />
+      </div>
+      <Button @action="updateEquip">Update</Button>
+    </Dialog>
     <!-- Equip List -->
     <div
       class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"

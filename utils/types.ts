@@ -67,6 +67,7 @@ export type ExerciseType = {
 export type RouterTypes =
   | "workoutdetail"
   | "equiplist"
+  | "musclelist"
   | "workouts"
   | "exercises";
 export type ShowType = {

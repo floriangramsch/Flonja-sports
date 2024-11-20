@@ -38,6 +38,16 @@ onBeforeUnmount(() => {
       />
     </button>
 
+    <button @click="show.showRouter = 'musclelist'" class="w-full">
+      <i
+        class="fa-solid fa-hand-fist"
+        :class="{
+          'text-sonja-akz': show.showRouter === 'musclelist',
+          'fa-bounce': activeBounce === 'musclelist',
+        }"
+      />
+    </button>
+
     <button @click="show.showRouter = 'workoutdetail'" class="w-full">
       <i
         class="fa-solid fa-home"

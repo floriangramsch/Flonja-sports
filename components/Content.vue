@@ -3,6 +3,7 @@ import ExerciseOverview from "./Exercises/ExerciseOverview.vue";
 import WorkoutOverview from "./Workout/WorkoutOverview.vue";
 import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import SlideTransition from "./ui/transitions/SlideTransition.vue";
+import MuscleList from "./Muscles/MuscleList.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
@@ -23,6 +24,11 @@ const exerciseFilter = ref<number[]>([]);
     <SlideTransition>
       <div v-if="show.showRouter === 'exercises' && users">
         <ExerciseOverview v-model="equips" v-model:filter="exerciseFilter" />
+      </div>
+    </SlideTransition>
+    <SlideTransition>
+      <div v-if="show.showRouter === 'musclelist' && muscles">
+        <MuscleList :muscles="muscles" />
       </div>
     </SlideTransition>
     <SlideTransition>
