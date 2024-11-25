@@ -28,7 +28,7 @@ const props = defineProps<{
 }>();
 
 const newEquipName = ref("");
-const newEquipMuscleId = ref<number | undefined>(props.muscleId && undefined);
+const newEquipMuscleId = ref<number | undefined>(props.muscleId ?? undefined);
 
 const { data: muscles } = useMuscles();
 const mutation = useAddEquips();
