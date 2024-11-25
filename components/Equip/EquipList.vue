@@ -207,7 +207,7 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
               showDialogUpdateEquip = true;
             }
           "
-          class="text-2xl font-bold cursor-pointer"
+          class="text-2xl font-bold cursor-pointer overflow-x-scroll whitespace-nowrap"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
           <button
@@ -231,9 +231,13 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
           </button>
         </div>
         <div v-for="user in equip.slice(1)" class="flex gap-2">
-          <div>{{ user.user_name }}:</div>
-          <div>PB {{ user.max_weight }}</div>
-          <div>Last {{ user.last_weight }}</div>
+          <div class="flex gap-2">
+            <div v-if="user.user_name">{{ user.user_name }}:</div>
+            <div v-if="user.max_weight">PB {{ user.max_weight }}</div>
+            <div v-else="user.max_weight">PB TBD</div>
+            <div v-if="user.last_weight">Last {{ user.last_weight }}</div>
+            <div v-else="user.last_weight">Last TBD</div>
+          </div>
         </div>
       </div>
     </div>
