@@ -42,25 +42,33 @@ const newStat = () => {
 };
 </script>
 <template>
-  <div v-for="stat in stats" class="p-2">
-    <div>{{ stat.name }}: {{ new Date(stat.date).toLocaleString() }}</div>
-    <div>
-      {{ stat.body_weight }} kg
-      <button
-        class="ml-2"
-        @click.stop="
-          statToDelete = Number(stat.stats_id);
-          showConfirmDeleteStat = true;
-        "
-      >
-        <i class="fa-solid fa-close text-red-800" />
-      </button>
+  <div>
+    <div v-for="stat in stats" class="p-2">
+      <div>{{ stat.name }}: {{ new Date(stat.date).toLocaleString() }}</div>
+      <div>
+        {{ stat.body_weight }} kg
+        <button
+          class="ml-2"
+          @click.stop="
+            statToDelete = Number(stat.stats_id);
+            showConfirmDeleteStat = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
+      </div>
     </div>
+    <Confirm v-model:isOpen="showConfirmDeleteStat" @yes="deleteStat()" />
+    <Dialog :isOpen="showNewStat" @close="showNewStat = false">
+      <template v-slot:trigger>
+        <div class="flex justify-center w-full">
+          <UiButtonsButton class="px-10" @action="showNewStat = true"
+            >New</UiButtonsButton
+          >
+        </div>
+      </template>
+      <input v-model="newWeight" />
+      <Button @action="newStat">New</Button>
+    </Dialog>
   </div>
-  <UiButtonsButton @action="showNewStat = true">New</UiButtonsButton>
-  <Confirm v-model:isOpen="showConfirmDeleteStat" @yes="deleteStat()" />
-  <Dialog :isOpen="showNewStat" @close="showNewStat = false">
-    <input v-model="newWeight" />
-    <Button @action="newStat">New</Button>
-  </Dialog>
 </template>
