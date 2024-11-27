@@ -14,12 +14,20 @@ self.addEventListener("push", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data && event.data.action === "startTimer") {
     const delay = event.data.delay || 120000; // Verzögerung in ms (Standard: 2 Minuten)
+    const minutes = Math.floor(delay / 60000);
+    const seconds = ((delay % 60000) / 1000).toFixed(0);
+    const timeString = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    console.log(`Timer started for ${timeString} (mm:ss)`);
 
     setTimeout(() => {
       // Benachrichtigung anzeigen
-      self.registration.showNotification("Pause vorbei!", {
-        body: "2 Minuten sind vorbei!",
-        vibrate: [200, 100, 200], // Optional: Vibrationsmuster
+      self.registration.showNotification("Weitermachen!", {
+        body: `${timeString} Minuten sind vorbei!`,
+        // vibrate: [200, 100, 200], // Optional: Vibrationsmuster
+        vibrate: [
+          400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200,
+          200, 200,
+        ],
       });
     }, delay);
   }

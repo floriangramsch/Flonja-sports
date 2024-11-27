@@ -62,9 +62,9 @@ const newStat = () => {
     <Dialog :isOpen="showNewStat" @close="showNewStat = false">
       <template v-slot:trigger>
         <div class="flex justify-center w-full">
-          <UiButtonsButton class="px-10" @action="showNewStat = true"
-            >New</UiButtonsButton
-          >
+          <UiButtonsButton class="px-10" @action="showNewStat = true">
+            New
+          </UiButtonsButton>
         </div>
       </template>
       <input v-model="newWeight" />
