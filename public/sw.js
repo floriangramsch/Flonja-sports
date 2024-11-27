@@ -27,17 +27,18 @@ self.addEventListener("message", (event) => {
           400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200,
           200, 200,
         ],
+        requireInteraction: true,
       });
     }, delay);
   }
 });
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open("app-cache").then((cache) => {
-      return cache.addAll(["/", "/about", "/styles.css"]);
-    })
-  );
+  // event.waitUntil(
+  //   caches.open("app-cache").then((cache) => {
+  //     return cache.addAll(["/", "/about", "/styles.css"]);
+  //   })
+  // );
   console.log("Service Worker installiert und Ressourcen zwischengespeichert.");
 });
 
@@ -46,9 +47,9 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+  // event.respondWith(
+  //   caches.match(event.request).then((response) => {
+  //     return response || fetch(event.request);
+  //   })
+  // );
 });
