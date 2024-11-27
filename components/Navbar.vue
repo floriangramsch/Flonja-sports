@@ -40,7 +40,7 @@ onBeforeUnmount(() => {
 
     <button @click="show.showRouter = 'stats'" class="w-full">
       <i
-        class="fa-solid fa-hand-fist"
+        class="fa-solid fa-weight-scale"
         :class="{
           'text-sonja-akz': show.showRouter === 'stats',
           'fa-bounce': activeBounce === 'stats',
