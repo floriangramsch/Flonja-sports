@@ -207,6 +207,7 @@ watch(
       "
     />
   </SlideTransition>
+  <!-- Equip Selection -->
   <SlideTransition>
     <div
       v-if="

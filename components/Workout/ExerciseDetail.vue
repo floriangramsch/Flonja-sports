@@ -75,8 +75,8 @@ const handleSet = () => {
           onSuccess: () => {
             showOldSets.value = false;
             showUpdateExerciseDialog.value = false;
-            // newWeight.value = undefined;
             newReps.value = undefined;
+            start.value = true;
           },
         }
       );
@@ -114,6 +114,8 @@ const newReps = ref<number>();
 const setIdToUpdate = ref<number>();
 
 const infoRef = ref<HTMLTextAreaElement | null>(null);
+
+const start = ref<boolean>(false);
 
 watch(
   () => infoRef.value,
@@ -232,6 +234,7 @@ watch(
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
+    <Timer :start="start" @stop="start = !start" />
     <!-- Delete Set Confirmation -->
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"
