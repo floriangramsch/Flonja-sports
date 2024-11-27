@@ -91,5 +91,5 @@ onUnmounted(() => {
 
   <button @click="emit('stop')">{{ !start ? "Start" : "Stop" }}</button>
 
-  <button @click="sendNotification('hallo se bebi')">Note</button>
+  <button @click="sendNotification('Hallo Se bebi!')">Note</button>
 </template>
