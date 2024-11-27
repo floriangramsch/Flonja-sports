@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// Notifications
+const registration = await navigator.serviceWorker.getRegistration();
+if (!registration) {
+  console.error("Service Worker nicht registriert.");
+}
+
 // Props und Events definieren
 const props = defineProps<{
   isActive: boolean;
@@ -9,7 +15,10 @@ const emit = defineEmits<{
 
 // Timer-Logik
 const startTime = ref<number | null>(null);
-const remainingTime = ref<number>(120000); // 2 Minuten in Millisekunden
+const restTime = ref<number>(120000);
+const restTimeInput = ref<string>("02:00");
+const remainingTime = ref<number>(restTime.value);
+const showAdjustRestTime = ref<boolean>(false);
 
 const formattedTime = computed(() => {
   const minutes = Math.floor(remainingTime.value / 60000);
@@ -25,19 +34,18 @@ let interval: ReturnType<typeof setInterval> | undefined;
 const startTimer = async () => {
   if (!startTime.value) {
     startTime.value = Date.now();
-    // sendTimerToSW(remainingTime.value); // Service Worker Timer starten
-    sendTimerToSW(3333); // Service Worker Timer starten
+    sendTimerToSW(restTime.value); // Service Worker Timer starten
   }
 
   interval = setInterval(() => {
     if (startTime.value) {
       const elapsed = Date.now() - startTime.value;
-      remainingTime.value = Math.max(120000 - elapsed, 0);
+      remainingTime.value = Math.max(restTime.value - elapsed, 0);
 
       if (remainingTime.value <= 0) {
         clearInterval(interval);
         startTime.value = null;
-        remainingTime.value = 120000;
+        remainingTime.value = restTime.value;
       }
     }
   }, 100);
@@ -46,15 +54,37 @@ const startTimer = async () => {
 const stopTimer = () => {
   clearInterval(interval);
   startTime.value = null;
-  remainingTime.value = 120000;
+  remainingTime.value = restTime.value;
   emit("stopped");
+};
+
+const changeRestTime = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const [minutes, seconds] = target.value.split(":");
+  const millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
+  restTime.value = millis;
+  remainingTime.value = millis;
 };
 
 // Nachricht an den Service Worker schicken
 const sendTimerToSW = async (delay: number) => {
   const registration = await navigator.serviceWorker.getRegistration();
-  if (registration && registration.active) {
-    registration.active.postMessage({ action: "startTimer", delay });
+  if (Notification.permission === "granted") {
+    if (registration && registration.active) {
+      registration.active.postMessage({ action: "startTimer", delay });
+    }
+  } else if (Notification.permission !== "denied") {
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      if (registration && registration.active) {
+        registration.active.postMessage({ action: "startTimer", delay });
+      }
+    } else {
+      console.error("Benachrichtigungen wurden abgelehnt.");
+    }
+  } else {
+    console.error("Benachrichtigungen wurden bereits abgelehnt.");
   }
 };
 
@@ -85,10 +115,30 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
-    <h1>Timer</h1>
-    <p>{{ formattedTime }}</p>
-    <button @click="startTimer">Start</button>
-    <button @click="stopTimer">Stop</button>
+  <div class="w-full flex justify-center p-2 mt-4 text-3xl gap-3">
+    <DialogsDialog
+      :is-open="showAdjustRestTime"
+      @close="showAdjustRestTime = false"
+    >
+      <template v-slot:trigger>
+        <div @click="showAdjustRestTime = true">
+          {{ formattedTime }}
+        </div>
+      </template>
+      <div class="flex w-full justify-center">
+        <input
+          type="time"
+          v-model="restTimeInput"
+          @change="changeRestTime"
+          class="p-4 rounded shadow flex justify-center bg-sonja-text text-sonja-akz2 text-3xl dark:yellow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
+        />
+      </div>
+    </DialogsDialog>
+    <button v-if="!startTime" @click="startTimer">
+      <i class="fa-solid fa-play" />
+    </button>
+    <button v-if="startTime" @click="stopTimer">
+      <i class="fa-solid fa-stop" />
+    </button>
   </div>
 </template>
