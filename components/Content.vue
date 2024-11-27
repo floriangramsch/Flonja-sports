@@ -7,6 +7,36 @@ import MuscleList from "./Muscles/MuscleList.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
+// Notifications
+const registration = await navigator.serviceWorker.getRegistration();
+const sendNotification = async () => {
+  if (Notification.permission === "granted") {
+    showNotification("test");
+  } else {
+    if (Notification.permission !== "denied") {
+      const permission = await Notification.requestPermission();
+
+      if (permission === "granted") {
+        showNotification("test");
+      }
+    }
+  }
+};
+
+const showNotification = (body: any) => {
+  const title = "What PWA Can Do Today";
+
+  const payload = {
+    body,
+  };
+
+  if (registration && "showNotification" in registration) {
+    registration.showNotification(title, payload);
+  } else {
+    new Notification(title, payload);
+  }
+};
+
 const logged = defineModel<LoggedType>("logged");
 const show = defineModel<ShowType>("show");
 const workout = defineModel<WorkoutType | undefined>("workout");
@@ -60,6 +90,7 @@ const exerciseFilter = ref<number[]>([]);
           v-model:show="show"
         />
       </div>
+      <button class="absolute top-1/2" @click="sendNotification">Note</button>
     </SlideTransition>
 
     <SlideTransition>
