@@ -43,6 +43,11 @@ const newStat = () => {
 </script>
 <template>
   <div>
+    <!-- Header -->
+    <div class="w-full flex justify-evenly py-4 px-2">
+      <div class="text-4xl font-bold text-center">Stats</div>
+    </div>
+    <!-- Stats -->
     <div v-for="stat in stats" class="p-2">
       <div>{{ stat.name }}: {{ new Date(stat.date).toLocaleString() }}</div>
       <div>
