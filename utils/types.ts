@@ -64,12 +64,21 @@ export type ExerciseType = {
   exercice_id: number;
 };
 
+export type StatsType = {
+  stats_id: number;
+  user_id: number;
+  body_weight: number;
+  date: Date;
+  name: string;
+};
+
 export type RouterTypes =
   | "workoutdetail"
   | "equiplist"
   | "musclelist"
   | "workouts"
-  | "exercises";
+  | "exercises"
+  | "stats";
 export type ShowType = {
   showNew: false; // show dropdown
   showDialogEquip: false; // show equip dialog

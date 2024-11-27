@@ -50,3 +50,14 @@ export const fetchExercisesByWorkout = async (id: number) => {
     return response.json();
   }
 };
+
+export const fetchStats = async () => {
+  const response = await fetch("/api/stats", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Fehler beim Abrufen der Stats");
+  return response.json();
+};

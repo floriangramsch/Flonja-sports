@@ -18,7 +18,7 @@ defineProps<{
 
 const filter = ref<number[]>([]);
 const exerciceFilter = defineModel<number[]>("filter");
-const show = defineModel<ShowType | undefined>("show");
+const show = defineModel<ShowType>("show");
 const showDialogMuscle = ref<boolean>(false);
 const showDialogEquip = ref<boolean>(false);
 const showDialogUpdateEquip = ref<boolean>(false);
@@ -140,6 +140,13 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
   <div class="relative">
     <!-- Header -->
     <div class="w-full flex justify-evenly py-4 px-2">
+      <button
+        v-if="show"
+        class="absolute left-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        @click="show.showRouter = 'musclelist'"
+      >
+        <i class="fa-solid fa-repeat" />
+      </button>
       <div class="text-4xl font-bold text-center">Equip List</div>
       <!-- New Equip -->
       <Dialog

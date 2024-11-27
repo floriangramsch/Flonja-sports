@@ -8,6 +8,8 @@ defineProps<{
   muscles: MuscleType[];
 }>();
 
+const show = defineModel<ShowType>("show");
+
 const showDialogNewMuscle = ref<boolean>(false);
 const showDialogDeleteMuscle = ref<boolean>(false);
 const showDialogMuscle = ref<boolean>(false);
@@ -64,6 +66,13 @@ const deleteMuscle = () => {
 <template>
   <!-- Header -->
   <div class="w-full flex py-4 px-2 justify-center">
+    <button
+      v-if="show"
+      class="absolute left-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+      @click="show.showRouter = 'equiplist'"
+    >
+      <i class="fa-solid fa-repeat" />
+    </button>
     <div class="text-4xl font-bold text-center">Muscle List</div>
     <!-- New Muscle -->
     <Dialog :isOpen="showDialogNewMuscle" @close="showDialogNewMuscle = false">

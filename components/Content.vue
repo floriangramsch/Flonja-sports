@@ -28,10 +28,8 @@ const exerciseFilter = ref<number[]>([]);
     </SlideTransition>
     <SlideTransition>
       <div v-if="show.showRouter === 'musclelist' && muscles">
-        <MuscleList :muscles="muscles" />
+        <MuscleList :muscles="muscles" v-model:show="show" />
       </div>
-    </SlideTransition>
-    <SlideTransition>
       <div v-if="show?.showRouter === 'workoutdetail'" class="absolute inset-0">
         <WorkoutDetail
           :equips="equips"
@@ -62,6 +60,10 @@ const exerciseFilter = ref<number[]>([]);
           v-model:show="show"
         />
       </div>
+    </SlideTransition>
+
+    <SlideTransition>
+      <Stats v-if="show?.showRouter === 'stats' && logged" :logged="logged" />
     </SlideTransition>
   </div>
 </template>
