@@ -54,25 +54,29 @@ const formattedTime = computed(() => {
 });
 let interval: ReturnType<typeof setInterval> | undefined;
 
+const startTime = ref<number | null>(null);
+
 watch(
   () => props.start,
   (newVal) => {
-    time.value = 0;
     if (newVal) {
       notification.value = undefined;
+      startTime.value = Date.now();
       interval = setInterval(() => {
-        time.value += 10;
-        // if (time.value >= 120000) {
-        if (time.value >= 3000) {
-          notification.value = "2 Minuten erreicht";
-          sendNotification("2 Minuten erreicht");
-          time.value = 0;
-          clearInterval(interval);
-          emit("stop");
+        if (startTime.value !== null) {
+          const elapsedTime = Date.now() - startTime.value;
+          time.value = elapsedTime;
+          if (elapsedTime >= 3000) {
+            notification.value = "2 Minuten erreicht";
+            sendNotification("2 Minuten erreicht");
+            clearInterval(interval);
+            emit("stop");
+          }
         }
-      }, 10);
+      }, 100);
     } else {
       clearInterval(interval);
+      startTime.value = null;
     }
   }
 );
