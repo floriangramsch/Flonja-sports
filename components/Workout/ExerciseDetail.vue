@@ -234,11 +234,9 @@ watch(
     >
       <div class="flex flex-col justify-center items-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
-        <div class="grid grid-cols-2 gap-2">
-          Reps:
-          <UiNumberInput v-model:modelValue="newReps" focus />
-          Weight:
-          <UiNumberInput v-model:modelValue="newWeight" />
+        <div class="flex gap-4">
+          <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
+          <UiNumberInput v-model:modelValue="newWeight" label="Weight" />
         </div>
         <Button @action="handleSet"> Done </Button>
       </div>

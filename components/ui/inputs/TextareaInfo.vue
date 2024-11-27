@@ -27,6 +27,8 @@ const updateInfo = () => {
   }
 };
 
+const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
+
 watch(
   () => infoRef.value,
   (newVal) => {
@@ -36,19 +38,29 @@ watch(
 </script>
 
 <template>
-  <div
-    v-if="!editInfo"
-    @click="editInfo = true"
-    class="flex flex-col text-wrap w-48 h-48 border-2 border-sonja-text p-2 rounded shadow bg-sonja-text text-sonja-akz2 whitespace-pre"
-  >
-    {{ info }}
-  </div>
-  <div class="flex flex-col gap-4" v-else>
-    <textarea
-      class="w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
-      v-model="newInfo"
-      ref="infoRef"
-    />
-    <Button @action="updateInfo"> Done </Button>
+  <div class="relative">
+    <div
+      v-if="!editInfo"
+      @click="editInfo = true"
+      class="flex flex-col text-wrap w-48 h-48 border-2 border-sonja-text p-2 rounded shadow bg-sonja-text text-sonja-akz2 whitespace-pre"
+    >
+      {{ info }}
+      s
+    </div>
+    <div class="flex flex-col gap-4" v-else>
+      <textarea
+        :id="labelId"
+        class="peer w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
+        v-model="newInfo"
+        ref="infoRef"
+      />
+      <Button @action="updateInfo"> Done </Button>
+    </div>
+    <label
+      :for="labelId"
+      class="absolute shadow bg-sonja-akz text-sonja-text text-xs p-[2px] rounded left-2 -top-2"
+    >
+      Info
+    </label>
   </div>
 </template>

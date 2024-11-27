@@ -31,32 +31,48 @@ const reset = () => {
   filter.value = [];
   isOpen.value = false;
 };
+
+const filterRef = ref<HTMLElement | null>(null);
+
+const handleOverlayClick = (e: MouseEvent) => {
+  if (filterRef.value && !filterRef.value.contains(e.target as Node)) {
+    reset();
+  }
+};
 </script>
 
 <template>
-  <button class="absolute right-0 bottom-0" @click="isOpen = !isOpen">
-    <i class="fa-solid fa-filter text-sonja-akz"></i>
+  <button class="fixed right-2 bottom-52 z-10" @click.stop="isOpen = !isOpen">
+    <i class="fa-solid fa-filter text-sonja-akz text-3xl" />
   </button>
 
   <DropdownSlideTransition>
     <div
       v-if="isOpen"
-      class="mr-8 bg-sonja-akz rounded-md shadow-lg overflow-auto h-80"
+      @click="handleOverlayClick"
+      class="fixed inset-0 flex h-screen w-screen"
     >
       <div
-        v-for="d in data"
-        :key="d.id"
-        @click="filterData(d.id)"
-        class="flex py-0.5 px-2 cursor-pointer"
-        :class="isFiltered(d.id) ? 'bg-sonja-akz2' : 'bg-sonja-akz'"
+        v-if="isOpen"
+        @click.stop
+        ref="filterRef"
+        class="fixed right-10 bottom-52 bg-sonja-text text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
       >
-        {{ d.name }}
-      </div>
-      <div
-        @click="reset"
-        class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer"
-      >
-        Reset
+        <div
+          v-for="d in data"
+          :key="d.id"
+          @click="filterData(d.id)"
+          class="flex py-0.5 px-2 cursor-pointer"
+          :class="isFiltered(d.id) ? 'bg-sonja-akz' : 'bg-sonja-text'"
+        >
+          {{ d.name }}
+        </div>
+        <div
+          @click="reset"
+          class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer w-full"
+        >
+          Reset
+        </div>
       </div>
     </div>
   </DropdownSlideTransition>

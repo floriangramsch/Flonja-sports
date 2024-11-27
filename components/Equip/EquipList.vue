@@ -134,6 +134,8 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
     });
   }
 });
+
+const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <template>
@@ -181,7 +183,7 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
         showDialogUpdateEquip = false;
       "
     >
-      <div class="flex flex-col gap-2 my-2">
+      <div class="flex flex-col gap-4 my-2">
         <Textinput v-model="equipForm.equip_name" label="Equip Name" />
 
         <Select
@@ -192,11 +194,20 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
         />
 
         <!-- Info -->
-        <textarea
-          class="w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
-          v-model="equipForm.info"
-          ref="infoRef"
-        />
+        <div class="relative">
+          <textarea
+            class="peer w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
+            v-model="equipForm.info"
+            ref="infoRef"
+            placeholder=" "
+          />
+          <label
+            :for="labelId"
+            class="absolute shadow transition-all duration-200 bg-sonja-akz text-sonja-text text-xs p-[2px] rounded left-2 -translate-y-1/2 peer-placeholder-shown:top-5 peer-placeholder-shown:text-sonja-akz2 peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-xl peer-focus:bg-sonja-akz peer-focus:text-sonja-text peer-focus:text-xs peer-focus:p-[2px] peer-focus:left-2 peer-focus:top-0"
+          >
+            Info
+          </label>
+        </div>
       </div>
       <Button @action="updateEquip">Update</Button>
     </Dialog>
@@ -257,22 +268,16 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
       @yes="deleteEquip(Number(equipToDelete))"
     />
 
-    <div class="fixed right-2 bottom-52 text-3xl">
-      <div class="absolute right-0 bottom-10">
-        <FilterEquips v-model="searchFilter" />
-      </div>
-      <div class="absolute right-0 bottom-0">
-        <Filter
-          :data="
-            muscles.map((muscle) => ({
-              id: muscle.muscle_group_id,
-              name: muscle.muscle_name,
-            }))
-          "
-          v-model="filter"
-        />
-      </div>
-    </div>
+    <FilterEquips v-model="searchFilter" />
+    <Filter
+      :data="
+        muscles.map((muscle) => ({
+          id: muscle.muscle_group_id,
+          name: muscle.muscle_name,
+        }))
+      "
+      v-model="filter"
+    />
   </div>
 </template>
 
