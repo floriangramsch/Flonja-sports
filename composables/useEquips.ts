@@ -30,6 +30,7 @@ export const useAddEquips = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["equips"] });
+      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
     },
   });
 };
@@ -89,6 +90,7 @@ export const useDeleteEquip = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["equips"] });
+      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
     },
   });
 };

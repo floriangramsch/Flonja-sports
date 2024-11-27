@@ -4,11 +4,11 @@ import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
 import { useEquipStats } from "~/composables/useEquips";
-import NewMuskle from "../Dialogs/NewMuskle.vue";
 import NewEquip from "../Dialogs/NewEquip.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import Select from "../ui/select/Select.vue";
+import Textinput from "../ui/inputs/Textinput.vue";
 
 defineProps<{
   muscles: MuscleType[];
@@ -181,19 +181,22 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
         showDialogUpdateEquip = false;
       "
     >
-      <div class="grid grid-cols-2">
-        {{ equipForm?.equip_name }}
-        <input v-model="equipForm.equip_name" />
+      <div class="flex flex-col gap-2 my-2">
+        <Textinput v-model="equipForm.equip_name" label="Equip Name" />
 
-        Muscle:
         <Select
+          class="w-full"
           v-model="equipForm.muscle_id"
           default="Muskle..."
           :options="muscles"
         />
 
-        Info
-        <input v-model="equipForm.info" />
+        <!-- Info -->
+        <textarea
+          class="w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
+          v-model="equipForm.info"
+          ref="infoRef"
+        />
       </div>
       <Button @action="updateEquip">Update</Button>
     </Dialog>

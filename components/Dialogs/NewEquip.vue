@@ -1,26 +1,15 @@
 <template>
-  <form>
-    <div class="flex flex-col">
-      <div>
-        <label>Gerätename:</label>
-        <input
-          v-model="newEquipName"
-          class="p-1 m-1 rounded-md ml-1 bg-sonja-akz2"
-        />
-      </div>
-      <Select
-        v-model="newEquipMuscleId"
-        default="Muskle..."
-        :options="muscles"
-      />
-    </div>
+  <div class="flex flex-col gap-2 mb-2">
+    <Textinput v-model="newEquipName" label="Gerätename" />
+    <Select v-model="newEquipMuscleId" default="Muskle..." :options="muscles" />
+  </div>
 
-    <Button @click="addNewEquip">Neues Gerät!</Button>
-  </form>
+  <Button @click="addNewEquip">Neues Gerät!</Button>
 </template>
 
 <script setup lang="ts">
 import Button from "../ui/buttons/Button.vue";
+import Textinput from "../ui/inputs/Textinput.vue";
 import Select from "../ui/select/Select.vue";
 
 const props = defineProps<{

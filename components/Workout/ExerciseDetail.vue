@@ -5,6 +5,7 @@ import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Confirm from "../Dialogs/Confirm.vue";
 import { useUpdateEquip } from "~/composables/useEquips";
+import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
 
 const props = defineProps<{
   exercise: any;
@@ -85,23 +86,6 @@ const handleSet = () => {
   }
 };
 
-const updateEquipMutation = useUpdateEquip();
-const updateInfo = () => {
-  if (props.equip) {
-    updateEquipMutation.mutate(
-      {
-        updatedData: `info = '${newInfo.value}'`,
-        equip_id: props.equip.equip_id,
-      },
-      {
-        onSuccess: () => {
-          editInfo.value = false;
-        },
-      }
-    );
-  }
-};
-
 const showUpdateExerciseDialog = ref<boolean>(false);
 const showConfirmDeleteSet = ref<boolean>(false);
 const showConfirmDeleteExercise = ref<boolean>(false);
@@ -109,21 +93,11 @@ const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.equip?.info);
 
-const newInfo = ref<string | undefined>(props.equip?.info);
 const newWeight = ref<number>();
 const newReps = ref<number>();
 const setIdToUpdate = ref<number>();
 
-const infoRef = ref<HTMLTextAreaElement | null>(null);
-
 const start = ref<boolean>(false);
-
-watch(
-  () => infoRef.value,
-  (newVal) => {
-    if (newVal) newVal.focus();
-  }
-);
 
 watch(
   () => sets.value,
@@ -278,21 +252,11 @@ watch(
       "
     >
       <div class="flex flex-col justify-center items-center gap-4">
-        <div
-          v-if="!editInfo"
-          @click="editInfo = true"
-          class="flex flex-col w-48 h-48 border-2 border-sonja-text p-2 rounded shadow bg-sonja-text text-sonja-akz2 whitespace-pre"
-        >
-          {{ equip?.info }}
-        </div>
-        <div class="flex flex-col gap-4" v-else>
-          <textarea
-            class="w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
-            v-model="newInfo"
-            ref="infoRef"
-          />
-          <Button @action="updateInfo"> Done </Button>
-        </div>
+        <TextareaInfo
+          v-model:edit-info="editInfo"
+          :info="equip?.info"
+          :equip-id="props.equip?.equip_id"
+        />
       </div>
     </Dialog>
   </div>
