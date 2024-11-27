@@ -234,7 +234,7 @@ watch(
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <Timer :start="start" @stop="start = !start" />
+    <Timer :isActive="start" @stopped="start = false" />
     <!-- Delete Set Confirmation -->
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"

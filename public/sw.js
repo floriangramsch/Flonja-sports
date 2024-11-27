@@ -11,6 +11,20 @@ self.addEventListener("push", (event) => {
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.action === "startTimer") {
+    const delay = event.data.delay || 120000; // Verzögerung in ms (Standard: 2 Minuten)
+
+    setTimeout(() => {
+      // Benachrichtigung anzeigen
+      self.registration.showNotification("Pause vorbei!", {
+        body: "2 Minuten sind vorbei!",
+        vibrate: [200, 100, 200], // Optional: Vibrationsmuster
+      });
+    }, delay);
+  }
+});
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open("app-cache").then((cache) => {
@@ -30,5 +44,4 @@ self.addEventListener("fetch", (event) => {
       return response || fetch(event.request);
     })
   );
-  console.log("Fetch-Event:", event.request.url);
 });
