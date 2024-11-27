@@ -45,7 +45,6 @@ const handleOverlayClick = (e: MouseEvent) => {
   <button class="fixed right-2 bottom-52 z-10" @click.stop="isOpen = !isOpen">
     <i class="fa-solid fa-filter text-sonja-akz text-3xl" />
   </button>
-
   <DropdownSlideTransition>
     <div
       v-if="isOpen"

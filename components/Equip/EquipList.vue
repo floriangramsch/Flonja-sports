@@ -139,7 +139,18 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relativ">
+    <FilterEquips v-model="searchFilter" />
+    <Filter
+      :data="
+        muscles.map((muscle) => ({
+          id: muscle.muscle_group_id,
+          name: muscle.muscle_name,
+        }))
+      "
+      v-model="filter"
+    />
+
     <!-- Header -->
     <div class="w-full flex justify-evenly py-4 px-2">
       <button
@@ -262,21 +273,9 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
         </div>
       </div>
     </div>
-
     <Confirm
       v-model:isOpen="showConfirmDeleteEquip"
       @yes="deleteEquip(Number(equipToDelete))"
-    />
-
-    <FilterEquips v-model="searchFilter" />
-    <Filter
-      :data="
-        muscles.map((muscle) => ({
-          id: muscle.muscle_group_id,
-          name: muscle.muscle_name,
-        }))
-      "
-      v-model="filter"
     />
   </div>
 </template>
