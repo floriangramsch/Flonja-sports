@@ -5,27 +5,26 @@ if (!registration) {
   console.error("Service Worker nicht registriert.");
 }
 
-const sendNotification = async () => {
+const sendNotification = async (message: string) => {
   if (Notification.permission === "granted") {
-    showNotification("test");
+    showNotification(message);
   } else {
     if (Notification.permission !== "denied") {
       const permission = await Notification.requestPermission();
 
       if (permission === "granted") {
-        showNotification("test");
+        showNotification(message);
       }
     }
   }
 };
 
 const showNotification = (body: string) => {
-  const title = "What PWA Can Do Today";
+  const title = "Pause vorbei!";
 
   const payload = {
     body,
   };
-
   if (registration && "showNotification" in registration) {
     registration.showNotification(title, payload);
   } else {
@@ -63,8 +62,10 @@ watch(
       notification.value = undefined;
       interval = setInterval(() => {
         time.value += 10;
-        if (time.value >= 120000) {
+        // if (time.value >= 120000) {
+        if (time.value >= 3000) {
           notification.value = "2 Minuten erreicht";
+          sendNotification("2 Minuten erreicht");
           time.value = 0;
           clearInterval(interval);
           emit("stop");
@@ -90,5 +91,5 @@ onUnmounted(() => {
 
   <button @click="emit('stop')">{{ !start ? "Start" : "Stop" }}</button>
 
-  <button @click="sendNotification">Note</button>
+  <button @click="sendNotification('hallo se bebi')">Note</button>
 </template>
