@@ -8,6 +8,8 @@ if (!registration) {
 // Props und Events definieren
 const props = defineProps<{
   isActive: boolean;
+  userId: number;
+  restTime: number;
 }>();
 const emit = defineEmits<{
   (e: "stopped"): void;
@@ -15,10 +17,20 @@ const emit = defineEmits<{
 
 // Timer-Logik
 const startTime = ref<number | null>(null);
-const restTime = ref<number>(120000);
-const restTimeInput = ref<string>("02:00");
-const remainingTime = ref<number>(restTime.value);
+const restTimeInput = ref<string>(formatTime(props.restTime));
+const remainingTime = ref<number>(props.restTime);
 const showAdjustRestTime = ref<boolean>(false);
+
+function formatTime(milliseconds: number): string {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
+}
 
 const formattedTime = computed(() => {
   const minutes = Math.floor(remainingTime.value / 60000);
@@ -34,18 +46,18 @@ let interval: ReturnType<typeof setInterval> | undefined;
 const startTimer = async () => {
   if (!startTime.value) {
     startTime.value = Date.now();
-    sendTimerToSW(restTime.value); // Service Worker Timer starten
+    sendTimerToSW(props.restTime); // Service Worker Timer starten
   }
 
   interval = setInterval(() => {
     if (startTime.value) {
       const elapsed = Date.now() - startTime.value;
-      remainingTime.value = Math.max(restTime.value - elapsed, 0);
+      remainingTime.value = Math.max(props.restTime - elapsed, 0);
 
       if (remainingTime.value <= 0) {
         clearInterval(interval);
         startTime.value = null;
-        remainingTime.value = restTime.value;
+        remainingTime.value = props.restTime;
       }
     }
   }, 100);
@@ -54,16 +66,24 @@ const startTimer = async () => {
 const stopTimer = () => {
   clearInterval(interval);
   startTime.value = null;
-  remainingTime.value = restTime.value;
+  remainingTime.value = props.restTime;
   emit("stopped");
 };
 
+const updateRestTimeMutation = useUpdateUser();
 const changeRestTime = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const [minutes, seconds] = target.value.split(":");
   const millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
-  restTime.value = millis;
-  remainingTime.value = millis;
+  console.log("hie");
+  updateRestTimeMutation.mutate(
+    { user_id: props.userId, rest_time: millis },
+    {
+      onSuccess: () => {
+        remainingTime.value = millis;
+      },
+    }
+  );
 };
 
 // Nachricht an den Service Worker schicken

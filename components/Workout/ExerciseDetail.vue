@@ -11,6 +11,7 @@ const props = defineProps<{
   workoutInfo: {
     start: Date;
     user_id: number;
+    rest_time: number;
   };
   equip: EquipType | undefined;
 }>();
@@ -234,7 +235,12 @@ watch(
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <Timer :isActive="start" @stopped="start = false" />
+    <Timer
+      :isActive="start"
+      :userId="props.workoutInfo.user_id"
+      :restTime="props.workoutInfo.rest_time"
+      @stopped="start = false"
+    />
     <!-- Delete Set Confirmation -->
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"

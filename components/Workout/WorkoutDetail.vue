@@ -198,7 +198,11 @@ watch(
         workout.user_id
       "
       :exercise="exToShow"
-      :workout-info="{ start: workout.start, user_id: workout.user_id }"
+      :workout-info="{
+        start: workout.start,
+        user_id: workout.user_id,
+        rest_time: workout.rest_time,
+      }"
       :equip="equips?.find((e) => e.equip_id === exToShow?.equip_id)"
       v-model:workout-show="workoutShow"
       @close="

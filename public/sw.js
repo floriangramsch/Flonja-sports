@@ -17,7 +17,6 @@ self.addEventListener("message", (event) => {
     const minutes = Math.floor(delay / 60000);
     const seconds = ((delay % 60000) / 1000).toFixed(0);
     const timeString = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    console.log(`Timer started for ${timeString} (mm:ss)`);
 
     setTimeout(() => {
       // Benachrichtigung anzeigen
