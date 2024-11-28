@@ -58,18 +58,20 @@ const handleRefresh = async () => {
     class="fixed flex justify-between items-center text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow"
   >
     <!-- Profilepic -->
-    <a @click.prevent="switchUser" class="h-full cursor-pointer">
+    <div @click.prevent="switchUser" class="h-full min-w-16 cursor-pointer">
       <img
         v-if="logged?.user?.name === 'Florian'"
         src="@/public/flo.jpg"
-        class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+        class="max-h-full min-w-18 p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+        alt="Flo"
       />
       <img
         v-else
         class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
         src="@/public/sonja.jpg"
+        alt="Sonja"
       />
-    </a>
+    </div>
     <!-- Status -->
     <h1
       v-if="logged?.user"
