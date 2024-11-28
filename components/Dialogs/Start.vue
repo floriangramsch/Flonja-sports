@@ -1,22 +1,17 @@
 <template>
   <div
-    class="flex flex-col absolute top-1 right-14 text-sonja-text bg-sonja-akz rounded-md shadow-lg text-xl"
+    class="flex flex-col absolute top-10 right-14 text-sonja-akz2 bg-sonja-text rounded-md shadow-lg text-xl border-2 border-sonja-akz"
   >
-    <button class="bg-sonja-akz px-4 py-2 rounded" @click.prevent="newWorkout">
+    <button class="px-4 py-2" @click.prevent="newWorkout">
       Neues Training
     </button>
-    <button
-      class="bg-sonja-akz px-4 py-2 rounded"
-      @click.prevent="resumeWorkout"
-    >
-      Weiter trainieren?
+    <button class="px-4 py-2" @click.prevent="resumeWorkout">
+      Weiter trainieren
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useQueryClient } from "@tanstack/vue-query";
-
 const props = defineProps<{
   workouts: WorkoutType[] | undefined;
 }>();
