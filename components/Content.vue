@@ -7,6 +7,10 @@ import MuscleList from "./Muscles/MuscleList.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
+defineEmits<{
+  (emits: "startTimer"): void;
+}>();
+
 const logged = defineModel<LoggedType>("logged");
 const show = defineModel<ShowType>("show");
 const workout = defineModel<WorkoutType | undefined>("workout");
@@ -36,6 +40,7 @@ const exerciseFilter = ref<number[]>([]);
           :muscles="muscles"
           :workout="workout"
           v-model:logged="logged"
+          @startTimer="$emit('startTimer')"
         />
       </div>
     </SlideTransition>

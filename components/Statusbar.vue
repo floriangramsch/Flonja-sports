@@ -6,10 +6,14 @@ const props = defineProps<{
   workouts: WorkoutType[] | undefined;
   workout: WorkoutType | undefined;
   workoutStart: Date | undefined;
+  timer: boolean;
 }>();
 
 const logged = defineModel<LoggedType>("logged");
 const show = defineModel<any>("show");
+const emit = defineEmits<{
+  (emit: "stopTimer"): void;
+}>();
 
 const switchUser = () => {
   if (props.users && Object.keys(props.users).length === 2 && logged.value) {
@@ -71,7 +75,14 @@ const handleRefresh = async () => {
       v-if="logged?.user"
       class="text-sonja-akz2 font-bold text-2xl flex flex-col"
     >
-      Hallo Se Bebi {{ logged.user?.name }}
+      Hallo Se Bebi {{ logged.user.name }}
+      <Timer
+        v-if="props.workout?.user_id && props.workout?.rest_time"
+        :isActive="timer"
+        :userId="props.workout?.user_id"
+        :restTime="props.workout?.rest_time"
+        @stopped="emit('stopTimer')"
+      />
     </h1>
     <!-- Buttons -->
     <div class="flex flex-col mr-3 text-3xl">

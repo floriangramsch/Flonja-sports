@@ -4,7 +4,6 @@ import { useGetSetsByExerciseId } from "~/composables/useSets";
 import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Confirm from "../Dialogs/Confirm.vue";
-import { useUpdateEquip } from "~/composables/useEquips";
 import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
 
 const props = defineProps<{
@@ -19,6 +18,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "close"): void;
+  (emits: "startTimer"): void;
 }>();
 
 const mutation = useDeleteExercise();
@@ -78,7 +78,7 @@ const handleSet = () => {
             showOldSets.value = false;
             showUpdateExerciseDialog.value = false;
             newReps.value = undefined;
-            start.value = true;
+            emit("startTimer");
           },
         }
       );
@@ -96,8 +96,6 @@ const editInfo = ref<boolean>(!props.equip?.info);
 const newWeight = ref<number>();
 const newReps = ref<number>();
 const setIdToUpdate = ref<number>();
-
-const start = ref<boolean>(false);
 
 watch(
   () => sets.value,
@@ -209,12 +207,6 @@ watch(
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
-    <Timer
-      :isActive="start"
-      :userId="props.workoutInfo.user_id"
-      :restTime="props.workoutInfo.rest_time"
-      @stopped="start = false"
-    />
     <!-- Delete Set Confirmation -->
     <Confirm
       v-model:isOpen="showConfirmDeleteSet"

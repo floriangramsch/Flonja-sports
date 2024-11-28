@@ -55,9 +55,7 @@ const startTimer = async () => {
       remainingTime.value = Math.max(props.restTime - elapsed, 0);
 
       if (remainingTime.value <= 0) {
-        clearInterval(interval);
-        startTime.value = null;
-        remainingTime.value = props.restTime;
+        stopTimer();
       }
     }
   }, 100);
@@ -75,7 +73,6 @@ const changeRestTime = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const [minutes, seconds] = target.value.split(":");
   const millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
-  console.log("hie");
   updateRestTimeMutation.mutate(
     { user_id: props.userId, rest_time: millis },
     {
@@ -120,11 +117,7 @@ document.addEventListener("visibilitychange", () => {
 watch(
   () => props.isActive,
   (newValue) => {
-    if (newValue) {
-      startTimer();
-    } else {
-      stopTimer();
-    }
+    newValue ? startTimer() : stopTimer();
   }
 );
 
@@ -135,7 +128,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex justify-center p-2 mt-4 text-3xl gap-3">
+  <div class="w-full flex justify-center text-2xl gap-3">
     <DialogsDialog
       :is-open="showAdjustRestTime"
       @close="showAdjustRestTime = false"

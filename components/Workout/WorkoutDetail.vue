@@ -20,6 +20,10 @@ const props = defineProps<{
 
 const logged = defineModel<LoggedType | undefined>("logged");
 
+defineEmits<{
+  (emits: "startTimer"): void;
+}>();
+
 const showConfirmEndWorkout = ref<boolean>(false);
 
 const workoutShow = ref<workoutShowType>({
@@ -209,6 +213,7 @@ watch(
         exToShow = undefined;
         workoutShow.showRouter = 'workoutdetail';
       "
+      @startTimer="$emit('startTimer')"
     />
   </SlideTransition>
   <!-- Equip Selection -->

@@ -7,6 +7,8 @@
       :workout="workout"
       v-model:logged="logged"
       v-model:show="show"
+      :timer="timer"
+      @stopTimer="stopTimer"
     />
     <Content
       v-if="users && workouts && logged && show"
@@ -15,6 +17,7 @@
       v-model:workout="workout"
       v-model:logged="logged"
       v-model:show="show"
+      @startTimer="startTimer"
     />
     <Navbar v-model="show" />
   </div>
@@ -36,6 +39,10 @@ const { isSuccess } = usePreloadData();
 
 const { data: users } = useUsers();
 const { data: workouts } = useWorkouts();
+
+const timer = ref<boolean>(false);
+const stopTimer = () => (timer.value = false);
+const startTimer = () => (timer.value = true);
 
 const show = ref<ShowType>({
   showNew: false, // show dropdown
