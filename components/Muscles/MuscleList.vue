@@ -109,7 +109,8 @@ const deleteMuscle = () => {
 
   <!-- Handle Muscle -->
   <Dialog :isOpen="showDialogMuscle" @close="showDialogMuscle = false">
-    <input v-model="muscleForm.name" />
+    <!-- <input v-model="muscleForm.name" /> -->
+    <UiInputsTextinput v-model="muscleForm.name" label="Muskle name" focus />
     <div class="flex w-full justify-center gap-2 mt-4">
       <Button @action="updateMuscle">Update</Button>
       <Confirm

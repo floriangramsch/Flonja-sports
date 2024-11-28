@@ -234,7 +234,7 @@ watch(
     >
       <div class="flex flex-col justify-center items-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-2 mt-2">
           <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
           <UiNumberInput v-model:modelValue="newWeight" label="Weight" />
         </div>

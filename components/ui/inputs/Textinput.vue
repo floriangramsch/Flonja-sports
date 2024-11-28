@@ -1,11 +1,30 @@
 <script setup lang="ts">
 const props = defineProps<{
   label?: string;
+  focus?: boolean;
 }>();
 
+const inputRef = ref<HTMLInputElement | null>(null);
 const model = defineModel();
 
 const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
+
+watch(
+  () => props.focus,
+  (newVal) => {
+    if (newVal) {
+      if (inputRef.value) {
+        inputRef.value.focus();
+      }
+    }
+  }
+);
+
+onMounted(() => {
+  if (props.focus && inputRef.value) {
+    inputRef.value.focus();
+  }
+});
 </script>
 
 <template>
@@ -15,6 +34,7 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
       class="peer p-2 rounded shadow bg-sonja-text text-sonja-akz2 focus:outline-none focus:ring-2 focus:ring-sonja-akz"
       v-model="model"
       placeholder=" "
+      ref="inputRef"
     />
     <label
       :for="labelId"

@@ -195,7 +195,7 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
       "
     >
       <div class="flex flex-col gap-4 my-2">
-        <Textinput v-model="equipForm.equip_name" label="Equip Name" />
+        <Textinput v-model="equipForm.equip_name" label="Equip Name" focus />
 
         <Select
           class="w-full"

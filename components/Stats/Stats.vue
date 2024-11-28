@@ -72,7 +72,8 @@ const newStat = () => {
           </UiButtonsButton>
         </div>
       </template>
-      <input v-model="newWeight" />
+      <!-- <UiInputsTextinput v-model="newWeight" label="Weight" /> -->
+      <UiNumberInput class="mb-2" v-model="newWeight" label="Weight" />
       <Button @action="newStat">New</Button>
     </Dialog>
   </div>

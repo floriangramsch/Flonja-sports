@@ -37,7 +37,7 @@ onMounted(() => {
       type="number"
       inputmode="numeric"
       pattern="[0-9]*"
-      class="peer w-16 h-12 remove-arrow focus:outline-none focus:ring-2 focus:ring-sonja-akz bg-sonja-text text-sonja-akz2 p-2 rounded shadow"
+      class="peer w-32 h-12 focus:outline-none focus:ring-2 focus:ring-sonja-akz bg-sonja-text text-sonja-akz2 p-2 rounded shadow"
       ref="inputRef"
       :placeholder="placeholder ?? ' '"
     />
