@@ -96,12 +96,10 @@ const changeRestTime = (e: Event) => {
 const sendTimerToSW = async (delay: number) => {
   const registration = await navigator.serviceWorker.getRegistration();
   if (Notification.permission === "granted") {
-    alert("granted");
     if (registration && registration.active) {
       registration.active.postMessage({ action: "startTimer", delay });
     }
   } else if (Notification.permission !== "denied") {
-    alert("denied");
     const permission = await Notification.requestPermission();
 
     if (permission === "granted") {

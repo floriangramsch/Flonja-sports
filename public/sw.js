@@ -35,11 +35,6 @@ self.addEventListener("message", (event) => {
     if (timerId) {
       clearTimeout(timerId);
       timerId = null;
-      self.registration.showNotification("Timer unterbrochen", {
-        body: "Der Timer wurde erfolgreich unterbrochen.",
-        vibrate: [200, 100, 200],
-        requireInteraction: true,
-      });
     }
   }
 });
