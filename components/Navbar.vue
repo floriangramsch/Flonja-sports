@@ -38,12 +38,12 @@ onBeforeUnmount(() => {
       />
     </button>
 
-    <button @click="show.showRouter = 'stats'" class="w-full">
+    <button @click="show.showRouter = 'workouts'" class="w-full">
       <i
-        class="fa-solid fa-weight-scale"
+        class="fa-solid fa-calendar"
         :class="{
-          'text-sonja-akz': show.showRouter === 'stats',
-          'fa-bounce': activeBounce === 'stats',
+          'text-sonja-akz': show.showRouter === 'workouts',
+          'fa-bounce': activeBounce === 'workouts',
         }"
       />
     </button>
@@ -68,12 +68,12 @@ onBeforeUnmount(() => {
       />
     </button>
 
-    <button @click="show.showRouter = 'workouts'" class="w-full">
+    <button @click="show.showRouter = 'stats'" class="w-full">
       <i
-        class="fa-solid fa-calendar"
+        class="fa-solid fa-weight-scale"
         :class="{
-          'text-sonja-akz': show.showRouter === 'workouts',
-          'fa-bounce': activeBounce === 'workouts',
+          'text-sonja-akz': show.showRouter === 'stats',
+          'fa-bounce': activeBounce === 'stats',
         }"
       />
     </button>
