@@ -43,7 +43,6 @@ const logout = () => {
     loggedWorkoutId: undefined,
   };
   show.value.showLogin = false;
-  show.value.showRouter = "workoutdetail";
   localStorage.removeItem("logged");
 };
 

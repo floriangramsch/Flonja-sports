@@ -2,6 +2,7 @@
 import Confirm from "../Dialogs/Confirm.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
+import Label from "../ui/label/Label.vue";
 
 const props = defineProps<{
   logged: LoggedType;
@@ -43,9 +44,41 @@ const newStat = () => {
 };
 
 const show = (time: any) => {
-  if (!time) return "No Time yet";
-  return new Date(time).toLocaleString();
+  if (!time) return "?";
+  const convertedTime = new Date(time);
+  const year = convertedTime.getUTCFullYear().toString().slice(-2);
+  const month = convertedTime.getMonth() + 1;
+  const day = convertedTime.getDate();
+  const hours = convertedTime.getHours();
+  const minutes = convertedTime.getMinutes();
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
+
+const newLocker = ref<number | undefined>(props.workout?.locker);
+const updateLockerMutation = useUpdateWorkout();
+
+const updateWorkout = () => {
+  if (
+    props.workout?.workout_id &&
+    newLocker.value &&
+    props.workout.locker !== newLocker.value
+  ) {
+    updateLockerMutation.mutate({
+      updatedData: `locker = ${newLocker.value}`,
+      workout_id: props.workout?.workout_id,
+    });
+  }
+};
+watch(
+  () => props.workout?.locker,
+  (newVal) => {
+    if (newVal) {
+      newLocker.value = newVal;
+    } else {
+      newLocker.value = undefined;
+    }
+  }
+);
 </script>
 <template>
   <div>
@@ -54,9 +87,20 @@ const show = (time: any) => {
       <div class="text-4xl font-bold text-center">Stats</div>
     </div>
     <!-- Stats -->
-    <div class="mb-2 w-full flex flex-col items-center">
-      <div>Start: {{ show(workout?.start) }}</div>
-      <div>End: {{ show(workout?.end) }}</div>
+    <div v-if="workout" class="mb-2 w-full flex flex-col items-center gap-3">
+      <!-- <div>Locker: {{ workout?.locker }}</div> -->
+      <div>
+        <UiNumberInput
+          v-model:modelValue="newLocker"
+          label="Lockernummer"
+          @action="updateWorkout"
+        />
+      </div>
+      <Label
+        :value="show(workout?.start) + '-' + show(workout?.end).slice(-5)"
+        label="Time"
+      />
+      <!-- <Label :value="show(workout?.end)" label="End" /> -->
     </div>
     <div v-for="stat in stats" class="p-2">
       <div>{{ stat.name }}: {{ show(stat.date) }}</div>

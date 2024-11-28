@@ -10,4 +10,14 @@ export const formatTime = (time: Date | undefined) => {
     return formattedTime + " Uhr";
   }
 };
-export default formatTime;
+
+export const showTime = (time: any) => {
+  if (!time) return "?";
+  const convertedTime = new Date(time);
+  const year = convertedTime.getUTCFullYear().toString().slice(-2);
+  const month = convertedTime.getMonth() + 1;
+  const day = convertedTime.getDate();
+  const hours = convertedTime.getHours().toString().padStart(2, "0");
+  const minutes = convertedTime.getMinutes().toString().padStart(2, "0");
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
+};

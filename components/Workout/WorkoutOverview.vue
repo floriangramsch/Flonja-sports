@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import useDeleteWorkout from "~/composables/Workouts/useDeleteWorkout";
 import Confirm from "../Dialogs/Confirm.vue";
+import Label from "../ui/label/Label.vue";
+import { showTime } from "~/utils/helpers";
 
 defineProps<{
   workouts: WorkoutType[];
@@ -52,16 +54,23 @@ const deleteWorkout = () => {
     <div
       v-for="workout in workouts"
       @click="editWorkout(workout)"
-      class="p-1 flex flex-col min-w-full snap-start border-b border-sonja-akz"
-      :class="
-        workout.workout_id === logged?.loggedWorkoutId
-          ? 'bg-sonja-bg-darker'
-          : 'bg-sonja-bg'
-      "
+      class="p-2 flex flex-col min-w-full snap-start"
       :key="workout.workout_id"
     >
       <div class="flex">
-        {{ formatTime(workout.start) }}
+        <Label
+          :class="
+            workout.workout_id === logged?.loggedWorkoutId
+              ? 'bg-sonja-fg'
+              : 'bg-sonja-text'
+          "
+          :value="
+            showTime(workout?.start) +
+            '-' +
+            (showTime(workout?.end)?.slice(-5) ?? '?')
+          "
+          :label="workout.name"
+        />
         <button
           class="ml-2"
           @click.stop="
@@ -71,10 +80,6 @@ const deleteWorkout = () => {
         >
           <i class="fa-solid fa-close text-red-800" />
         </button>
-      </div>
-      <div class="pl-3">
-        von
-        {{ workout.name }}
       </div>
     </div>
     <Confirm

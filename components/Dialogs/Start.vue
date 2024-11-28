@@ -49,7 +49,6 @@ const resumeWorkout = () => {
       },
       loggedWorkoutId: Number(latestWorkout.workout_id),
     };
-    show.value.showRouter = "workoutdetail";
   }
 };
 </script>

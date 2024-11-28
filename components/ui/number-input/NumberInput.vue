@@ -11,6 +11,10 @@ const props = defineProps<{
 
 const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
 
+defineEmits<{
+  (emit: "action"): void;
+}>();
+
 watch(
   () => props.focus,
   (newVal) => {
@@ -40,6 +44,7 @@ onMounted(() => {
       class="peer w-32 h-12 focus:outline-none focus:ring-2 focus:ring-sonja-akz bg-sonja-text text-sonja-akz2 p-2 rounded shadow"
       ref="inputRef"
       :placeholder="placeholder ?? ' '"
+      @focusout="$emit('action')"
     />
     <label
       :for="labelId"
