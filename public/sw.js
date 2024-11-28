@@ -11,14 +11,16 @@ self.addEventListener("push", (event) => {
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
+let timerId;
 self.addEventListener("message", (event) => {
+  console.log("message", message);
   if (event.data && event.data.action === "startTimer") {
     const delay = event.data.delay || 120000; // Verzögerung in ms (Standard: 2 Minuten)
     const minutes = Math.floor(delay / 60000);
     const seconds = ((delay % 60000) / 1000).toFixed(0);
     const timeString = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
-    setTimeout(() => {
+    timerId = setTimeout(() => {
       // Benachrichtigung anzeigen
       self.registration.showNotification("Weitermachen!", {
         body: `${timeString} Minuten sind vorbei!`,
@@ -30,6 +32,17 @@ self.addEventListener("message", (event) => {
         requireInteraction: true,
       });
     }, delay);
+  } else if (event.data.action === "interuptTimer") {
+    console.log("hi", timerId);
+    if (timerId) {
+      clearTimeout(timerId);
+      timerId = null;
+      self.registration.showNotification("Timer unterbrochen", {
+        body: "Der Timer wurde erfolgreich unterbrochen.",
+        vibrate: [200, 100, 200],
+        requireInteraction: true,
+      });
+    }
   }
 });
 

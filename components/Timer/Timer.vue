@@ -68,6 +68,15 @@ const stopTimer = () => {
   emit("stopped");
 };
 
+// Dont notify
+const interuptTimer = async () => {
+  stopTimer();
+  const registration = await navigator.serviceWorker.getRegistration();
+  if (registration && registration.active) {
+    registration.active.postMessage({ action: "interuptTimer" });
+  }
+};
+
 const updateRestTimeMutation = useUpdateUser();
 const changeRestTime = (e: Event) => {
   const target = e.target as HTMLInputElement;
@@ -117,7 +126,7 @@ document.addEventListener("visibilitychange", () => {
 watch(
   () => props.isActive,
   (newValue) => {
-    newValue ? startTimer() : stopTimer();
+    newValue ? startTimer() : interuptTimer();
   }
 );
 
