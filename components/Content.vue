@@ -63,7 +63,11 @@ const exerciseFilter = ref<number[]>([]);
     </SlideTransition>
 
     <SlideTransition>
-      <Stats v-if="show?.showRouter === 'stats' && logged" :logged="logged" />
+      <Stats
+        v-if="show?.showRouter === 'stats' && logged"
+        :logged="logged"
+        :workout="workout"
+      />
     </SlideTransition>
   </div>
 </template>

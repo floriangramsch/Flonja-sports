@@ -67,10 +67,11 @@ const handleRefresh = async () => {
       />
     </a>
     <!-- Status -->
-    <h1 v-if="logged?.user" class="text-sonja-akz2 font-bold text-2xl">
+    <h1
+      v-if="logged?.user"
+      class="text-sonja-akz2 font-bold text-2xl flex flex-col"
+    >
       Hallo Se Bebi {{ logged.user?.name }}
-      <br />
-      {{ formatTime(workoutStart) }}
     </h1>
     <!-- Buttons -->
     <div class="flex flex-col mr-3 text-3xl">

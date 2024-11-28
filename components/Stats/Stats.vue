@@ -5,6 +5,7 @@ import Button from "../ui/buttons/Button.vue";
 
 const props = defineProps<{
   logged: LoggedType;
+  workout?: WorkoutType;
 }>();
 
 const { data: stats } = useGetStats();
@@ -40,6 +41,11 @@ const newStat = () => {
     );
   }
 };
+
+const show = (time: any) => {
+  if (!time) return "No Time yet";
+  return new Date(time).toLocaleString();
+};
 </script>
 <template>
   <div>
@@ -48,8 +54,12 @@ const newStat = () => {
       <div class="text-4xl font-bold text-center">Stats</div>
     </div>
     <!-- Stats -->
+    <div class="mb-2 w-full flex flex-col items-center">
+      <div>Start: {{ show(workout?.start) }}</div>
+      <div>End: {{ show(workout?.end) }}</div>
+    </div>
     <div v-for="stat in stats" class="p-2">
-      <div>{{ stat.name }}: {{ new Date(stat.date).toLocaleString() }}</div>
+      <div>{{ stat.name }}: {{ show(stat.date) }}</div>
       <div>
         {{ stat.body_weight }} kg
         <button
