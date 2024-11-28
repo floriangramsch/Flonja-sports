@@ -60,9 +60,11 @@ export type SetType = {
 };
 
 export type ExerciseType = {
+  exercice_id: number;
   equipName: string;
   equip_id: number;
-  exercice_id: number;
+  muscle_group_id: number;
+  muscleName: string;
 };
 
 export type StatsType = {

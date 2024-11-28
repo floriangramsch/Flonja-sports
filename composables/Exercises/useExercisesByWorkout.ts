@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/vue-query";
 
 export function useExercisesByWorkout(workoutId: Ref<number | undefined>) {
-  return useQuery<any>({
+  return useQuery<ExerciseType[]>({
     queryKey: computed(() => ["exercises", workoutId.value]),
     queryFn: () => {
       if (!workoutId.value) throw new Error("Exercises ID is undefined");

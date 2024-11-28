@@ -145,8 +145,13 @@ export const getExercisesByWorkout = async (
 ): Promise<ExerciseRow[]> => {
   const pool = await connect();
 
-  const sql =
-    " SELECT exercice_id, name AS equipName, e.equip_id FROM Exercice e LEFT JOIN Equip eq ON eq.equip_id = e.equip_id WHERE workout_id = ? ";
+  const sql = `
+    SELECT exercice_id, eq.name AS equipName, e.equip_id, eq.muscle_group_id, m.name AS muscleName 
+    FROM Exercice e 
+    LEFT JOIN Equip eq ON eq.equip_id = e.equip_id
+    LEFT JOIN MuscleGroup m ON eq.muscle_group_id = m.muscle_group_id
+    WHERE workout_id = ? 
+  `;
   const results: ExerciseRow[] = await query(pool, sql, [id]);
   return results;
 };
