@@ -126,7 +126,7 @@ document.addEventListener("visibilitychange", () => {
 watch(
   () => props.isActive,
   (newValue) => {
-    newValue ? startTimer() : interuptTimer();
+    newValue ? startTimer() : stopTimer();
   }
 );
 
@@ -160,7 +160,7 @@ onUnmounted(() => {
     <button v-if="!startTime" @click="startTimer">
       <i class="fa-solid fa-play" />
     </button>
-    <button v-if="startTime" @click="stopTimer">
+    <button v-if="startTime" @click="interuptTimer">
       <i class="fa-solid fa-stop" />
     </button>
   </div>
