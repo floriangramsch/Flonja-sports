@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Start from "./Dialogs/Start.vue";
+import Timer from "./Timer/Timer.vue";
 
 const props = defineProps<{
   users: UserType | undefined;

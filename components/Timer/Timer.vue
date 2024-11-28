@@ -141,6 +141,7 @@ onUnmounted(() => {
       <div class="flex w-full justify-center">
         <input
           type="time"
+          min="00:01"
           v-model="restTimeInput"
           @change="changeRestTime"
           class="p-4 rounded shadow flex justify-center bg-sonja-text text-sonja-akz2 text-3xl dark:yellow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
