@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (method === "DELETE") {
       const { stats_id } = await readBody(event);
       const connection = await connect();
-      const [rows] = await connection.execute(
+      const [rows]: any = await connection.execute(
         `
         DELETE FROM Stats
         WHERE stats_id = ?
@@ -31,13 +31,23 @@ export default defineEventHandler(async (event) => {
     }
     if (method === "GET") {
       const connection = await connect();
-      const [rows] = await connection.execute(
+      const [rows]: any[] = await connection.execute(
         `
           SELECT * FROM Stats s
           LEFT JOIN User u ON u.user_id = s.user_id
         `
       );
-      return rows;
+      const res: { Florian: any[]; Sonja: any[] } = {
+        Florian: [],
+        Sonja: [],
+      };
+      rows.forEach(
+        (element: { name: "Florian" | "Sonja"; [key: string]: any }) => {
+          res[element.name].push(element);
+        }
+      );
+      console.log("res", res);
+      return res;
     }
     if (method === "POST") {
       const { user_id, weight } = await readBody(event);

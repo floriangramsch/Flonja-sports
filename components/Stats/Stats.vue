@@ -9,6 +9,8 @@ const props = defineProps<{
   workout?: WorkoutType;
 }>();
 
+const showList = ref<boolean>(false);
+
 const { data: stats } = useGetStats();
 const updateMutation = useUpdateStats();
 const deleteMutation = useDeleteStats();
@@ -84,6 +86,10 @@ watch(
   <div>
     <!-- Header -->
     <div class="w-full flex justify-evenly py-4 px-2">
+      <i
+        class="fa-solid fa-list pl-2 text-3xl absolute left-4"
+        @click="showList = !showList"
+      />
       <div class="text-4xl font-bold text-center">Stats</div>
     </div>
     <!-- Stats -->
@@ -102,22 +108,12 @@ watch(
       />
       <!-- <Label :value="show(workout?.end)" label="End" /> -->
     </div>
-    <div v-for="stat in stats" class="p-2">
-      <div>{{ stat.name }}: {{ show(stat.date) }}</div>
-      <div>
-        {{ stat.body_weight }} kg
-        <button
-          class="ml-2"
-          @click.stop="
-            statToDelete = Number(stat.stats_id);
-            showConfirmDeleteStat = true;
-          "
-        >
-          <i class="fa-solid fa-close text-red-800" />
-        </button>
-      </div>
-    </div>
-    <Confirm v-model:isOpen="showConfirmDeleteStat" @yes="deleteStat()" />
+    <ChartsBasicChart
+      v-if="stats"
+      :dataFlorian="stats.Florian.map((stat: StatsType) => [stat.date, stat.body_weight])"
+      :dataSonja="stats.Sonja.map((stat: StatsType) => [stat.date, stat.body_weight])"
+    />
+
     <Dialog :isOpen="showNewStat" @close="showNewStat = false">
       <template v-slot:trigger>
         <div class="flex justify-center w-full">
@@ -130,5 +126,39 @@ watch(
       <UiNumberInput class="mb-2" v-model="newWeight" label="Weight" />
       <Button @action="newStat">New</Button>
     </Dialog>
+
+    <div
+      v-show="showList"
+      class="transition-opacity duration-500 ease-in-out opacity-0"
+      :class="{ 'opacity-100': showList }"
+    >
+      Flo
+      <div v-for="stat in stats?.Florian">
+        {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
+        <button
+          class="ml-2"
+          @click.stop="
+            statToDelete = Number(stat.stats_id);
+            showConfirmDeleteStat = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
+      </div>
+      Sonja
+      <div v-for="stat in stats?.Sonja">
+        {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
+        <button
+          class="ml-2"
+          @click.stop="
+            statToDelete = Number(stat.stats_id);
+            showConfirmDeleteStat = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
+      </div>
+    </div>
+    <Confirm v-model:isOpen="showConfirmDeleteStat" @yes="deleteStat()" />
   </div>
 </template>

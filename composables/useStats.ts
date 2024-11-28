@@ -33,7 +33,7 @@ export function useAddStats() {
 }
 
 export function useGetStats() {
-  return useQuery<StatsType[]>({
+  return useQuery<UserStatsType>({
     queryKey: ["stats"],
     queryFn: fetchStats,
   });

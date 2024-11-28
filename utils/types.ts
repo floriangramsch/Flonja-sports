@@ -69,8 +69,14 @@ export type StatsType = {
   stats_id: number;
   user_id: number;
   body_weight: number;
-  date: Date;
+  date: string;
   name: string;
+};
+
+export type UserStatsType = {
+  Florian: StatsType[];
+  Sonja: StatsType[];
+  // [key: string]: StatsType[];
 };
 
 export type RouterTypes =
