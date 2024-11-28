@@ -13,7 +13,6 @@ self.addEventListener("push", (event) => {
 
 let timerId;
 self.addEventListener("message", (event) => {
-  console.log("message", message);
   if (event.data && event.data.action === "startTimer") {
     const delay = event.data.delay || 120000; // Verzögerung in ms (Standard: 2 Minuten)
     const minutes = Math.floor(delay / 60000);
@@ -33,7 +32,6 @@ self.addEventListener("message", (event) => {
       });
     }, delay);
   } else if (event.data.action === "interuptTimer") {
-    console.log("hi", timerId);
     if (timerId) {
       clearTimeout(timerId);
       timerId = null;
