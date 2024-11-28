@@ -9,7 +9,6 @@ defineProps<{
 
 const logged = defineModel<LoggedType>();
 const show = defineModel<ShowType>("show");
-const showConfirmation = ref<boolean>(false);
 
 const editWorkout = (workout: WorkoutType) => {
   logged.value = {
@@ -24,14 +23,16 @@ const editWorkout = (workout: WorkoutType) => {
 };
 
 const mutation = useDeleteWorkout();
-const deleteWorkout = (id: number) => {
-  if (id) {
-    mutation.mutate(id, {
+const workoutToDelete = ref<number>();
+const showConfirmDeleteWorkout = ref<boolean>(false);
+const deleteWorkout = () => {
+  if (workoutToDelete.value) {
+    mutation.mutate(workoutToDelete.value, {
       onSuccess: () => {
         if (logged.value) {
           logged.value.isLogged = false;
           logged.value.loggedWorkoutId = undefined;
-          showConfirmation.value = false;
+          showConfirmDeleteWorkout.value = false;
         }
       },
     });
@@ -61,18 +62,25 @@ const deleteWorkout = (id: number) => {
     >
       <div class="flex">
         {{ formatTime(workout.start) }}
-        <Confirm
-          v-bind:is-open="showConfirmation"
-          class="ml-5"
-          @yes="deleteWorkout(workout.workout_id)"
+        <button
+          class="ml-2"
+          @click.stop="
+            workoutToDelete = Number(workout.workout_id);
+            showConfirmDeleteWorkout = true;
+          "
         >
-          <i class="fa-solid fa-close text-2xl text-sonja-akz" />
-        </Confirm>
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
       </div>
       <div class="pl-3">
         von
         {{ workout.name }}
       </div>
     </div>
+    <Confirm
+      v-model:is-open="showConfirmDeleteWorkout"
+      class="ml-5"
+      @yes="deleteWorkout()"
+    />
   </div>
 </template>

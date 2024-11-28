@@ -41,11 +41,11 @@ const { data: exercises } = useExercisesByWorkout(
 const exToShow = ref<ExerciseType>();
 
 const showLockerDialog = ref<boolean>(false);
-const newLocker = ref<number>();
+const newLocker = ref<number | undefined>(props.workout?.locker);
 const updateLockerMutation = useUpdateWorkout();
 
 const updateWorkout = () => {
-  if (props.workout?.workout_id)
+  if (props.workout?.workout_id && newLocker.value)
     updateLockerMutation.mutate(
       {
         updatedData: `locker = ${newLocker.value}`,
@@ -114,6 +114,17 @@ watch(
     }
   }
 );
+
+watch(
+  () => props.workout?.locker,
+  (newVal) => {
+    if (newVal) {
+      newLocker.value = newVal;
+    } else {
+      newLocker.value = undefined;
+    }
+  }
+);
 </script>
 
 <template>
@@ -153,14 +164,11 @@ watch(
         <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
           <div class="flex flex-col justify-center items-center gap-4">
             <div class="flex gap-2">
-              Lockernummer:
               <UiNumberInput
-                v-if="!workout?.locker"
                 v-model:modelValue="newLocker"
-                :placeholder="workout?.locker ? String(workout?.locker) : ''"
-                focus
+                label="Lockernummer"
+                :focus="!workout?.locker"
               />
-              <div v-else>{{ workout?.locker }}</div>
             </div>
             <Button @action="updateWorkout"> Done </Button>
           </div>

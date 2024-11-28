@@ -81,7 +81,12 @@ const updateRestTimeMutation = useUpdateUser();
 const changeRestTime = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const [minutes, seconds] = target.value.split(":");
-  const millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
+  let millis;
+  if (!minutes && !seconds) {
+    millis = 120000;
+  } else {
+    millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
+  }
   updateRestTimeMutation.mutate(
     { user_id: props.userId, rest_time: millis },
     {
