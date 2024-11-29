@@ -177,15 +177,24 @@ watch(
       <div
         v-if="exercises?.length !== 0"
         v-for="ex in exercises"
-        class="border-b border-sonja-bg-darker rounded-full flex justify-center items-center py-2 cursor-pointer"
+        class="border-b border-sonja-bg-darker rounded-full flex justify-center items-center py-3 cursor-pointer"
         @click="
           exToShow = ex;
           workoutShow.showRouter = 'exercisedetail';
         "
       >
-        {{ ex.equipName }}
-        <div class="bg-sonja-akz rounded shadow p-1 ml-2">
-          {{ ex.muscleName }}
+        <div class="group relative">
+          <div class="relative z-10">
+            {{ ex.equipName }}
+          </div>
+          <div
+            class="absolute -translate-y-11 -right-2 text-xs/[8px] z-0 bg-sonja-akz rounded shadow p-1 ml-2 group-hover:-translate-y-9 group-hover:-rotate-[20deg] group-hover:-right-8 transition-all duration-300"
+          >
+            <!-- <div
+            class="absolute -translate-y-9 -right-8 -rotate-[20deg] text-xs/[8px] z-0 bg-sonja-akz rounded shadow p-1 ml-2"
+          > -->
+            {{ ex.muscleName }}
+          </div>
         </div>
       </div>
       <div v-else>
