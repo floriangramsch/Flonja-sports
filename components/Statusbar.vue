@@ -45,12 +45,6 @@ const logout = () => {
   show.value.showLogin = false;
   localStorage.removeItem("logged");
 };
-
-const refresh = useRefresh();
-
-const handleRefresh = async () => {
-  await refresh();
-};
 </script>
 
 <template>
@@ -88,10 +82,6 @@ const handleRefresh = async () => {
     </h1>
     <!-- Buttons -->
     <div class="flex flex-col mr-3 text-3xl">
-      <!-- Refresh -->
-      <a @click.prevent="handleRefresh" class="cursor-pointer">
-        <i class="fa-solid fa-rotate-right" />
-      </a>
       <!-- Start/End Workout -->
       <button v-if="logged?.isLogged" @click.prevent="logout">
         <i class="fa-solid fa-right-from-bracket" />

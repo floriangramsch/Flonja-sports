@@ -8,7 +8,7 @@
   >
     <div
       v-if="isPulling"
-      class="fixed top-0 left-0 right-0 h-10 bg-sonja-bg flex justify-center items-center text-xl"
+      class="fixed top-0 left-0 right-0 h-20 bg-sonja-text flex justify-center items-center text-3xl"
     >
       <span v-if="loading">Loading</span>
       <span v-else-if="isPulling">Pulling</span>
@@ -98,11 +98,6 @@ const currentY = ref(0); // Aktuelle Position während des Moves
 const isPulling = ref(false); // Status des Pulls
 const loading = ref(false);
 
-const triggerRefresh = () => {
-  alert("Test");
-  // fetchData();
-};
-
 const onTouchStart = (e: TouchEvent) => {
   if (window.scrollY === 0) {
     startY.value = e.touches[0].clientY;
@@ -122,11 +117,18 @@ const onTouchMove = (e: TouchEvent) => {
   }
 };
 
+const handleRefresh = async () => {
+  await refresh();
+};
+
+const refresh = useRefresh();
+
 const onTouchEnd = () => {
   if (isPulling.value) {
     const pullDistance = currentY.value - startY.value;
     if (pullDistance > 600) {
-      triggerRefresh();
+      // handleRefresh();
+      alert("Test");
     }
     isPulling.value = false;
     loading.value = false;
