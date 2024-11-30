@@ -127,8 +127,7 @@ const onTouchEnd = () => {
   if (isPulling.value) {
     const pullDistance = currentY.value - startY.value;
     if (pullDistance > 600) {
-      // handleRefresh();
-      alert("Test");
+      handleRefresh();
     }
     isPulling.value = false;
     loading.value = false;
