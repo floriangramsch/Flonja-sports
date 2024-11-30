@@ -6,6 +6,14 @@
     @touchmove="onTouchMove"
     @touchend="onTouchEnd"
   >
+    <div
+      v-if="isPulling"
+      class="fixed top-0 left-0 right-0 h-10 bg-gray-200 flex justify-center items-center"
+    >
+      <span v-if="loading">Loading</span>
+      <span v-else-if="isPulling">Pulling</span>
+    </div>
+    <div class="absolute z-50 text-5xl">{{ loading ? "y" : "n" }}</div>
     <Statusbar
       :users="users"
       :workouts="workouts"
@@ -94,6 +102,7 @@ watch(logged, saveLoggedState, { deep: true });
 const startY = ref(0); // Startpunkt des Touches
 const currentY = ref(0); // Aktuelle Position während des Moves
 const isPulling = ref(false); // Status des Pulls
+const loading = ref(false);
 
 const triggerRefresh = () => {
   console.log("Daten werden aktualisiert...");
@@ -113,10 +122,9 @@ const onTouchMove = (e: TouchEvent) => {
   if (isPulling.value) {
     currentY.value = e.touches[0].clientY;
 
-    // Optional: Eine visuelle Anzeige für das Pullen
     const pullDistance = currentY.value - startY.value;
-    if (pullDistance > 50) {
-      console.log("Pull wird erkannt!", pullDistance);
+    if (pullDistance > 600) {
+      loading.value = true;
     }
   }
 };
@@ -125,9 +133,10 @@ const onTouchEnd = () => {
   if (isPulling.value) {
     const pullDistance = currentY.value - startY.value;
     if (pullDistance > 600) {
-      triggerRefresh(); // Nur bei ausreichend langem Pull auslösen
+      triggerRefresh();
     }
     isPulling.value = false;
+    loading.value = false;
     startY.value = 0;
     currentY.value = 0;
   }
