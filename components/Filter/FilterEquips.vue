@@ -1,5 +1,5 @@
 <template>
-  <button class="fixed right-2 bottom-60" @click.stop="isOpen = !isOpen">
+  <button @click.stop="isOpen = !isOpen">
     <i class="fa-solid fa-magnifying-glass text-sonja-akz text-3xl" />
   </button>
   <DropdownSlideTransition>

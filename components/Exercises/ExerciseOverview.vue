@@ -15,6 +15,8 @@ const filtered = computed(() => {
       filter.value?.includes(Number(equip.equip_id))
   );
 });
+
+const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
 </script>
 
 <template>
@@ -22,7 +24,27 @@ const filtered = computed(() => {
     <!-- Header -->
     <div class="w-full flex justify-evenly py-4 px-2">
       <div class="text-4xl font-bold text-center">Exercise List</div>
+      <button
+        class="absolute right-3 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        @click="filterComponent?.toggle"
+      >
+        <i class="fa-solid fa-filter" />
+      </button>
     </div>
+
+    <!-- Filter -->
+    <Filter
+      ref="filterComponent"
+      :data="
+        equips?.map((equip) => ({
+          id: equip.equip_id,
+          name: equip.equip_name,
+        }))
+      "
+      v-model="filter"
+    />
+
+    <!-- Exercise List -->
     <div
       v-for="equip in filtered"
       class="p-1 border-b border-sonja-akz"
@@ -45,19 +67,5 @@ const filtered = computed(() => {
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Filter -->
-  <div class="fixed right-2 bottom-52 text-3xl">
-    <!-- s -->
-    <Filter
-      :data="
-        equips?.map((equip) => ({
-          id: equip.equip_id,
-          name: equip.equip_name,
-        }))
-      "
-      v-model="filter"
-    />
   </div>
 </template>

@@ -39,23 +39,25 @@ const handleOverlayClick = (e: MouseEvent) => {
     reset();
   }
 };
+
+const toggle = () => {
+  isOpen.value = !isOpen.value;
+};
+
+defineExpose({
+  toggle,
+});
 </script>
 
 <template>
-  <button class="fixed right-2 bottom-52 z-10" @click.stop="isOpen = !isOpen">
-    <i class="fa-solid fa-filter text-sonja-akz text-3xl" />
-  </button>
+  <slot :openDialog="toggle" />
   <DropdownSlideTransition>
-    <div
-      v-if="isOpen"
-      @click="handleOverlayClick"
-      class="fixed inset-0 flex h-screen w-screen"
-    >
+    <!-- @click="handleOverlayClick" -->
+    <div v-if="isOpen" class="flex justify-center">
       <div
-        v-if="isOpen"
         @click.stop
         ref="filterRef"
-        class="fixed right-10 bottom-52 bg-sonja-text text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
+        class="bg-sonja-text text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
       >
         <div
           v-for="d in data"
@@ -73,6 +75,7 @@ const handleOverlayClick = (e: MouseEvent) => {
           Reset
         </div>
       </div>
+      <slot name="content" />
     </div>
   </DropdownSlideTransition>
 </template>

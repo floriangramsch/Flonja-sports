@@ -61,7 +61,7 @@ const deleteWorkout = () => {
         <Label
           :class="
             workout.workout_id === logged?.loggedWorkoutId
-              ? 'bg-sonja-fg'
+              ? 'bg-indigo-900'
               : 'bg-sonja-text'
           "
           :value="
