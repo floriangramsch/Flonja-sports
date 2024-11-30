@@ -10,6 +10,7 @@ import Button from "../ui/buttons/Button.vue";
 import Select from "../ui/select/Select.vue";
 import Textinput from "../ui/inputs/Textinput.vue";
 import Label from "../ui/label/Label.vue";
+import FilterWrapper from "../Filter/FilterWrapper.vue";
 
 defineProps<{
   muscles: MuscleType[];
@@ -138,7 +139,7 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
 
 const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
 
-const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
+const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 </script>
 
 <template>
@@ -155,54 +156,47 @@ const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
       <div class="text-4xl font-bold text-center">Equip List</div>
       <button
         class="absolute right-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
-        @click="filterComponent?.toggle"
+        @click="filterWrapperComponent?.toggle"
       >
         <i class="fa-solid fa-filter" />
       </button>
     </div>
 
-    <Filter
-      ref="filterComponent"
-      :data="
-        muscles.map((muscle) => ({
-          id: muscle.muscle_group_id,
-          name: muscle.muscle_name,
-        }))
-      "
-      v-model="filter"
-    >
-      <template #name>
-        <i
-          class="fa-solid fa-hand flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
-        />
-      </template>
-      <template #content>
-        <FilterEquips v-model="searchFilter" />
-        <!-- New Equip -->
-        <Dialog
-          :isOpen="showDialogEquip"
+    <FilterWrapper ref="filterWrapperComponent">
+      <Filter
+        :data="
+          muscles.map((muscle) => ({
+            id: muscle.muscle_group_id,
+            name: muscle.muscle_name,
+          }))
+        "
+        v-model="filter"
+      />
+      <FilterEquips v-model="searchFilter" />
+      <!-- New Equip -->
+      <Dialog
+        :isOpen="showDialogEquip"
+        @close="
+          showDialogEquip = false;
+          showDialogMuscle = false;
+        "
+      >
+        <template #trigger>
+          <button
+            class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+            @click="showDialogEquip = true"
+          >
+            <i class="fa-solid fa-plus" />
+          </button>
+        </template>
+        <NewEquip
           @close="
             showDialogEquip = false;
             showDialogMuscle = false;
           "
-        >
-          <template #trigger>
-            <button
-              class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
-              @click="showDialogEquip = true"
-            >
-              <i class="fa-solid fa-plus" />
-            </button>
-          </template>
-          <NewEquip
-            @close="
-              showDialogEquip = false;
-              showDialogMuscle = false;
-            "
-          />
-        </Dialog>
-      </template>
-    </Filter>
+        />
+      </Dialog>
+    </FilterWrapper>
     <!-- Update Equip -->
     <Dialog
       :isOpen="showDialogUpdateEquip"

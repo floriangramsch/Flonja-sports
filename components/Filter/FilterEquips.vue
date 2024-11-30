@@ -7,13 +7,13 @@
   <DropdownSlideTransition>
     <div
       v-if="isOpen"
-      class="absolute inset-0 w-screen h-screen"
+      class="fixed inset-0 w-screen h-screen"
       @click="handleOverlayClick"
     >
       <input
         v-if="isOpen"
         @click.stop
-        class="absolute left-14 top-12 mr-10 text-2xl rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-sonja-akz text-center p-1 bg-sonja-text text-sonja-akz2"
+        class="absolute left-14 top-52 mr-10 text-2xl rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-sonja-akz text-center p-1 bg-sonja-text text-sonja-akz2"
         ref="input"
         v-model="search"
         @input="filter"
@@ -68,6 +68,7 @@ const closeInput = (event: KeyboardEvent | MouseEvent) => {
 const handleOverlayClick = (e: MouseEvent) => {
   if (input.value && !input.value.contains(e.target as Node)) {
     isOpen.value = false;
+    search.value = "";
   }
 };
 </script>

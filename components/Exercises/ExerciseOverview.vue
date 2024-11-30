@@ -16,7 +16,7 @@ const filtered = computed(() => {
   );
 });
 
-const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
+const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 </script>
 
 <template>
@@ -26,23 +26,23 @@ const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
       <div class="text-4xl font-bold text-center">Exercise List</div>
       <button
         class="absolute right-3 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
-        @click="filterComponent?.toggle"
+        @click="filterWrapperComponent?.toggle"
       >
         <i class="fa-solid fa-filter" />
       </button>
     </div>
 
-    <!-- Filter -->
-    <Filter
-      ref="filterComponent"
-      :data="
-        equips?.map((equip) => ({
-          id: equip.equip_id,
-          name: equip.equip_name,
-        }))
-      "
-      v-model="filter"
-    />
+    <FilterWrapper ref="filterWrapperComponent">
+      <Filter
+        :data="
+          equips?.map((equip) => ({
+            id: equip.equip_id,
+            name: equip.equip_name,
+          }))
+        "
+        v-model="filter"
+      />
+    </FilterWrapper>
 
     <!-- Exercise List -->
     <div
