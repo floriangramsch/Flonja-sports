@@ -1,5 +1,11 @@
 <template>
-  <div v-if="isSuccess" class="flex flex-col h-dvh">
+  <div
+    v-if="isSuccess"
+    class="flex flex-col h-dvh"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
+  >
     <Statusbar
       :users="users"
       :workouts="workouts"
@@ -84,4 +90,46 @@ onMounted(() => {
 
 // Beobachte Änderungen im Anmeldezustand und speichere diese
 watch(logged, saveLoggedState, { deep: true });
+
+const startY = ref(0); // Startpunkt des Touches
+const currentY = ref(0); // Aktuelle Position während des Moves
+const isPulling = ref(false); // Status des Pulls
+
+const triggerRefresh = () => {
+  console.log("Daten werden aktualisiert...");
+  alert("Test");
+  // Hier kannst du deine Refresh-Logik einfügen, z.B.:
+  // fetchData();
+};
+
+const onTouchStart = (e: TouchEvent) => {
+  if (window.scrollY === 0) {
+    startY.value = e.touches[0].clientY;
+    isPulling.value = true;
+  }
+};
+
+const onTouchMove = (e: TouchEvent) => {
+  if (isPulling.value) {
+    currentY.value = e.touches[0].clientY;
+
+    // Optional: Eine visuelle Anzeige für das Pullen
+    const pullDistance = currentY.value - startY.value;
+    if (pullDistance > 50) {
+      console.log("Pull wird erkannt!", pullDistance);
+    }
+  }
+};
+
+const onTouchEnd = () => {
+  if (isPulling.value) {
+    const pullDistance = currentY.value - startY.value;
+    if (pullDistance > 600) {
+      triggerRefresh(); // Nur bei ausreichend langem Pull auslösen
+    }
+    isPulling.value = false;
+    startY.value = 0;
+    currentY.value = 0;
+  }
+};
 </script>
