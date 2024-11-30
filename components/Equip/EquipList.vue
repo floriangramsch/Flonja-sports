@@ -239,7 +239,7 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
               showDialogUpdateEquip = true;
             }
           "
-          class="text-2xl font-bold cursor-pointer overflow-x-scroll whitespace-nowrap"
+          class="text-2xl font-bold cursor-pointer overflow-x-scroll sm:overflow-x-auto whitespace-nowrap"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
           <button

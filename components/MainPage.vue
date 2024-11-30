@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import useWorkouts from "~/composables/useWorkouts";
 import type { LoggedType, ShowType } from "~/utils/types";
+import Navbar from "./Navbar.vue";
 
 const { isSuccess } = usePreloadData();
 
