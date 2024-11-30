@@ -59,17 +59,13 @@ const deleteWorkout = () => {
     >
       <div class="flex">
         <Label
-          :class="
-            workout.workout_id === logged?.loggedWorkoutId
-              ? 'bg-indigo-900'
-              : 'bg-sonja-text'
-          "
           :value="
             showTime(workout?.start) +
             '-' +
             (showTime(workout?.end)?.slice(-5) ?? '?')
           "
           :label="workout.name"
+          :selected="workout.workout_id === logged?.loggedWorkoutId"
         />
         <button
           class="ml-2"

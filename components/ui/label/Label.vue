@@ -2,7 +2,7 @@
 defineProps<{
   label: string;
   value: string;
-  class?: string;
+  selected?: boolean;
 }>();
 
 const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
@@ -18,8 +18,8 @@ const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
     </label>
     <div
       :id="labelId"
-      class="p-2 rounded shadow bg-sonja-text text-sonja-akz2"
-      :class="class"
+      class="p-2 rounded shadow text-sonja-akz2"
+      :class="[selected ? 'bg-sonja-fg' : 'bg-sonja-text']"
     >
       {{ value }}
     </div>

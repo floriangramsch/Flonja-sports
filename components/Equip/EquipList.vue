@@ -9,6 +9,7 @@ import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import Select from "../ui/select/Select.vue";
 import Textinput from "../ui/inputs/Textinput.vue";
+import Label from "../ui/label/Label.vue";
 
 defineProps<{
   muscles: MuscleType[];
@@ -275,7 +276,7 @@ const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
           </button>
         </div>
         <div v-for="user in equip.slice(1)" class="flex gap-2">
-          <div class="flex gap-2">
+          <div v-if="user.user_name" class="flex gap-2">
             <div v-if="user.user_name">{{ user.user_name }}:</div>
             <div v-if="user.max_weight">PB {{ user.max_weight }}</div>
             <div v-else="user.max_weight">PB TBD</div>

@@ -88,10 +88,8 @@ export type RouterTypes =
   | "workouts"
   | "exercises"
   | "stats";
+
 export type ShowType = {
-  showNew: false; // show dropdown
-  showDialogEquip: false; // show equip dialog
-  showDialogMuskle: false; // show muscle dialog
   showLogin: false; // show login
   showRouter: RouterTypes;
 };

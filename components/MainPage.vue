@@ -46,9 +46,6 @@ const stopTimer = () => (timer.value = false);
 const startTimer = () => (timer.value = true);
 
 const show = ref<ShowType>({
-  showNew: false, // show dropdown
-  showDialogEquip: false, // show equip dialog
-  showDialogMuskle: false, // show muscle dialog
   showLogin: false, // show login
   showRouter: "workoutdetail",
 });
