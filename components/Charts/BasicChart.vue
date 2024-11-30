@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <canvas class="h-10" ref="chartCanvas" />
-  </div>
+  <canvas class="min-w-full" ref="chartCanvas" />
 </template>
 
 <!-- <template>
@@ -13,7 +11,6 @@
 <script lang="ts" setup>
 import Chart from "chart.js/auto";
 import "chartjs-adapter-date-fns";
-import tailwindConfig from "~/tailwind.config";
 
 const props = defineProps<{
   dataFlorian?: [string, number][]; // Datum und Wert für Florian

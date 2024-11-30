@@ -42,6 +42,16 @@ module.exports = {
           akz3: "#C1D7F0",
         },
       },
+      screens: {
+        "mobile-landscape": {
+          raw: "(max-width: 768px) and (orientation: landscape)",
+        },
+      },
+    },
+    variants: {
+      extend: {
+        display: ["mobile-landscape"],
+      },
     },
   },
 };

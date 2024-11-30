@@ -55,7 +55,7 @@ const handleRefresh = async () => {
 
 <template>
   <div
-    class="fixed flex justify-between items-center text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow"
+    class="fixed flex justify-between items-center text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow mobile-landscape:hidden"
   >
     <!-- Profilepic -->
     <div @click.prevent="switchUser" class="h-full min-w-16 cursor-pointer">
