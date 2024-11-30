@@ -171,6 +171,11 @@ const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
       "
       v-model="filter"
     >
+      <template #name>
+        <i
+          class="fa-solid fa-hand flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        />
+      </template>
       <template #content>
         <FilterEquips v-model="searchFilter" />
         <!-- New Equip -->
@@ -183,7 +188,7 @@ const filterComponent = ref<InstanceType<typeof Filter> | null>(null);
         >
           <template #trigger>
             <button
-              class="absolute right-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+              class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
               @click="showDialogEquip = true"
             >
               <i class="fa-solid fa-plus" />

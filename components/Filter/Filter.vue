@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import DropdownSlideTransition from "../ui/transitions/DropdownSlideTransition.vue";
+import SlideDownTransition from "../ui/transitions/SlideDownTransition.vue";
 
 const filteredData = ref<number[]>([]);
 const isOpen = ref<boolean>(false);
+const isOpenOptions = ref<boolean>(false);
 
 defineProps<{
   data: { id: number; name: string }[] | undefined;
@@ -21,7 +22,6 @@ const filterData = (id: number) => {
     filteredData.value = filteredData.value.filter((dataId) => dataId !== id);
   } else {
     filteredData.value.push(id);
-    isOpen.value = false;
   }
   filter.value = filteredData.value;
 };
@@ -29,14 +29,14 @@ const filterData = (id: number) => {
 const reset = () => {
   filteredData.value = [];
   filter.value = [];
-  isOpen.value = false;
+  isOpenOptions.value = false;
 };
 
 const filterRef = ref<HTMLElement | null>(null);
 
 const handleOverlayClick = (e: MouseEvent) => {
   if (filterRef.value && !filterRef.value.contains(e.target as Node)) {
-    reset();
+    isOpenOptions.value = false;
   }
 };
 
@@ -51,31 +51,43 @@ defineExpose({
 
 <template>
   <slot :openDialog="toggle" />
-  <DropdownSlideTransition>
+  <SlideDownTransition>
     <!-- @click="handleOverlayClick" -->
-    <div v-if="isOpen" class="flex justify-center">
-      <div
-        @click.stop
-        ref="filterRef"
-        class="bg-sonja-text text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
-      >
-        <div
-          v-for="d in data"
-          :key="d.id"
-          @click="filterData(d.id)"
-          class="flex py-0.5 px-2 cursor-pointer"
-          :class="isFiltered(d.id) ? 'bg-sonja-akz' : 'bg-sonja-text'"
-        >
-          {{ d.name }}
-        </div>
-        <div
-          @click="reset"
-          class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer w-full"
-        >
-          Reset
-        </div>
+    <div v-if="isOpen" class="relative flex justify-evenly">
+      <div @click.stop="isOpenOptions = !isOpenOptions">
+        <slot name="name" />
       </div>
+
+      <SlideDownTransition>
+        <div
+          v-if="isOpenOptions"
+          class="absolute inset-0 w-screen h-screen"
+          @click="handleOverlayClick"
+        >
+          <div
+            @click.stop
+            ref="filterRef"
+            class="absolute left-9 top-12 bg-sonja-text text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
+          >
+            <div
+              v-for="d in data"
+              :key="d.id"
+              @click="filterData(d.id)"
+              class="flex py-0.5 px-2 cursor-pointer"
+              :class="isFiltered(d.id) ? 'bg-sonja-akz' : 'bg-sonja-text'"
+            >
+              {{ d.name }}
+            </div>
+            <div
+              @click="reset"
+              class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer w-full"
+            >
+              Reset
+            </div>
+          </div>
+        </div>
+      </SlideDownTransition>
       <slot name="content" />
     </div>
-  </DropdownSlideTransition>
+  </SlideDownTransition>
 </template>

@@ -190,9 +190,6 @@ watch(
           <div
             class="absolute -translate-y-11 -right-2 text-xs/[8px] z-0 bg-sonja-akz rounded shadow p-1 ml-2 group-hover:-translate-y-9 group-hover:-rotate-[20deg] group-hover:-right-8 transition-all duration-300"
           >
-            <!-- <div
-            class="absolute -translate-y-9 -right-8 -rotate-[20deg] text-xs/[8px] z-0 bg-sonja-akz rounded shadow p-1 ml-2"
-          > -->
             {{ ex.muscleName }}
           </div>
         </div>
