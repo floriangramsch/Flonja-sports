@@ -8,12 +8,11 @@
   >
     <div
       v-if="isPulling"
-      class="fixed top-0 left-0 right-0 h-10 bg-gray-200 flex justify-center items-center"
+      class="fixed top-0 left-0 right-0 h-10 bg-sonja-bg flex justify-center items-center text-xl"
     >
       <span v-if="loading">Loading</span>
       <span v-else-if="isPulling">Pulling</span>
     </div>
-    <div class="absolute z-50 text-5xl">{{ loading ? "y" : "n" }}</div>
     <Statusbar
       :users="users"
       :workouts="workouts"
@@ -92,12 +91,7 @@ const loadLoggedState = () => {
   }
 };
 
-onMounted(() => {
-  loadLoggedState();
-});
-
-// Beobachte Änderungen im Anmeldezustand und speichere diese
-watch(logged, saveLoggedState, { deep: true });
+// Pull to Refresh
 
 const startY = ref(0); // Startpunkt des Touches
 const currentY = ref(0); // Aktuelle Position während des Moves
@@ -105,9 +99,7 @@ const isPulling = ref(false); // Status des Pulls
 const loading = ref(false);
 
 const triggerRefresh = () => {
-  console.log("Daten werden aktualisiert...");
   alert("Test");
-  // Hier kannst du deine Refresh-Logik einfügen, z.B.:
   // fetchData();
 };
 
@@ -123,6 +115,7 @@ const onTouchMove = (e: TouchEvent) => {
     currentY.value = e.touches[0].clientY;
 
     const pullDistance = currentY.value - startY.value;
+    loading.value = false;
     if (pullDistance > 600) {
       loading.value = true;
     }
@@ -141,4 +134,11 @@ const onTouchEnd = () => {
     currentY.value = 0;
   }
 };
+
+onMounted(() => {
+  loadLoggedState();
+});
+
+// Beobachte Änderungen im Anmeldezustand und speichere diese
+watch(logged, saveLoggedState, { deep: true });
 </script>
