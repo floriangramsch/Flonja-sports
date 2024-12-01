@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
+import ExerciseChart from "../Charts/ExerciseChart.vue";
 
 const equips = defineModel<EquipType[]>();
 
@@ -54,8 +55,9 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         {{ equip.equip_name }}
       </div>
       <div v-for="user in equip.users" class="flex flex-wrap">
-        <div class="mr-1">{{ user.user_name }}:</div>
-        <div v-for="(set, index) in user.sets" class="flex">
+        <!-- <div class="mr-1">{{ user.user_name }}:</div> -->
+        <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
+        <!-- <div v-for="(set, index) in user.sets" class="flex">
           <div class="mx-2 flex">
             <div>{{ set.weight }}</div>
             <div v-if="set.reps">({{ set.reps }})</div>
@@ -64,7 +66,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
             v-if="index !== user.sets.length - 1"
             class="fa-solid fa-arrow-right"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

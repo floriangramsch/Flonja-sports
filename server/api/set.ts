@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         SET weight = ?, reps = ?
         WHERE id = ?;
         `,
-        [weight, reps, set_id]
+        [weight, reps, set_id],
       );
       return rows;
     }
@@ -40,8 +40,9 @@ export default defineEventHandler(async (event) => {
           LEFT JOIN Exercice e ON e.exercice_id = s.exercise_id
           LEFT JOIN Equip eq ON eq.equip_id = e.equip_id
           LEFT JOIN Workout w ON w.workout_id = e.workout_id
-          LEFT JOIN User u ON u.user_id = w.user_id;
-        `
+          LEFT JOIN User u ON u.user_id = w.user_id
+          ORDER BY w.start;
+        `,
         );
         const groupedData = rows.reduce((acc: { [key: string]: any }, curr) => {
           const { equip_name, equip_id, user_name, weight, reps } = curr;
