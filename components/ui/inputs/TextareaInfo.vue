@@ -22,7 +22,7 @@ const updateInfo = () => {
         onSuccess: () => {
           editInfo.value = false;
         },
-      }
+      },
     );
   }
 };
@@ -33,7 +33,7 @@ watch(
   () => infoRef.value,
   (newVal) => {
     if (newVal) newVal.focus();
-  }
+  },
 );
 </script>
 
@@ -42,7 +42,7 @@ watch(
     <div
       v-if="!editInfo"
       @click="editInfo = true"
-      class="flex flex-col text-wrap w-48 h-48 border-2 border-sonja-text p-2 rounded shadow bg-sonja-text text-sonja-akz2 whitespace-pre"
+      class="flex h-48 w-48 flex-col whitespace-pre text-wrap rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow"
     >
       {{ info }}
       s
@@ -50,7 +50,7 @@ watch(
     <div class="flex flex-col gap-4" v-else>
       <textarea
         :id="labelId"
-        class="peer w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
+        class="peer h-48 w-48 rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
         v-model="newInfo"
         ref="infoRef"
       />
@@ -58,7 +58,7 @@ watch(
     </div>
     <label
       :for="labelId"
-      class="absolute shadow bg-sonja-akz text-sonja-text text-xs p-[2px] rounded left-2 -top-2"
+      class="absolute -top-2 left-2 rounded bg-sonja-akz p-[2px] text-xs text-sonja-text shadow"
     >
       Info
     </label>
