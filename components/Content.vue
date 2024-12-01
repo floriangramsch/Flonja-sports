@@ -23,7 +23,7 @@ const exerciseFilter = ref<number[]>([]);
 
 <template>
   <div
-    class="flex flex-col flex-grow bg-sonja-bg text-sonja-text text-2xl flex-1 mobile-landscape:mt-0 overflow-y-auto relative no-x-scrollbar"
+    class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
     <SlideTransition>
       <div v-if="show.showRouter === 'exercises' && users">

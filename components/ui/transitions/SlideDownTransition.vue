@@ -7,7 +7,9 @@
 <style scoped>
 .slide-fade-dropdown-enter-active,
 .slide-fade-dropdown-leave-active {
-  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
   overflow: hidden;
 }
 

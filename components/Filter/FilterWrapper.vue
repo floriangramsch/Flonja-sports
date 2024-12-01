@@ -14,7 +14,7 @@ defineExpose({
   <SlideDownTransition>
     <div
       v-show="isOpen"
-      class="flex w-full justify-evenly pb-1 overflow-hidden"
+      class="flex w-full justify-evenly overflow-hidden pb-1"
     >
       <slot />
     </div>

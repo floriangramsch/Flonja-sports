@@ -4,6 +4,7 @@ import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import EquipSelection from "./EquipSelection.vue";
 import type {
+  EquipType,
   ExerciseType,
   WorkoutRouterTypes,
   workoutShowType,
@@ -35,7 +36,7 @@ const switchRouter = (route: WorkoutRouterTypes) => {
 };
 
 const { data: exercises } = useExercisesByWorkout(
-  computed(() => props.workout?.workout_id)
+  computed(() => props.workout?.workout_id),
 );
 
 const exToShow = ref<ExerciseType>();
@@ -56,7 +57,7 @@ const updateWorkout = () => {
           showLockerDialog.value = false;
           newLocker.value = undefined;
         },
-      }
+      },
     );
 };
 
@@ -81,7 +82,7 @@ const endWorkout = () => {
         onSuccess: () => {
           showConfirmEndWorkout.value = false;
         },
-      }
+      },
     );
   }
 };
@@ -94,7 +95,7 @@ watch(
     } else {
       switchRouter("home");
     }
-  }
+  },
 );
 
 watch(
@@ -103,7 +104,7 @@ watch(
     if (!logged.value?.loggedWorkoutId) {
       switchRouter("home");
     }
-  }
+  },
 );
 
 watch(
@@ -112,7 +113,7 @@ watch(
     if (newVal) {
       switchRouter("exercisedetail");
     }
-  }
+  },
 );
 
 watch(
@@ -123,7 +124,7 @@ watch(
     } else {
       newLocker.value = undefined;
     }
-  }
+  },
 );
 </script>
 
@@ -140,12 +141,12 @@ watch(
       class="absolute inset-0"
     >
       <!-- Header -->
-      <div class="w-full flex justify-evenly py-4 px-2">
+      <div class="flex w-full justify-evenly px-2 py-4">
         <!-- End Workout -->
         <Confirm
           v-model:isOpen="showConfirmEndWorkout"
           @yes="endWorkout"
-          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           :disabled="workout?.end ? true : false"
         >
           <i
@@ -153,16 +154,16 @@ watch(
             :class="workout?.end ? 'opacity-50' : ''"
           />
         </Confirm>
-        <div class="text-4xl font-bold text-center">Exercises</div>
+        <div class="text-center text-4xl font-bold">Exercises</div>
         <!-- Locker -->
         <button
           @click="showLockerDialog = true"
-          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         >
           <i class="fa-solid fa-lock" />
         </button>
         <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
-          <div class="flex flex-col justify-center items-center gap-4">
+          <div class="flex flex-col items-center justify-center gap-4">
             <div class="flex gap-2">
               <UiNumberInput
                 v-model:modelValue="newLocker"
@@ -177,7 +178,7 @@ watch(
       <div
         v-if="exercises?.length !== 0"
         v-for="ex in exercises"
-        class="border-b border-sonja-bg-darker rounded-full flex justify-center items-center py-3 cursor-pointer"
+        class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
         @click="
           exToShow = ex;
           workoutShow.showRouter = 'exercisedetail';
@@ -188,7 +189,7 @@ watch(
             {{ ex.equipName }}
           </div>
           <div
-            class="absolute -translate-y-11 -right-2 text-xs/[8px] z-0 bg-sonja-akz rounded shadow p-1 ml-2 group-hover:-translate-y-9 group-hover:-rotate-[20deg] group-hover:-right-8 transition-all duration-300"
+            class="absolute -right-2 z-0 ml-2 -translate-y-11 rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-9 group-hover:-rotate-[20deg]"
           >
             {{ ex.muscleName }}
           </div>
@@ -196,14 +197,14 @@ watch(
       </div>
       <div v-else>
         <div
-          class="bg-sonja-bg-darker w-full h-20 flex justify-center items-center text-3xl font-bold cursor-pointer"
+          class="flex h-20 w-full cursor-pointer items-center justify-center bg-sonja-bg-darker text-3xl font-bold"
           @click="() => (workoutShow.showRouter = 'equipselection')"
         >
           Start Workout
         </div>
       </div>
       <button
-        class="w-full bg-sonja-bg-darker flex justify-center rounded-t rounded-full pt-3 pb-2"
+        class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
         @click="() => (workoutShow.showRouter = 'equipselection')"
       >
         <i class="fa-solid fa-plus text-5xl" />
@@ -224,7 +225,7 @@ watch(
         user_id: workout.user_id,
         rest_time: workout.rest_time,
       }"
-      :equip="equips?.find((e) => e.equip_id === exToShow?.equip_id)"
+      :equip="equips?.find((e: EquipType) => e.equip_id === exToShow?.equip_id)"
       v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;

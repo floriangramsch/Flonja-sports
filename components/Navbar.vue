@@ -26,7 +26,7 @@ onBeforeUnmount(() => {
 
 <template>
   <nav
-    class="sticky bottom-0 w-full flex bg-sonja-bg border-t-2 border-sonja-bg-darker text-sonja-text text-2xl pb-7 pt-2"
+    class="sticky bottom-0 flex w-full border-t-2 border-sonja-bg-darker bg-sonja-bg pb-7 pt-2 text-2xl text-sonja-text"
   >
     <button @click="show.showRouter = 'exercises'" class="w-full">
       <i

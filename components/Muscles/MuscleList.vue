@@ -41,7 +41,7 @@ const updateMuscle = () => {
             name: undefined,
           };
         },
-      }
+      },
     );
   }
 };
@@ -65,20 +65,20 @@ const deleteMuscle = () => {
 
 <template>
   <!-- Header -->
-  <div class="w-full flex py-4 px-2 justify-center">
+  <div class="flex w-full justify-center px-2 py-4">
     <button
       v-if="show"
-      class="absolute left-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+      class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
       @click="show.showRouter = 'equiplist'"
     >
       <i class="fa-solid fa-repeat" />
     </button>
-    <div class="text-4xl font-bold text-center">Muscle List</div>
+    <div class="text-center text-4xl font-bold">Muscle List</div>
     <!-- New Muscle -->
     <Dialog :isOpen="showDialogNewMuscle" @close="showDialogNewMuscle = false">
       <template v-slot:trigger>
         <button
-          class="absolute right-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           @click="showDialogNewMuscle = true"
         >
           <i class="fa-solid fa-plus" />
@@ -98,10 +98,10 @@ const deleteMuscle = () => {
       };
       showDialogMuscle = true;
     "
-    class="flex w-full justify-center m-2 cursor-pointer"
+    class="m-2 flex w-full cursor-pointer justify-center"
   >
     <div
-      class="flex justify-center w-1/2 p-2 bg-sonja-text text-sonja-akz2 rounded shadow"
+      class="flex w-1/2 justify-center rounded bg-sonja-text p-2 text-sonja-akz2 shadow"
     >
       {{ muscle.muscle_name }}
     </div>
@@ -111,12 +111,12 @@ const deleteMuscle = () => {
   <Dialog :isOpen="showDialogMuscle" @close="showDialogMuscle = false">
     <!-- <input v-model="muscleForm.name" /> -->
     <UiInputsTextinput v-model="muscleForm.name" label="Muskle name" focus />
-    <div class="flex w-full justify-center gap-2 mt-4">
+    <div class="mt-4 flex w-full justify-center gap-2">
       <Button @action="updateMuscle">Update</Button>
       <Confirm
         v-model:isOpen="showDialogDeleteMuscle"
         @yes="deleteMuscle"
-        class="flex items-center bg-sonja-text text-red-600 h-10 px-4 rounded-full shadow"
+        class="flex h-10 items-center rounded-full bg-sonja-text px-4 text-red-600 shadow"
       >
         Delete
       </Confirm>

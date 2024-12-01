@@ -40,7 +40,7 @@ const newStat = () => {
           showNewStat.value = false;
           newWeight.value = undefined;
         },
-      }
+      },
     );
   }
 };
@@ -79,21 +79,21 @@ watch(
     } else {
       newLocker.value = undefined;
     }
-  }
+  },
 );
 </script>
 <template>
   <div>
     <!-- Header -->
-    <div class="w-full flex justify-evenly py-4 px-2">
+    <div class="flex w-full justify-evenly px-2 py-4">
       <i
-        class="fa-solid fa-list pl-2 text-3xl absolute left-4"
+        class="fa-solid fa-list absolute left-4 pl-2 text-3xl"
         @click="showList = !showList"
       />
-      <div class="text-4xl font-bold text-center">Stats</div>
+      <div class="text-center text-4xl font-bold">Stats</div>
     </div>
     <!-- Stats -->
-    <div v-if="workout" class="mb-2 w-full flex flex-col items-center gap-3">
+    <div v-if="workout" class="mb-2 flex w-full flex-col items-center gap-3">
       <!-- <div>Locker: {{ workout?.locker }}</div> -->
       <div>
         <UiNumberInput
@@ -110,13 +110,17 @@ watch(
     </div>
     <ChartsBasicChart
       v-if="stats"
-      :dataFlorian="stats.Florian.map((stat: StatsType) => [stat.date, stat.body_weight])"
-      :dataSonja="stats.Sonja.map((stat: StatsType) => [stat.date, stat.body_weight])"
+      :dataFlorian="
+        stats.Florian.map((stat: StatsType) => [stat.date, stat.body_weight])
+      "
+      :dataSonja="
+        stats.Sonja.map((stat: StatsType) => [stat.date, stat.body_weight])
+      "
     />
 
     <Dialog :isOpen="showNewStat" @close="showNewStat = false">
       <template v-slot:trigger>
-        <div class="flex justify-center w-full">
+        <div class="flex w-full justify-center">
           <UiButtonsButton class="px-10" @action="showNewStat = true">
             New
           </UiButtonsButton>
@@ -129,7 +133,7 @@ watch(
 
     <div
       v-show="showList"
-      class="transition-opacity duration-500 ease-in-out opacity-0"
+      class="opacity-0 transition-opacity duration-500 ease-in-out"
       :class="{ 'opacity-100': showList }"
     >
       Flo

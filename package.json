@@ -22,7 +22,6 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "cypress": "^13.15.0",
     "prettier": "^3.4.1",
     "prettier-plugin-tailwindcss": "^0.6.9"
   }

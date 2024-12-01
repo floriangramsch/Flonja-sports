@@ -64,7 +64,7 @@ const handleSet = () => {
             // newWeight.value = undefined;
             newReps.value = undefined;
           },
-        }
+        },
       );
     } else {
       addSetMutation.mutate(
@@ -80,7 +80,7 @@ const handleSet = () => {
             newReps.value = undefined;
             emit("startTimer");
           },
-        }
+        },
       );
     }
   }
@@ -102,33 +102,33 @@ watch(
   (newVal) => {
     showOldSets.value =
       newVal.length === 0 && lastSets.value && lastSets.value?.length !== 0;
-  }
+  },
 );
 </script>
 
 <template>
   <div class="absolute inset-0 pb-52">
     <!-- Header -->
-    <div class="w-full flex justify-evenly py-4 px-4">
+    <div class="flex w-full justify-evenly px-4 py-4">
       <button
-        class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         @click="emit('close')"
       >
         <i class="fa-solid fa-arrow-left" />
       </button>
-      <div class="text-4xl font-bold text-center">
+      <div class="text-center text-4xl font-bold">
         {{ exercise.equipName }}
       </div>
       <Confirm
         v-model:isOpen="showConfirmDeleteExercise"
         @yes="removeExercise"
-        class="flex items-center bg-sonja-bg-darker text-red-800 h-10 px-4 rounded-full shadow"
+        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow"
       >
         <i class="fa-solid fa-close" />
       </Confirm>
     </div>
     <!-- Buttons -->
-    <div class="flex w-full justify-center mb-5">
+    <div class="mb-5 flex w-full justify-center">
       <!-- Switch between current and old sets -->
       <button
         class="text-3xl"
@@ -140,7 +140,7 @@ watch(
       </button>
       <!-- Open Info -->
       <button
-        class="text-3xl absolute right-9 text-sonja-text"
+        class="absolute right-9 text-3xl text-sonja-text"
         @click="showInfo = true"
       >
         <i class="fa-solid fa-info" />
@@ -152,7 +152,7 @@ watch(
       <div
         v-if="!showOldSets"
         v-for="set in sets"
-        class="flex justify-between m-2 pr-6 pb-2 border-b-2 border-sonja-bg-darker rounded-lg"
+        class="m-2 flex justify-between rounded-lg border-b-2 border-sonja-bg-darker pb-2 pr-6"
       >
         <button
           @click="
@@ -183,7 +183,7 @@ watch(
       <div
         v-if="showOldSets"
         v-for="set in lastSets"
-        class="flex justify-between m-2 pr-6 p-2 border-b-2 bg-sonja-text text-sonja-akz2 rounded-lg"
+        class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
       >
         <div class="flex flex-col">
           <div>Reps: {{ set.reps }}</div>
@@ -193,7 +193,7 @@ watch(
     </div>
     <div v-if="sets?.length === 0 && !showOldSets">
       <div
-        class="bg-sonja-bg-darker rounded-t-3xl w-full h-20 flex justify-center items-center text-3xl font-bold cursor-pointer"
+        class="flex h-20 w-full cursor-pointer items-center justify-center rounded-t-3xl bg-sonja-bg-darker text-3xl font-bold"
         @click="() => (showUpdateExerciseDialog = true)"
       >
         New Set
@@ -203,7 +203,7 @@ watch(
     <button
       v-if="!showOldSets"
       @click="showUpdateExerciseDialog = true"
-      class="flex w-full justify-center bg-sonja-bg-darker rounded-t rounded-full pt-1 -mt-2"
+      class="-mt-2 flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pt-1"
     >
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
@@ -224,9 +224,9 @@ watch(
         }
       "
     >
-      <div class="flex flex-col justify-center items-center gap-4">
+      <div class="flex flex-col items-center justify-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
-        <div class="grid grid-cols-2 gap-2 mt-2">
+        <div class="mt-2 grid grid-cols-2 gap-2">
           <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
           <UiNumberInput v-model:modelValue="newWeight" label="Weight" />
         </div>
@@ -241,7 +241,7 @@ watch(
         equip?.info ? (editInfo = false) : (editInfo = true);
       "
     >
-      <div class="flex flex-col justify-center items-center gap-4">
+      <div class="flex flex-col items-center justify-center gap-4">
         <TextareaInfo
           v-model:edit-info="editInfo"
           :info="equip?.info"

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col absolute top-10 right-14 text-sonja-akz2 bg-sonja-text rounded-md shadow-lg text-xl border-2 border-sonja-akz"
+    class="absolute right-14 top-10 flex flex-col rounded-md border-2 border-sonja-akz bg-sonja-text text-xl text-sonja-akz2 shadow-lg"
   >
     <button class="px-4 py-2" @click.prevent="newWorkout">
       Neues Training

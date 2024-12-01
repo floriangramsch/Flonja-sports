@@ -1,14 +1,14 @@
 <template>
   <div
     v-if="isSuccess"
-    class="flex flex-col h-dvh"
+    class="flex h-dvh flex-col"
     @touchstart="onTouchStart"
     @touchmove="onTouchMove"
     @touchend="onTouchEnd"
   >
     <div
       v-if="isPulling"
-      class="fixed top-0 left-0 right-0 h-20 bg-sonja-text flex justify-center items-center text-3xl"
+      class="fixed left-0 right-0 top-0 flex h-20 items-center justify-center bg-sonja-text text-3xl"
     >
       <span v-if="loading">Loading</span>
       <span v-else-if="isPulling">Pulling</span>
@@ -37,7 +37,7 @@
   <!-- loading -->
   <div
     v-else
-    class="flex justify-center items-center text-5xl bg-sonja-bg h-dvh gap-4"
+    class="flex h-dvh items-center justify-center gap-4 bg-sonja-bg text-5xl"
   >
     <i class="fa-solid fa-dumbbell fa-spin" />
     Loading...
@@ -73,7 +73,7 @@ const logged = ref<LoggedType>({
 });
 
 const { data: workout } = useGetWorkout(
-  computed(() => logged.value.loggedWorkoutId)
+  computed(() => logged.value.loggedWorkoutId),
 );
 
 // Funktion zum Speichern des Anmeldezustands im Local Storage

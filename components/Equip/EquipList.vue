@@ -58,7 +58,7 @@ const updateEquip = () => {
             info: undefined,
           };
         },
-      }
+      },
     );
   }
 };
@@ -126,7 +126,7 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
 
         return acc;
       },
-      {}
+      {},
     );
 
     // Umwandeln der Ergebnisse in ein Array von Arrays und nach Namen sortieren
@@ -145,17 +145,17 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 <template>
   <div class="relativ">
     <!-- Header -->
-    <div class="w-full flex justify-evenly py-4 px-2">
+    <div class="flex w-full justify-evenly px-2 py-4">
       <button
         v-if="show"
-        class="absolute left-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         @click="show.showRouter = 'musclelist'"
       >
         <i class="fa-solid fa-repeat" />
       </button>
-      <div class="text-4xl font-bold text-center">Equip List</div>
+      <div class="text-center text-4xl font-bold">Equip List</div>
       <button
-        class="absolute right-6 flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         @click="filterWrapperComponent?.toggle"
       >
         <i class="fa-solid fa-filter" />
@@ -165,7 +165,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
     <FilterWrapper ref="filterWrapperComponent">
       <Filter
         :data="
-          muscles.map((muscle) => ({
+          muscles.map((muscle: MuscleType) => ({
             id: muscle.muscle_group_id,
             name: muscle.muscle_name,
           }))
@@ -183,7 +183,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       >
         <template #trigger>
           <button
-            class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+            class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
             @click="showDialogEquip = true"
           >
             <i class="fa-solid fa-plus" />
@@ -206,7 +206,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         showDialogUpdateEquip = false;
       "
     >
-      <div class="flex flex-col gap-4 my-2">
+      <div class="my-2 flex flex-col gap-4">
         <Textinput v-model="equipForm.equip_name" label="Equip Name" focus />
 
         <Select
@@ -219,14 +219,14 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         <!-- Info -->
         <div class="relative">
           <textarea
-            class="peer w-48 h-48 border-2 border-sonja-text rounded p-2 shadow bg-sonja-text text-sonja-akz2 focus:ring-2 focus:ring-sonja-akz focus:outline-none"
+            class="peer h-48 w-48 rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
             v-model="equipForm.info"
             ref="infoRef"
             placeholder=" "
           />
           <label
             :for="labelId"
-            class="absolute shadow transition-all duration-200 bg-sonja-akz text-sonja-text text-xs p-[2px] rounded left-2 -translate-y-1/2 peer-placeholder-shown:top-5 peer-placeholder-shown:text-sonja-akz2 peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-xl peer-focus:bg-sonja-akz peer-focus:text-sonja-text peer-focus:text-xs peer-focus:p-[2px] peer-focus:left-2 peer-focus:top-0"
+            class="absolute left-2 -translate-y-1/2 rounded bg-sonja-akz p-[2px] text-xs text-sonja-text shadow transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-xl peer-placeholder-shown:text-sonja-akz2 peer-focus:left-2 peer-focus:top-0 peer-focus:bg-sonja-akz peer-focus:p-[2px] peer-focus:text-xs peer-focus:text-sonja-text"
           >
             Info
           </label>
@@ -236,7 +236,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
     </Dialog>
     <!-- Equip List -->
     <div
-      class="flex flex-col snap-y snap-mandatory bg-sonja-bg overflow-y-scroll no-scrollbar"
+      class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg"
     >
       <div v-for="equip in equipList" class="p-1">
         <div
@@ -251,7 +251,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
               showDialogUpdateEquip = true;
             }
           "
-          class="text-2xl font-bold cursor-pointer overflow-x-scroll sm:overflow-x-auto whitespace-nowrap"
+          class="cursor-pointer overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
           <button

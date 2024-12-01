@@ -23,9 +23,9 @@ const addWorkout = () => {
 </script>
 
 <template>
-  <div class="bg-sonja-bg flex justify-center items-center h-full">
+  <div class="flex h-full items-center justify-center bg-sonja-bg">
     <button
-      class="bg-sonja-text text-sonja-akz3 h-12 px-20 rounded-3xl shadow flex items-center"
+      class="flex h-12 items-center rounded-3xl bg-sonja-text px-20 text-sonja-akz3 shadow"
       @click.prevent="addWorkout"
     >
       Start

@@ -27,7 +27,7 @@ const chooseMuscle = (muscle: MuscleType) => {
 
 const equipsToShow = computed(() => {
   return props.equips.filter(
-    (equip) => equip.muscle_name === chosenMuscle.value?.muscle_name
+    (equip) => equip.muscle_name === chosenMuscle.value?.muscle_name,
   );
 });
 
@@ -54,7 +54,7 @@ const addNewExercice = (equipId: number) => {
         };
         emit("close");
       },
-    }
+    },
   );
 };
 </script>
@@ -63,21 +63,21 @@ const addNewExercice = (equipId: number) => {
   <!-- Muscle Selection -->
   <SlideTransition>
     <div v-if="showMuscleOverview">
-      <div class="w-full flex justify-evenly py-4">
+      <div class="flex w-full justify-evenly py-4">
         <button
-          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           @click="emit('close')"
         >
           <i class="fa-solid fa-arrow-left" />
         </button>
-        <div class="text-4xl font-bold text-center">Muskel</div>
+        <div class="text-center text-4xl font-bold">Muskel</div>
         <div></div>
       </div>
       <div
-        class="grid grid-cols-3 place-items-center gap-2 inset-0 overflow-auto"
+        class="inset-0 grid grid-cols-3 place-items-center gap-2 overflow-auto"
       >
         <div
-          class="size-28 flex justify-center items-center border-4 border-sonja-bg-darker cursor-pointer overflow-auto"
+          class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker"
           @click="chooseMuscle(muscle)"
           v-for="muscle in muscles"
           :key="muscle.muscle_group_id"
@@ -87,7 +87,7 @@ const addNewExercice = (equipId: number) => {
         <Dialog :isOpen="showDialogMuscle" @close="showDialogMuscle = false">
           <template v-slot:trigger>
             <div
-              class="size-28 flex text-center items-center bg-sonja-text text-sonja-akz2 border-4 border-black cursor-pointer overflow-auto"
+              class="flex size-28 cursor-pointer items-center overflow-auto border-4 border-black bg-sonja-text text-center text-sonja-akz2"
               @click="showDialogMuscle = true"
             >
               Neuer Muskle
@@ -102,9 +102,9 @@ const addNewExercice = (equipId: number) => {
   <!-- Equip Selection -->
   <SlideTransition>
     <div v-if="showEquipOverview">
-      <div class="w-full flex justify-evenly py-4">
+      <div class="flex w-full justify-evenly py-4">
         <button
-          class="flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           @click="
             showMuscleOverview = true;
             showEquipOverview = false;
@@ -112,14 +112,14 @@ const addNewExercice = (equipId: number) => {
         >
           <i class="fa-solid fa-arrow-left" />
         </button>
-        <div class="text-4xl font-bold text-center">Equipment</div>
+        <div class="text-center text-4xl font-bold">Equipment</div>
         <div class=""></div>
       </div>
-      <div class="flex flex-col mt-16 absolute inset-0">
+      <div class="absolute inset-0 mt-16 flex flex-col">
         <div
           v-for="equip in equipsToShow"
           @click="addNewExercice(Number(equip.equip_id))"
-          class="cursor-pointer flex justify-center py-2 border-b-4 border-sonja-bg-darker"
+          class="flex cursor-pointer justify-center border-b-4 border-sonja-bg-darker py-2"
         >
           {{ equip.equip_name }}
         </div>

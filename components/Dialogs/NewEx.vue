@@ -5,12 +5,12 @@
       <input
         v-model="newWorkoutWeight"
         style="width: 64px"
-        class="p-1 bg-sonja-akz2 rounded-md ml-1"
+        class="ml-1 rounded-md bg-sonja-akz2 p-1"
       />
     </div>
     <button
       @click.prevent="addNewExercice"
-      class="mt-4 bg-sonja-akz p-2 rounded"
+      class="mt-4 rounded bg-sonja-akz p-2"
     >
       Neues Gewicht!
     </button>
@@ -47,7 +47,7 @@ const addNewExercice = () => {
       },
       {
         onSuccess: () => emit("close"),
-      }
+      },
     );
   }
 };

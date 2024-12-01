@@ -28,7 +28,7 @@ function formatTime(milliseconds: number): string {
 
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0"
+    "0",
   )}`;
 }
 
@@ -37,7 +37,7 @@ const formattedTime = computed(() => {
   const seconds = Math.floor((remainingTime.value % 60000) / 1000);
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
-    "0"
+    "0",
   )}`;
 });
 
@@ -93,7 +93,7 @@ const changeRestTime = (e: Event) => {
       onSuccess: () => {
         remainingTime.value = millis;
       },
-    }
+    },
   );
 };
 
@@ -132,7 +132,7 @@ watch(
   () => props.isActive,
   (newValue) => {
     newValue ? startTimer() : stopTimer();
-  }
+  },
 );
 
 // Timer aufräumen, wenn die Komponente entladen wird
@@ -142,7 +142,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex justify-center text-2xl gap-3">
+  <div class="flex w-full justify-center gap-3 text-2xl">
     <DialogsDialog
       :is-open="showAdjustRestTime"
       @close="showAdjustRestTime = false"
@@ -158,7 +158,7 @@ onUnmounted(() => {
           min="00:01"
           v-model="restTimeInput"
           @change="changeRestTime"
-          class="p-4 rounded shadow flex justify-center bg-sonja-text text-sonja-akz2 text-3xl dark:yellow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
+          class="dark:yellow flex justify-center rounded bg-sonja-text p-4 text-3xl text-sonja-akz2 shadow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
         />
       </div>
     </DialogsDialog>

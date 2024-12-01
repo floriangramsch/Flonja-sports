@@ -23,7 +23,7 @@ watch(
         inputRef.value.focus();
       }
     }
-  }
+  },
 );
 
 onMounted(() => {
@@ -40,14 +40,14 @@ onMounted(() => {
       v-model="newValue"
       type="number"
       inputmode="decimal"
-      class="peer w-32 h-12 focus:outline-none focus:ring-2 focus:ring-sonja-akz bg-sonja-text text-sonja-akz2 p-2 rounded shadow remove-arrow"
+      class="remove-arrow peer h-12 w-32 rounded bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
       ref="inputRef"
       :placeholder="placeholder ?? ' '"
       @focusout="$emit('action')"
     />
     <label
       :for="labelId"
-      class="absolute transition-all duration-200 left-2 -translate-y-2 text-xs bg-sonja-akz p-[2px] rounded shadow peer-placeholder-shown:top-[1.1rem] peer-placeholder-shown:left-1 peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-sonja-akz2 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:left-2 peer-focus:text-sonja-text peer-focus:bg-sonja-akz peer-focus:text-xs"
+      class="absolute left-2 -translate-y-2 rounded bg-sonja-akz p-[2px] text-xs shadow transition-all duration-200 peer-placeholder-shown:left-1 peer-placeholder-shown:top-[1.1rem] peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-base peer-placeholder-shown:text-sonja-akz2 peer-focus:left-2 peer-focus:top-0 peer-focus:bg-sonja-akz peer-focus:text-xs peer-focus:text-sonja-text"
     >
       {{ label }}
     </label>

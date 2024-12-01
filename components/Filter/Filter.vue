@@ -51,33 +51,33 @@ defineExpose({
   <div class="relative">
     <div @click.stop="isOpen = !isOpen">
       <i
-        class="fa-solid fa-hand flex items-center bg-sonja-bg-darker text-sonja-text h-10 px-4 rounded-full shadow"
+        class="fa-solid fa-hand flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
       />
     </div>
     <SlideDownTransition>
       <div
         v-if="isOpen"
-        class="fixed inset-0 w-screen h-screen"
+        class="fixed inset-0 h-screen w-screen"
         @click="handleOverlayClick"
       >
         <div
           @click.stop
           ref="filterRef"
-          class="absolute bg-sonja-text top-40 text-sonja-akz2 rounded-md shadow-lg text-nowrap overflow-scroll max-h-80 max-w-48"
+          class="absolute top-40 max-h-80 max-w-48 overflow-scroll text-nowrap rounded-md bg-sonja-text text-sonja-akz2 shadow-lg"
           style="transform: translate(40px, 40px)"
         >
           <div
             v-for="d in data"
             :key="d.id"
             @click="filterData(d.id)"
-            class="flex py-0.5 px-2 cursor-pointer"
+            class="flex cursor-pointer px-2 py-0.5"
             :class="isFiltered(d.id) ? 'bg-sonja-akz' : 'bg-sonja-text'"
           >
             {{ d.name }}
           </div>
           <div
             @click="reset"
-            class="border-t border-sonja-akz2 py-1 px-2 cursor-pointer w-full"
+            class="w-full cursor-pointer border-t border-sonja-akz2 px-2 py-1"
           >
             Reset
           </div>

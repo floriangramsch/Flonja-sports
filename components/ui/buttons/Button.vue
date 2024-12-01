@@ -4,7 +4,7 @@ const emit = defineEmits(["action"]);
 
 <template>
   <button
-    class="p-2 bg-sonja-text text-sonja-akz2 rounded"
+    class="rounded bg-sonja-text p-2 text-sonja-akz2"
     @click.prevent="emit('action')"
   >
     <slot />

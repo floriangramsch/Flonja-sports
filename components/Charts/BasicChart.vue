@@ -112,6 +112,6 @@ watch(
   () => {
     createChart();
   },
-  { deep: true }
+  { deep: true },
 );
 </script>

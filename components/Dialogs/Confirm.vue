@@ -34,15 +34,15 @@ const handleOverlayClick = (e: MouseEvent) => {
   <div
     v-if="isOpen"
     @click="handleOverlayClick"
-    class="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 text-xl z-50"
+    class="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 text-xl"
   >
     <div
       @click.stop
       ref="dialog"
-      class="flex flex-col justify-center items-center fixed bg-sonja-bg p-12 py-14 w-48 h-20 top-1/4 left-1/4 text-sonja-text rounded shadow"
+      class="fixed left-1/4 top-1/4 flex h-20 w-48 flex-col items-center justify-center rounded bg-sonja-bg p-12 py-14 text-sonja-text shadow"
     >
       <div>Sure?</div>
-      <div class="flex gap-4 mt-2">
+      <div class="mt-2 flex gap-4">
         <Button @action="emit('yes')"> Yes </Button>
         <Button @action="isOpen = false"> No </Button>
       </div>

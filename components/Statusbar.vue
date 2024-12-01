@@ -49,19 +49,19 @@ const logout = () => {
 
 <template>
   <div
-    class="sticky flex justify-between items-center text-sonja-akz top-0 w-full bg-sonja-text h-20 z-10 shadow mobile-landscape:hidden"
+    class="sticky top-0 z-10 flex h-20 w-full items-center justify-between bg-sonja-text text-sonja-akz shadow mobile-landscape:hidden"
   >
     <!-- Profilepic -->
     <div @click.prevent="switchUser" class="h-full min-w-16 cursor-pointer">
       <img
         v-if="logged?.user?.name === 'Florian'"
         src="@/public/flo.jpg"
-        class="max-h-full min-w-18 p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+        class="min-w-18 max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
         alt="Flo"
       />
       <img
         v-else
-        class="max-h-full p-[1px] rounded-r-lg shadow shadow-sonja-akz"
+        class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
         src="@/public/sonja.jpg"
         alt="Sonja"
       />
@@ -69,7 +69,7 @@ const logout = () => {
     <!-- Status -->
     <h1
       v-if="logged?.user"
-      class="text-sonja-akz2 font-bold text-2xl flex flex-col"
+      class="flex flex-col text-2xl font-bold text-sonja-akz2"
     >
       Hallo Se Bebi {{ logged.user.name }}
       <Timer
@@ -81,7 +81,7 @@ const logout = () => {
       />
     </h1>
     <!-- Buttons -->
-    <div class="flex flex-col mr-3 text-3xl">
+    <div class="mr-3 flex flex-col text-3xl">
       <!-- Start/End Workout -->
       <button v-if="logged?.isLogged" @click.prevent="logout">
         <i class="fa-solid fa-right-from-bracket" />

@@ -44,17 +44,17 @@ const deleteWorkout = () => {
 
 <template>
   <div
-    class="flex flex-col snap-y snap-mandatory overflow-y-auto no-scrollbar cursor-pointer"
+    class="no-scrollbar flex cursor-pointer snap-y snap-mandatory flex-col overflow-y-auto"
   >
     <!-- Header -->
-    <div class="w-full flex justify-evenly py-4 px-2">
-      <div class="text-4xl font-bold text-center">Workout List</div>
+    <div class="flex w-full justify-evenly px-2 py-4">
+      <div class="text-center text-4xl font-bold">Workout List</div>
     </div>
     <!-- workout list -->
     <div
       v-for="workout in workouts"
       @click="editWorkout(workout)"
-      class="p-2 flex flex-col min-w-full snap-start"
+      class="flex min-w-full snap-start flex-col p-2"
       :key="workout.workout_id"
     >
       <div class="flex">
