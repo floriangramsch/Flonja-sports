@@ -49,7 +49,7 @@ const createChart = () => {
           backgroundColor: "#1e293b",
           borderColor: "#1e293b",
           borderWidth: 1,
-          pointRadius: 3,
+          pointRadius: 5,
         },
         {
           label: "Sonja",
@@ -61,7 +61,7 @@ const createChart = () => {
           backgroundColor: "#0d9488",
           borderColor: "#0d9488",
           borderWidth: 1,
-          pointRadius: 3,
+          pointRadius: 5,
         },
       ],
     },
@@ -83,7 +83,7 @@ const createChart = () => {
         y: {
           beginAtZero: false,
           title: {
-            display: true,
+            display: false,
             text: "Weigth",
           },
         },

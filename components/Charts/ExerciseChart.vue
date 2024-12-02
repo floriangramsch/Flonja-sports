@@ -35,7 +35,7 @@ const createTopSetsChart = () => {
 
       datasets: [
         {
-          label: props.user,
+          label: props.user + " (Weight)",
 
           data: props.data?.map((d: any) => d.weight),
           // data: props.data?.map((d: any) => d.weight * d.reps),
@@ -66,7 +66,7 @@ const createTopSetsChart = () => {
         y: {
           beginAtZero: false,
           title: {
-            display: true,
+            display: false,
             text: "Weigth",
           },
         },
@@ -124,8 +124,7 @@ const createVolumeChart = () => {
 
       datasets: [
         {
-          label: props.user,
-
+          label: props.user + " (Weight * Reps)",
           data: props.data?.map((d: any) => d.weight * d.reps),
           backgroundColor: "#1e293b",
           borderColor: "#1e293b",
@@ -148,7 +147,7 @@ const createVolumeChart = () => {
         y: {
           beginAtZero: false,
           title: {
-            display: true,
+            display: false,
             text: "Weigth * Reps",
           },
         },
