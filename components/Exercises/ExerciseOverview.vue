@@ -59,7 +59,6 @@ const showLegacy = ref<boolean>(false);
         {{ equip.equip_name }}
       </div>
       <div v-for="user in equip.users" class="flex flex-wrap">
-        <!-- <div class="mr-1">{{ user.user_name }}:</div> -->
         <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
         <div v-if="showLegacy" v-for="(set, index) in user.sets" class="flex">
           <div class="mx-2 flex">

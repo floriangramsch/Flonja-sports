@@ -189,8 +189,10 @@ watch(
 </script>
 
 <template>
-  <div class="sm:h-90 relative my-4 h-64 w-full">
-    <button @click="switchChart"><i class="fa-solid fa-cat" /></button>
-    <canvas class="min-w-full" ref="chartCanvas" />
+  <div class="sm:h-90 relative h-64 w-full">
+    <button class="absolute ml-2" @click="switchChart">
+      <i class="fa-solid fa-cat" />
+    </button>
+    <canvas class="mt-2 min-w-full" ref="chartCanvas" />
   </div>
 </template>
