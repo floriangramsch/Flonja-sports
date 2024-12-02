@@ -8,10 +8,6 @@ const props = defineProps<{
 
 const type = ref<"volume" | "sets">("sets");
 
-props.data.map((t: any) => {
-  console.log(t.weight, t.reps, t.weight * t.reps);
-});
-
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 let chartInstance: Chart<"line", { x: number; y: number }[]> | null = null;
 
@@ -194,7 +190,7 @@ watch(
 </script>
 
 <template>
-  <div class="sm:h-90 relative h-64 w-full">
+  <div class="sm:h-90 relative my-4 h-64 w-full">
     <button @click="switchChart"><i class="fa-solid fa-cat" /></button>
     <canvas class="min-w-full" ref="chartCanvas" />
   </div>

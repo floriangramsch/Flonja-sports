@@ -18,6 +18,8 @@ const filtered = computed(() => {
 });
 
 const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
+
+const showLegacy = ref<boolean>(false);
 </script>
 
 <template>
@@ -43,30 +45,32 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         "
         v-model="filter"
       />
+      <button
+        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+        @click="showLegacy = !showLegacy"
+      >
+        <i class="fa-solid fa-barcode" />
+      </button>
     </FilterWrapper>
 
     <!-- Exercise List -->
-    <div
-      v-for="equip in filtered"
-      class="border-b border-sonja-akz p-1"
-      :key="equip.equip_id"
-    >
+    <div v-for="equip in filtered" class="p-1" :key="equip.equip_id">
       <div class="font-bold">
         {{ equip.equip_name }}
       </div>
       <div v-for="user in equip.users" class="flex flex-wrap">
         <!-- <div class="mr-1">{{ user.user_name }}:</div> -->
         <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
-        <!-- <div v-for="(set, index) in user.sets" class="flex">
+        <div v-if="showLegacy" v-for="(set, index) in user.sets" class="flex">
           <div class="mx-2 flex">
-            <div>{{ set.weight }}</div>
-            <div v-if="set.reps">({{ set.reps }})</div>
+            <div v-if="set.reps">{{ set.reps }}</div>
+            <div>@{{ set.weight }}</div>
           </div>
           <i
             v-if="index !== user.sets.length - 1"
             class="fa-solid fa-arrow-right"
           />
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
