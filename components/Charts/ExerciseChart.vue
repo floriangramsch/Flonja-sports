@@ -8,6 +8,10 @@ const props = defineProps<{
 
 const type = ref<"volume" | "sets">("sets");
 
+const trackDate = ref<Date>();
+const trackColor = ref<boolean>(false);
+const colors = ["#1e293b", "#0d9488"];
+
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
 let chartInstance: Chart<"line", { x: number; y: number }[]> | null = null;
 
@@ -19,24 +23,34 @@ const getPointRadius = (reps: number) => {
   return 13;
 };
 
+const getPointColor = (date: Date) => {
+  const currentDate = new Date(date);
+  if (trackDate.value) {
+    if (currentDate.toDateString() !== trackDate.value.toDateString()) {
+      trackColor.value = !trackColor.value;
+    }
+    const color = trackColor.value ? colors[1] : colors[0];
+    trackDate.value = currentDate;
+    return color;
+  }
+  trackDate.value = currentDate;
+  return colors[0];
+};
+
 const createTopSetsChart = () => {
   if (!chartCanvas.value) return;
 
-  // Falls bereits ein Chart existiert, diesen zerstören
   if (chartInstance) {
     chartInstance.destroy();
   }
 
-  // Neuen Chart erstellen
   chartInstance = new Chart(chartCanvas.value, {
     type: "line",
     data: {
       labels: props.data.map((_: any, index: number) => index + 1),
-
       datasets: [
         {
           label: props.user + " (Weight)",
-
           data: props.data?.map((d: any) => d.weight),
           // data: props.data?.map((d: any) => d.weight * d.reps),
           // data:
@@ -48,6 +62,9 @@ const createTopSetsChart = () => {
           backgroundColor: "#1e293b",
           borderColor: "#1e293b",
           borderWidth: 1,
+          pointBackgroundColor: props.data.map((d: any) =>
+            getPointColor(d.start),
+          ),
           // pointRadius: 3,
         },
       ],
@@ -77,7 +94,7 @@ const createTopSetsChart = () => {
             label: (context) => {
               const index = context.dataIndex;
               const data = props.data[index];
-              return `Weight: ${data.weight}, Reps: ${data.reps}`;
+              return `Weight: ${data.weight}, Reps: ${data.reps}, Time: ${new Date(data.start).toDateString()}`;
             },
           },
         },
@@ -111,12 +128,10 @@ const createTopSetsChart = () => {
 const createVolumeChart = () => {
   if (!chartCanvas.value) return;
 
-  // Falls bereits ein Chart existiert, diesen zerstören
   if (chartInstance) {
     chartInstance.destroy();
   }
 
-  // Neuen Chart erstellen
   chartInstance = new Chart(chartCanvas.value, {
     type: "line",
     data: {
@@ -130,6 +145,9 @@ const createVolumeChart = () => {
           borderColor: "#1e293b",
           borderWidth: 1,
           pointRadius: 5,
+          pointBackgroundColor: props.data.map((d: any) =>
+            getPointColor(d.start),
+          ),
         },
       ],
     },
@@ -170,6 +188,7 @@ const createVolumeChart = () => {
 const switchChart = () => {
   if (type.value === "sets") type.value = "volume";
   else if (type.value === "volume") type.value = "sets";
+  trackColor.value = true
 };
 
 onMounted(createTopSetsChart);
