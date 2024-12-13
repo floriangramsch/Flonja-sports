@@ -9,7 +9,6 @@ import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import Select from "../ui/select/Select.vue";
 import Textinput from "../ui/inputs/Textinput.vue";
-import Label from "../ui/label/Label.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
 
 defineProps<{
@@ -34,18 +33,22 @@ const equipForm = ref<{
   equip_id?: number;
   muscle_id?: number;
   info?: string;
+  type?: EquipArtType;
+  metric?: EquipMetricType;
 }>({
   equip_name: undefined,
   equip_id: undefined,
   muscle_id: undefined,
   info: undefined,
+  type: undefined,
+  metric: undefined,
 });
 const updateEquipMutation = useUpdateEquip();
 const updateEquip = () => {
   if (equipForm.value && equipForm.value.equip_id) {
     updateEquipMutation.mutate(
       {
-        updatedData: `name = '${equipForm.value.equip_name}', muscle_group_id = '${equipForm.value.muscle_id}', info = '${equipForm.value.info}'`,
+        updatedData: `name = '${equipForm.value.equip_name}', muscle_group_id = '${equipForm.value.muscle_id}', info = '${equipForm.value.info}', type = '${equipForm.value.type}', metric = '${equipForm.value.metric}'`,
         equip_id: equipForm.value.equip_id,
       },
       {
@@ -56,6 +59,8 @@ const updateEquip = () => {
             equip_id: undefined,
             muscle_id: undefined,
             info: undefined,
+            type: undefined,
+            metric: undefined,
           };
         },
       },
@@ -105,7 +110,6 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
         // Prüfen, ob das erste Objekt bereits für dieses equip_id existiert
         const firstEntry = acc[equipId][0];
 
-        // Falls es das erste Element ist, fügen wir die gemeinsamen Informationen hinzu
         if (!firstEntry) {
           acc[equipId].push({
             equip_name: curr.equip_name,
@@ -113,10 +117,11 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
             muscle_name: curr.muscle_name,
             muscle_id: curr.muscle_id,
             info: curr.info,
+            type: curr.type,
+            metric: curr.metric,
           });
         }
 
-        // Füge das aktuelle Element zum Array für das jeweilige equip_id hinzu
         acc[equipId].push({
           user_id: userId,
           max_weight: curr.max_weight,
@@ -213,7 +218,33 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           class="w-full"
           v-model="equipForm.muscle_id"
           default="Muskle..."
-          :options="muscles"
+          :options="
+            muscles.map((muscle) => ({
+              label: muscle.muscle_name,
+              value: muscle.muscle_group_id,
+            }))
+          "
+        />
+
+        <Select
+          class="w-full"
+          v-model="equipForm.type"
+          default="Type..."
+          :options="[
+            { value: 'Bodyweight', label: 'Bodyweight' },
+            { value: 'Machine', label: 'Machine' },
+            { value: 'Dumbbell', label: 'Dumbbell' },
+          ]"
+        />
+
+        <Select
+          class="w-full"
+          v-model="equipForm.metric"
+          default="Metric..."
+          :options="[
+            { value: 'Time', label: 'Time' },
+            { value: 'Weight', label: 'Weight' },
+          ]"
         />
 
         <!-- Info -->
@@ -247,13 +278,29 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
                 equip_id: equip[0].equip_id,
                 muscle_id: equip[0].muscle_id,
                 info: equip[0].info,
+                type: equip[0].type,
+                metric: equip[0].metric,
               };
               showDialogUpdateEquip = true;
             }
           "
-          class="cursor-pointer overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
+          class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
+          <i v-if="equip[0].type === 'Machine'" class="fa-solid fa-laptop" />
+          <i
+            v-else-if="equip[0].type === 'Bodyweight'"
+            class="fa-solid fa-child-reaching"
+          />
+          <i
+            v-else-if="equip[0].type === 'Dumbbell'"
+            class="fa-solid fa-dumbbell"
+          />
+          <i v-if="equip[0].metric === 'Time'" class="fa-solid fa-clock" />
+          <i
+            v-else-if="equip[0].metric === 'Weight'"
+            class="fa-solid fa-weight-hanging"
+          />
           <button
             class="ml-2"
             @click.stop="
@@ -295,11 +342,14 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 
 <style scoped>
 .no-scrollbar {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 </style>

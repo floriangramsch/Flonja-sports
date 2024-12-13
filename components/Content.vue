@@ -40,6 +40,8 @@ const exerciseFilter = ref<number[]>([]);
           :muscles="muscles"
           :workout="workout"
           v-model:logged="logged"
+          v-model:filter="exerciseFilter"
+          v-model:show="show"
           @startTimer="$emit('startTimer')"
         />
       </div>

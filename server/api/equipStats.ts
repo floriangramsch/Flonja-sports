@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
         eq.equip_id,
         u.name AS user_name,
         eq.info,
+        eq.type,
+        eq.metric,
           (SELECT s2.weight
           FROM \`Set\` s2
           LEFT JOIN Exercice e2 ON s2.exercise_id = e2.exercice_id

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   default: string;
-  options: any;
+  options: {value: number | string, label: string}[];
 }>();
 
 const model = defineModel();
@@ -14,12 +14,12 @@ const model = defineModel();
   >
     <option value="undefined" disabled>{{default}}</option>
     <option
-      v-for="muscle in options"
-      :key="muscle.muscle_group_id"
-      :value="muscle.muscle_group_id"
+      v-for="option in options"
+      :key="option.value"
+      :value="option.value"
       class="py-1"
     >
-      {{ muscle.muscle_name }}
+      {{ option.label }}
     </option>
   </select>
 </template>

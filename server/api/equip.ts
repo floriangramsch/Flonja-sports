@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "POST") {
-      const body = await readBody(event); // Holt den Body der POST-Anfrage
+      const body = await readBody(event);
       const newEquip = body;
 
       const response = await addEquip(newEquip);

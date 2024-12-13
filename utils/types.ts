@@ -20,14 +20,17 @@ export type MuscleType = {
   muscle_group_id: number;
 };
 
+
+export type EquipArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
+export type EquipMetricType = 'Weight' | 'Time';
 export type EquipType = {
   equip_id: number;
   equip_name: string;
   muscle_name: string;
   muscle_id: number;
   info: string;
-  type: 'machine' | 'bodyweight';
-  metric: 'weight' | 'time';
+  type: EquipArtType;
+  metric: EquipMetricType;
 };
 
 export type EquipStatsType = {
@@ -40,6 +43,8 @@ export type EquipStatsType = {
   user_id: number;
   user_name: string;
   info: string;
+  type: EquipArtType;
+  metric: EquipMetricType;
 };
 
 export type WorkoutType = {
@@ -67,8 +72,8 @@ export type ExerciseType = {
   equip_id: number;
   muscle_group_id: number;
   muscleName: string;
-  type: 'machine' | 'bodyweight';
-  metric: 'weight' | 'time';
+  type: EquipArtType;
+  metric: EquipMetricType;
 };
 
 export type StatsType = {

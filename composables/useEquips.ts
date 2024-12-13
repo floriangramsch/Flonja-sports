@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { EquipArtType, EquipMetricType } from "~/utils/types";
 
 export default function useEquips() {
   return useQuery<EquipType[]>({
@@ -18,7 +19,12 @@ export const useAddEquips = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newEquip: { name: string; muscleGroupId: number }) => {
+    mutationFn: async (newEquip: {
+      name: string;
+      muscleGroupId: number;
+      type: EquipArtType;
+      metric: EquipMetricType;
+    }) => {
       const response = await fetch("/api/equip", {
         method: "Post",
         headers: {

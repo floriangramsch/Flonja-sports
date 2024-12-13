@@ -20,6 +20,8 @@ const props = defineProps<{
 }>();
 
 const logged = defineModel<LoggedType | undefined>("logged");
+const exerciceFilter = defineModel<number[]>("filter");
+const show = defineModel<ShowType>("show");
 
 defineEmits<{
   (emits: "startTimer"): void;
@@ -164,11 +166,20 @@ watch(
         class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
         @click="
           exToShow = ex;
-          workoutShow.showRouter = 'exercisedetail';
+        workoutShow.showRouter = 'exercisedetail';
         ">
         <div class="z-10">
           {{ ex.equipName }}
         </div>
+        <button
+            class="ml-2"
+            @click.stop="
+              exerciceFilter = [ex.equip_id];
+              if (show) show.showRouter = 'exercises';
+            "
+          >
+            <i class="fa-solid fa-chart-line text-sonja-akz" />
+          </button>
         <div class="absolute right-auto flex gap-1 -top-1 z-0">
           <div
             class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-9 group-hover:-rotate-[20deg]">
@@ -199,27 +210,27 @@ watch(
   <!-- Exercise Detail -->
   <SlideTransition>
     <WorkoutExerciseDetail v-if="
-        workoutShow.showRouter === 'exercisedetail' &&
-        workout?.start &&
-        workout.user_id
-      " :exercise="exToShow" :workout-info="{
+      workoutShow.showRouter === 'exercisedetail' &&
+      workout?.start &&
+      workout.user_id
+    " :exercise="exToShow" :workout-info="{
         start: workout.start,
         user_id: workout.user_id,
         rest_time: workout.rest_time,
       }" :equip="equips?.find((e: EquipType) => e.equip_id === exToShow?.equip_id)" v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;
-        workoutShow.showRouter = 'workoutdetail';
+      workoutShow.showRouter = 'workoutdetail';
       " @startTimer="$emit('startTimer')" />
   </SlideTransition>
   <!-- Equip Selection -->
   <SlideTransition>
     <div v-if="
-        workoutShow.showRouter === 'equipselection' &&
-        workout?.workout_id &&
-        muscles &&
-        equips
-      " class="absolute inset-0">
+      workoutShow.showRouter === 'equipselection' &&
+      workout?.workout_id &&
+      muscles &&
+      equips
+    " class="absolute inset-0">
       <EquipSelection :workoutId="workout.workout_id" :muscles="muscles" :equips="equips" v-model="exToShow"
         @close="workoutShow.showRouter = 'workoutdetail'" />
     </div>

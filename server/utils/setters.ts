@@ -1,3 +1,5 @@
+import { EquipArtType, EquipMetricType } from "~/utils/types";
+
 export const addMuscle = async (newMuscle: string) => {
   const pool = await connect();
 
@@ -30,17 +32,21 @@ export const addMuscle = async (newMuscle: string) => {
 export const addEquip = async (newEquip: {
   name: string;
   muscleGroupId: number;
+  type: EquipArtType;
+  metric: EquipMetricType;
 }) => {
   const pool = await connect();
 
   const sql = `
-      INSERT INTO Equip (name, muscle_group_id) VALUES (?, ?)
+      INSERT INTO Equip (name, muscle_group_id, type, metric) VALUES (?, ?, ?, ?)
     `;
 
   try {
     const results = await query(pool, sql, [
       newEquip.name,
       newEquip.muscleGroupId,
+      newEquip.type,
+      newEquip.metric,
     ]);
     if (results.affectedRows > 0) {
       return {
