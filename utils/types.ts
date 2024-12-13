@@ -26,6 +26,8 @@ export type EquipType = {
   muscle_name: string;
   muscle_id: number;
   info: string;
+  type: 'machine' | 'bodyweight';
+  metric: 'weight' | 'time';
 };
 
 export type EquipStatsType = {
@@ -65,6 +67,8 @@ export type ExerciseType = {
   equip_id: number;
   muscle_group_id: number;
   muscleName: string;
+  type: 'machine' | 'bodyweight';
+  metric: 'weight' | 'time';
 };
 
 export type StatsType = {

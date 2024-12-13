@@ -110,144 +110,109 @@ watch(
   <div class="absolute inset-0 pb-52">
     <!-- Header -->
     <div class="flex w-full justify-evenly px-4 py-4">
-      <button
-        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="emit('close')"
-      >
+      <button class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+        @click="emit('close')">
         <i class="fa-solid fa-arrow-left" />
       </button>
       <div class="text-center text-4xl font-bold">
         {{ exercise.equipName }}
       </div>
-      <Confirm
-        v-model:isOpen="showConfirmDeleteExercise"
-        @yes="removeExercise"
-        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow"
-      >
+      <Confirm v-model:isOpen="showConfirmDeleteExercise" @yes="removeExercise"
+        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow">
         <i class="fa-solid fa-close" />
       </Confirm>
     </div>
     <!-- Buttons -->
     <div class="mb-5 flex w-full justify-center">
       <!-- Switch between current and old sets -->
-      <button
-        class="text-3xl"
-        :class="lastSets?.length === 0 ? 'opacity-50' : ''"
-        :disabled="lastSets?.length === 0"
-        @click="showOldSets = !showOldSets"
-      >
+      <button class="text-3xl" :class="lastSets?.length === 0 ? 'opacity-50' : ''" :disabled="lastSets?.length === 0"
+        @click="showOldSets = !showOldSets">
         <i class="fa-solid fa-repeat" />
       </button>
       <!-- Open Info -->
-      <button
-        class="absolute right-9 text-3xl text-sonja-text"
-        @click="showInfo = true"
-      >
+      <button class="absolute right-9 text-3xl text-sonja-text" @click="showInfo = true">
         <i class="fa-solid fa-info" />
       </button>
     </div>
     <!-- Sets -->
     <div>
       <!-- Current Sets -->
-      <div
-        v-if="!showOldSets"
-        v-for="set in sets"
-        class="m-2 flex justify-between rounded-lg border-b-2 border-sonja-bg-darker pb-2 pr-6"
-      >
-        <button
-          @click="
+      <div v-if="!showOldSets" v-for="set in sets"
+        class="m-2 flex justify-between rounded-lg border-b-2 border-sonja-bg-darker pb-2 pr-6">
+        <button @click="
             () => {
               setIdToUpdate = set.id;
               showUpdateExerciseDialog = true;
               newReps = set.reps;
               newWeight = set.weight;
             }
-          "
-          class="flex flex-col items-start"
-        >
+          " class="flex flex-col items-start">
           <div>Reps: {{ set.reps }}</div>
-          <div>Gewicht: {{ set.weight }}</div>
+          <div>
+            {{ exercise.metric }}: {{ set.weight }}{{ exercise.metric === 'Weight' ? ' kg' : 's' }}
+          </div>
         </button>
 
         <!-- Delete Set -->
-        <button
-          @click="
+        <button @click="
             setToDelete = set.id;
             showConfirmDeleteSet = true;
-          "
-        >
+          ">
           <i class="fa-solid fa-close" />
         </button>
       </div>
       <!-- Last Sets -->
-      <div
-        v-if="showOldSets"
-        v-for="set in lastSets"
-        class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
-      >
+      <div v-if="showOldSets" v-for="set in lastSets"
+        class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2">
         <div class="flex flex-col">
           <div>Reps: {{ set.reps }}</div>
-          <div>Gewicht: {{ set.weight }}</div>
+          <div>
+            {{ exercise.metric }}: {{ set.weight }}{{ exercise.metric === 'Weight' ? ' kg' : 's' }}
+          </div>
         </div>
       </div>
     </div>
     <div v-if="sets?.length === 0 && !showOldSets">
       <div
         class="flex h-20 w-full cursor-pointer items-center justify-center rounded-t-3xl bg-sonja-bg-darker text-3xl font-bold"
-        @click="() => (showUpdateExerciseDialog = true)"
-      >
+        @click="() => (showUpdateExerciseDialog = true)">
         New Set
       </div>
     </div>
     <!-- Add Set -->
-    <button
-      v-if="!showOldSets"
-      @click="showUpdateExerciseDialog = true"
-      class="-mt-2 flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pt-1"
-    >
+    <button v-if="!showOldSets" @click="showUpdateExerciseDialog = true"
+      class="-mt-2 flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pt-1">
       <i class="fa-solid fa-plus text-4xl"></i>
     </button>
     <!-- Delete Set Confirmation -->
-    <Confirm
-      v-model:isOpen="showConfirmDeleteSet"
-      @yes="removeSet(Number(setToDelete))"
-    />
+    <Confirm v-model:isOpen="showConfirmDeleteSet" @yes="removeSet(Number(setToDelete))" />
     <!-- New Rep/Weigt -->
-    <Dialog
-      :isOpen="showUpdateExerciseDialog"
-      @close="
+    <Dialog :isOpen="showUpdateExerciseDialog" @close="
         {
           showUpdateExerciseDialog = false;
           newReps = undefined;
           newWeight = undefined;
           setIdToUpdate = undefined;
         }
-      "
-    >
+      ">
       <div class="flex flex-col items-center justify-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
         <div class="mt-2 grid grid-cols-2 gap-2">
           <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
-          <UiNumberInput v-model:modelValue="newWeight" label="Weight" />
+          <UiNumberInput v-model:modelValue="newWeight" :label="exercise.metric" />
         </div>
         <Button @action="handleSet"> Done </Button>
       </div>
     </Dialog>
     <!-- Info -->
-    <Dialog
-      :isOpen="showInfo"
-      @close="
+    <Dialog :isOpen="showInfo" @close="
         showInfo = false;
         equip?.info ? (editInfo = false) : (editInfo = true);
-      "
-    >
+      ">
       <div class="flex flex-col items-center justify-center gap-4">
-        <TextareaInfo
-          v-model:edit-info="editInfo"
-          :info="equip?.info"
-          :equip-id="props.equip?.equip_id"
-        />
+        <TextareaInfo v-model:edit-info="editInfo" :info="equip?.info" :equip-id="props.equip?.equip_id" />
       </div>
     </Dialog>
   </div>
 </template>
+
