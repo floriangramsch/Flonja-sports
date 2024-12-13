@@ -45,7 +45,6 @@ watch(
       class="flex h-48 w-48 flex-col whitespace-pre text-wrap rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow"
     >
       {{ info }}
-      s
     </div>
     <div class="flex flex-col gap-4" v-else>
       <textarea

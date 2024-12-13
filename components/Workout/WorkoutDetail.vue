@@ -178,13 +178,13 @@ watch(
       <div
         v-if="exercises?.length !== 0"
         v-for="ex in exercises"
-        class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
+        class="group flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
         @click="
           exToShow = ex;
           workoutShow.showRouter = 'exercisedetail';
         "
       >
-        <div class="group relative">
+        <div class="relative">
           <div class="relative z-10">
             {{ ex.equipName }}
           </div>

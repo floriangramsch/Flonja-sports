@@ -52,11 +52,11 @@ const logout = () => {
     class="sticky top-0 z-10 flex h-20 w-full items-center justify-between bg-sonja-text text-sonja-akz shadow mobile-landscape:hidden"
   >
     <!-- Profilepic -->
-    <div @click.prevent="switchUser" class="h-full min-w-16 cursor-pointer">
+    <div @click.prevent="switchUser" class="h-full w-16 cursor-pointer">
       <img
         v-if="logged?.user?.name === 'Florian'"
         src="@/public/flo.jpg"
-        class="min-w-18 max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
+        class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
         alt="Flo"
       />
       <img
