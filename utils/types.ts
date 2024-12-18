@@ -111,3 +111,20 @@ export type WorkoutRouterTypes =
 export type workoutShowType = {
   showRouter: WorkoutRouterTypes;
 };
+
+export type WorkoutPlan = {
+  id: number;
+  name: string;
+  day?: number;
+}
+
+export type WorkoutPlanEquip = WorkoutPlan & {
+  equip_id: number;
+  sets: number;
+  reps: number;
+  weight: number;
+  muscle_group_id: number;
+  info: string;
+  type: EquipArtType;
+  metric: EquipMetricType;
+}

@@ -40,48 +40,59 @@ const deleteWorkout = () => {
     });
   }
 };
+
+const toggled = ref<boolean>(false);
 </script>
 
 <template>
   <div
-    class="no-scrollbar flex cursor-pointer snap-y snap-mandatory flex-col overflow-y-auto"
+    class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-auto"
   >
     <!-- Header -->
     <div class="flex w-full justify-evenly px-2 py-4">
       <div class="text-center text-4xl font-bold">Workout List</div>
+      <button
+        class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+        @click="toggled = !toggled"
+      >
+        <i class="fa-solid fa-list" />
+      </button>
     </div>
     <!-- workout list -->
-    <div
-      v-for="workout in workouts"
-      @click="editWorkout(workout)"
-      class="flex min-w-full snap-start flex-col p-2"
-      :key="workout.workout_id"
-    >
-      <div class="flex">
-        <Label
-          :value="
-            showTime(workout?.start) +
-            '-' +
-            (showTime(workout?.end)?.slice(-5) ?? '?')
-          "
-          :label="workout.name"
-          :selected="workout.workout_id === logged?.loggedWorkoutId"
-        />
-        <button
-          class="ml-2"
-          @click.stop="
-            workoutToDelete = Number(workout.workout_id);
-            showConfirmDeleteWorkout = true;
-          "
-        >
-          <i class="fa-solid fa-close text-red-800" />
-        </button>
+    <div v-if="toggled">
+      <div
+        v-for="workout in workouts"
+        @click="editWorkout(workout)"
+        class="flex min-w-full snap-start flex-col p-2"
+        :key="workout.workout_id"
+      >
+        <div class="flex">
+          <Label
+            :value="
+              showTime(workout?.start) +
+              '-' +
+              (showTime(workout?.end)?.slice(-5) ?? '?')
+            "
+            :label="workout.name"
+            :selected="workout.workout_id === logged?.loggedWorkoutId"
+          />
+          <button
+            class="ml-2"
+            @click.stop="
+              workoutToDelete = Number(workout.workout_id);
+              showConfirmDeleteWorkout = true;
+            "
+          >
+            <i class="fa-solid fa-close text-red-800" />
+          </button>
+        </div>
       </div>
+      <Confirm
+        v-model:is-open="showConfirmDeleteWorkout"
+        class="ml-5"
+        @yes="deleteWorkout()"
+      />
     </div>
-    <Confirm
-      v-model:is-open="showConfirmDeleteWorkout"
-      class="ml-5"
-      @yes="deleteWorkout()"
-    />
+    <WorkoutPlan v-else />
   </div>
 </template>

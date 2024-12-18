@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ExerciseOverview from "./Exercises/ExerciseOverview.vue";
-import WorkoutOverview from "./Workout/WorkoutOverview.vue";
+import WorkoutList from "./Workout/WorkoutList.vue";
 import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import SlideTransition from "./ui/transitions/SlideTransition.vue";
 import MuscleList from "./Muscles/MuscleList.vue";
@@ -60,7 +60,7 @@ const exerciseFilter = ref<number[]>([]);
     </SlideTransition>
     <SlideTransition>
       <div v-if="show.showRouter === 'workouts' && users && workouts">
-        <WorkoutOverview
+        <WorkoutList
           :workouts="workouts"
           :users="users"
           v-model="logged"

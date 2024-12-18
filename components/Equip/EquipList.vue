@@ -287,7 +287,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
           {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
-          <i v-if="equip[0].type === 'Machine'" class="fa-solid fa-laptop" />
+          <i v-if="equip[0].type === 'Machine'" class="fa-solid fa-cable-car" />
           <i
             v-else-if="equip[0].type === 'Bodyweight'"
             class="fa-solid fa-child-reaching"
