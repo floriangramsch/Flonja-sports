@@ -82,7 +82,7 @@ const changeRestTime = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const [minutes, seconds] = target.value.split(":");
   let millis;
-  if (!minutes && !seconds) {
+  if (Number(minutes) === 0 && Number(seconds) === 0) {
     millis = 120000;
   } else {
     millis = parseInt(minutes) * 60000 + parseInt(seconds) * 1000;
@@ -142,7 +142,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex w-full justify-center gap-3 text-2xl">
+  <div class="flex w-full justify-center gap-3 text-2xl z-50">
     <DialogsDialog
       :is-open="showAdjustRestTime"
       @close="showAdjustRestTime = false"
