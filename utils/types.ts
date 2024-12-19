@@ -15,29 +15,28 @@ export type UserType = {
   };
 };
 
-export type MuscleType = {
-  muscle_name: string;
-  muscle_group_id: number;
+export type CategoryType = {
+  category_id: number;
+  category_name: string;
 };
-
 
 export type EquipArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
 export type EquipMetricType = 'Weight' | 'Time';
 export type EquipType = {
-  equip_id: number;
-  equip_name: string;
-  muscle_name: string;
-  muscle_id: number;
+  exercise_id: number;
+  exercise_name: string;
+  category_id: number;
+  category_name: string;
   info: string;
   type: EquipArtType;
   metric: EquipMetricType;
 };
 
 export type EquipStatsType = {
-  equip_name: string;
-  equip_id: number;
-  muscle_id: number;
-  muscle_name: string;
+  exercise_name: string;
+  exercise_id: number;
+  category_id: number;
+  category_name: string;
   last_weight: number;
   max_weight: number;
   user_id: number;
@@ -58,6 +57,21 @@ export type WorkoutType = {
 };
 
 export type SetType = {
+  weight: string;
+  reps: number;
+  start: string;
+}
+export type DingensType = {
+  user_name: string;
+  sets: SetType[]
+}
+export type SetHelperType = {
+  exercise_id: number;
+  exercise_name: string;
+  users: DingensType[]
+}
+
+export type SetOriginalType = {
   weight: number;
   reps: number;
   equip_id: number;
@@ -66,12 +80,12 @@ export type SetType = {
   user_name: string;
 };
 
-export type ExerciseType = {
-  exercice_id: number;
-  equipName: string;
-  equip_id: number;
-  muscle_group_id: number;
-  muscleName: string;
+export type WorkoutExerciseType = {
+  workout_exercise_id: number;
+  exercise_name: string;
+  exercise_id: number;
+  category_id: number;
+  category_name: string;
   type: EquipArtType;
   metric: EquipMetricType;
 };
@@ -93,7 +107,7 @@ export type UserStatsType = {
 export type RouterTypes =
   | "workoutdetail"
   | "equiplist"
-  | "musclelist"
+  | "categorylist"
   | "workouts"
   | "exercises"
   | "stats";
@@ -123,7 +137,7 @@ export type WorkoutPlanEquip = WorkoutPlan & {
   sets: number;
   reps: number;
   weight: number;
-  muscle_group_id: number;
+  category_id: number;
   info: string;
   type: EquipArtType;
   metric: EquipMetricType;

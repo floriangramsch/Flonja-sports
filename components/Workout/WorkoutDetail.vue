@@ -5,7 +5,7 @@ import Button from "../ui/buttons/Button.vue";
 import EquipSelection from "./EquipSelection.vue";
 import type {
   EquipType,
-  ExerciseType,
+  WorkoutExerciseType,
   WorkoutRouterTypes,
   workoutShowType,
   WorkoutType,
@@ -15,7 +15,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
   equips: EquipType[] | undefined;
-  muscles: MuscleType[] | undefined;
+  categories: CategoryType[] | undefined;
   workout: WorkoutType | undefined;
 }>();
 
@@ -41,7 +41,7 @@ const { data: exercises } = useExercisesByWorkout(
   computed(() => props.workout?.workout_id),
 );
 
-const exToShow = ref<ExerciseType>();
+const exToShow = ref<WorkoutExerciseType>();
 
 const showLockerDialog = ref<boolean>(false);
 const newLocker = ref<number | undefined>(props.workout?.locker);
@@ -186,11 +186,11 @@ watch(
           workoutShow.showRouter = 'exercisedetail';
         "
       >
-          {{ ex.equipName }}
+        {{ ex.exercise_name }}
         <button
           class="ml-2"
           @click.stop="
-            exerciceFilter = [ex.equip_id];
+            exerciceFilter = [ex.exercise_id];
             if (show) show.showRouter = 'exercises';
           "
         >
@@ -198,17 +198,17 @@ watch(
         </button>
         <div class="absolute -top-1 right-auto z-0 flex gap-1">
           <div
-            class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-9 group-hover:-rotate-[20deg]"
+            class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
-            {{ ex.muscleName }}
+            {{ ex.category_name }}
           </div>
           <div
-            class="rounded bg-yellow-500 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-9 group-hover:-rotate-[20deg]"
+            class="rounded bg-yellow-500 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
             {{ ex.metric }}
           </div>
           <div
-            class="rounded bg-red-700 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-9 group-hover:-rotate-[20deg]"
+            class="rounded bg-red-700 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
             {{ ex.type }}
           </div>
@@ -236,7 +236,7 @@ watch(
       v-if="
         workoutShow.showRouter === 'exercisedetail' &&
         workout?.start &&
-        workout.user_id
+        workout.user_id && exToShow
       "
       :exercise="exToShow"
       :workout-info="{
@@ -244,7 +244,9 @@ watch(
         user_id: workout.user_id,
         rest_time: workout.rest_time,
       }"
-      :equip="equips?.find((e: EquipType) => e.equip_id === exToShow?.equip_id)"
+      :equip="
+        equips?.find((e: EquipType) => e.exercise_id === exToShow?.exercise_id)
+      "
       v-model:workout-show="workoutShow"
       @close="
         exToShow = undefined;
@@ -259,14 +261,14 @@ watch(
       v-if="
         workoutShow.showRouter === 'equipselection' &&
         workout?.workout_id &&
-        muscles &&
+        categories &&
         equips
       "
       class="absolute inset-0"
     >
       <EquipSelection
         :workoutId="workout.workout_id"
-        :muscles="muscles"
+        :categories="categories"
         :equips="equips"
         v-model="exToShow"
         @close="workoutShow.showRouter = 'workoutdetail'"

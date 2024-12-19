@@ -26,12 +26,12 @@ export default function usePreloadData() {
     queryFn: fetchEquipment,
   });
   const {
-    isSuccess: isMusclesSuccess,
-    isError: isMusclesError,
-    isLoading: isMusclesLoading,
-  } = useQuery<MuscleType>({
-    queryKey: ["muscles"],
-    queryFn: fetchMuscles,
+    isSuccess: isCategorySuccess,
+    isError: isCategoryError,
+    isLoading: isCategoryLoading,
+  } = useQuery<CategoryType>({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
   });
   const {
     isSuccess: isWorkoutsSuccess,
@@ -46,7 +46,7 @@ export default function usePreloadData() {
     return (
       isUsersSuccess.value &&
       isEquipsSuccess.value &&
-      isMusclesSuccess.value &&
+      isCategorySuccess.value &&
       isWorkoutsSuccess.value
     );
   });
@@ -55,7 +55,7 @@ export default function usePreloadData() {
     return (
       isUsersError.value ||
       isEquipsError.value ||
-      isMusclesError.value ||
+      isCategoryError.value ||
       isWorkoutsError.value
     );
   });
@@ -64,7 +64,7 @@ export default function usePreloadData() {
     return (
       isUsersLoading.value &&
       isEquipsLoading.value &&
-      isMusclesLoading.value &&
+      isCategoryLoading.value &&
       isWorkoutsLoading.value
     );
   });

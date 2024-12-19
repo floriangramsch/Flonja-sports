@@ -6,7 +6,7 @@ export default function useAddExercise() {
   return useMutation({
     mutationFn: async (newEx: {
       workout_id: number;
-      equip_id: number;
+      exercise_id: number;
       weight?: string;
     }) => {
       const response = await fetch("/api/addExercise", {
@@ -21,7 +21,7 @@ export default function useAddExercise() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
       queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
     },
   });
 }

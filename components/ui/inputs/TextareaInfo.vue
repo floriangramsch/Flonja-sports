@@ -10,13 +10,13 @@ const newInfo = ref<string | undefined>(props.info);
 const editInfo = defineModel<boolean>("editInfo");
 const infoRef = ref<HTMLTextAreaElement | null>(null);
 
-const updateEquipMutation = useUpdateEquip();
+const updateEquipMutation = useUpdateExercise();
 const updateInfo = () => {
   if (props.equipId) {
     updateEquipMutation.mutate(
       {
         updatedData: `info = '${newInfo.value}'`,
-        equip_id: props.equipId,
+        exercise_id: props.equipId,
       },
       {
         onSuccess: () => {

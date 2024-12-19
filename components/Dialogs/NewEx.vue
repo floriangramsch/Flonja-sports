@@ -1,7 +1,7 @@
 <template>
   <form>
     <div>
-      {{ equip?.equip_name }} [{{ equip.muscle_name }}]
+      {{ equip?.exercise_name }} [{{ equip.category_name }}]
       <input
         v-model="newWorkoutWeight"
         style="width: 64px"
@@ -37,12 +37,12 @@ const addNewExercice = () => {
   if (
     newWorkoutWeight.value &&
     props.workout.workout_id &&
-    props.equip.equip_id
+    props.equip.exercise_id
   ) {
     mutation.mutate(
       {
         workout_id: props.workout.workout_id,
-        equip_id: props.equip.equip_id,
+        exercise_id: props.equip.exercise_id,
         weight: newWorkoutWeight.value,
       },
       {

@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       const id = await readBody(event);
       const [rows] = await connection.execute(
         `
-        DELETE FROM WorkoutPlanEquip 
+        DELETE FROM Plan_Exercise 
         WHERE id = ?;
         `,
         [id],
@@ -17,18 +17,11 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "PUT") {
-      // const connection = await connect();
-      // const { workout_id, updatedData } = await readBody(event);
-      // const [rows] = await connection.execute(
-      //   `UPDATE Workout SET ${updatedData} WHERE workout_id = ?`,
-      //   [workout_id]
-      // );
-      // return rows;
     }
     if (method === "POST") {
-      const { plan_id, equip_id, sets, reps } = await readBody(event);
-      const query = `INSERT INTO WorkoutPlanEquip (workout_plan_id, equip_id, sets, reps) VALUES (?, ?, ?, ?);`;
-      const params = [plan_id, equip_id, sets, reps];
+      const { plan_id, exercise_id, sets, reps } = await readBody(event);
+      const query = `INSERT INTO Plan_Exercise (plan_id, exercise_id, sets, reps) VALUES (?, ?, ?, ?);`;
+      const params = [plan_id, exercise_id, sets, reps];
       const [rows] = await connection.execute(query, params);
       return rows;
     }

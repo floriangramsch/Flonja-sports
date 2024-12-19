@@ -37,7 +37,7 @@ const newPlanForm = ref({
 
 // detail
 const { data: equips } = useEquips();
-const { data: muscles } = useMuscles();
+const { data: categories } = useCategories();
 
 const newExEquipDialog = ref<boolean>(false);
 const newExDialog = ref<boolean>(false);
@@ -70,7 +70,7 @@ const newEx = () => {
     newExMutation.mutate(
       {
         plan_id: selectedWorkoutPlan.value.id,
-        equip_id: newExEquipId.value,
+        exercise_id: newExEquipId.value,
         sets: newExEquipSets.value,
         reps: newExEquipReps.value,
       },
@@ -166,8 +166,8 @@ watch(newExEquipId, (newValue) => {
       </button>
     </div>
     <BetterEquipSelection
-      v-if="newExEquipDialog && muscles && equips"
-      :muscles="muscles"
+      v-if="newExEquipDialog && categories && equips"
+      :categories="categories"
       :equips="equips"
       v-model:result="newExEquipId"
       @close="newExEquipDialog = false"

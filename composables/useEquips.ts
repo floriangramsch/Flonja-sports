@@ -4,24 +4,32 @@ import type { EquipArtType, EquipMetricType } from "~/utils/types";
 export default function useEquips() {
   return useQuery<EquipType[]>({
     queryKey: ["equips"],
-    queryFn: fetchEquipment,
+    queryFn: async () => {
+      const response = await fetch("/api/equip");
+      if (!response.ok) throw new Error("Fehler beim Abrufen der Ausrüstungen");
+      return response.json();
+    },
   });
 }
 
-export function useEquipStats() {
+export function useExerciseStats() {
   return useQuery<EquipStatsType[]>({
     queryKey: ["equipStats"],
-    queryFn: fetchEquipStats,
+    queryFn: async () => {
+      const response = await fetch("/api/equipStats");
+      if (!response.ok) throw new Error("Fehler beim Abrufen der Equip Stats");
+      return response.json();
+    },
   });
 }
 
-export const useAddEquips = () => {
+export const useAddExercise = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (newEquip: {
       name: string;
-      muscleGroupId: number;
+      category_id: number;
       type: EquipArtType;
       metric: EquipMetricType;
     }) => {
@@ -41,25 +49,25 @@ export const useAddEquips = () => {
   });
 };
 
-export const useUpdateEquip = () => {
+export const useUpdateExercise = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       updatedData,
-      equip_id,
+      exercise_id,
     }: {
       updatedData: any;
-      equip_id: number;
+      exercise_id: number;
     }) => {
-      if (equip_id) {
+      if (exercise_id) {
         const response = await fetch("/api/equip", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            equip_id,
+            exercise_id,
             updatedData,
           }),
         });
@@ -68,29 +76,29 @@ export const useUpdateEquip = () => {
           throw new Error("Failed to update equip");
         }
 
-        return equip_id;
+        return exercise_id;
       } else {
         throw new Error("Failed to update equip");
       }
     },
-    onSuccess: (equip_id: number) => {
+    onSuccess: (exercise_id: number) => {
       queryClient.invalidateQueries({ queryKey: ["equips"] });
       queryClient.invalidateQueries({ queryKey: ["equipStats"] });
     },
   });
 };
 
-export const useDeleteEquip = () => {
+export const useDeleteExercise = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (equip_id: number) => {
+    mutationFn: async (exercise_id: number) => {
       const response = await fetch("/api/equip", {
         method: "Delete",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ equip_id }),
+        body: JSON.stringify({ exercise_id }),
       });
       return response.json();
     },

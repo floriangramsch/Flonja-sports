@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 export function useGetSets() {
-  return useQuery({
+  return useQuery<SetHelperType[]>({
     queryKey: ["sets"],
     queryFn: async () =>
       await fetch("/api/set", {
@@ -15,11 +15,11 @@ export function useGetSets() {
   });
 }
 
-export function useGetSetsByExerciseId(exercise_id: number) {
+export function useGetSetsByExerciseId(workout_exercise_id: number) {
   return useQuery({
-    queryKey: ["sets", exercise_id],
+    queryKey: ["sets", workout_exercise_id],
     queryFn: async () =>
-      await fetch(`/api/set?exercise_id=${exercise_id}`, {
+      await fetch(`/api/set?workout_exercise_id=${workout_exercise_id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,11 +35,11 @@ export const useAddSet = () => {
 
   return useMutation({
     mutationFn: async ({
-      exercise_id,
+      workout_exercise_id,
       weight,
       reps,
     }: {
-      exercise_id: number;
+      workout_exercise_id: number;
       weight: number;
       reps: number;
     }) => {
@@ -49,7 +49,7 @@ export const useAddSet = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          exercise_id,
+          workout_exercise_id,
           weight,
           reps,
         }),
@@ -125,23 +125,23 @@ export function useDeleteSet() {
 }
 
 export function useGetLastSets({
-  equip_id,
+  exercise_id,
   user_id,
   start,
 }: {
-  equip_id: number;
+  exercise_id: number;
   user_id: number;
   start: Date;
 }) {
   return useQuery({
-    queryKey: ["sets", equip_id, user_id, start],
+    queryKey: ["sets", exercise_id, user_id, start],
     queryFn: async () =>
       await fetch(`/api/lastSets`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ equip_id: equip_id, user_id, start }),
+        body: JSON.stringify({ exercise_id, user_id, start }),
       })
         .then((res) => res.json())
         .catch((error) => console.log(error)),

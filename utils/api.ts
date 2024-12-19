@@ -11,12 +11,6 @@ export const fetchEquipment = async () => {
   return response.json();
 };
 
-export const fetchEquipStats = async () => {
-  const response = await fetch("/api/equipStats");
-  if (!response.ok) throw new Error("Fehler beim Abrufen der Equip Stats");
-  return response.json();
-};
-
 export const fetchWorkouts = async () => {
   const response = await fetch("/api/workout");
   if (!response.ok) throw new Error("Fehler beim Abrufen der Workouts");
@@ -31,24 +25,10 @@ export const fetchWorkout = async (id: number | undefined) => {
   }
 };
 
-export const fetchMuscles = async () => {
-  const response = await fetch("/api/muscle");
-  if (!response.ok) throw new Error("Fehler beim Abrufen der Muskeln");
+export const fetchCategories = async () => {
+  const response = await fetch("/api/category");
+  if (!response.ok) throw new Error("Fehler beim Abrufen der category");
   return response.json();
-};
-
-export const fetchExercisesByWorkout = async (id: number) => {
-  if (id) {
-    const response = await fetch("/api/getExercisesByWorkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
-    if (!response.ok) throw new Error("Fehler beim Abrufen der Exercises");
-    return response.json();
-  }
 };
 
 export const fetchStats = async () => {

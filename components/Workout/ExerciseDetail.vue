@@ -7,7 +7,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
 
 const props = defineProps<{
-  exercise: any;
+  exercise: WorkoutExerciseType;
   workoutInfo: {
     start: Date;
     user_id: number;
@@ -23,17 +23,17 @@ const emit = defineEmits<{
 
 const mutation = useDeleteExercise();
 const deleteSetMutation = useDeleteSet();
-const { data: sets } = useGetSetsByExerciseId(props.exercise.exercice_id);
+const { data: sets } = useGetSetsByExerciseId(props.exercise.workout_exercise_id);
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
 const { data: lastSets } = useGetLastSets({
-  equip_id: props.exercise.equip_id,
+  exercise_id: props.exercise.exercise_id,
   user_id: props.workoutInfo?.user_id,
   start: props.workoutInfo?.start,
 });
 
 const removeExercise = () => {
-  mutation.mutate(props.exercise.exercice_id, {
+  mutation.mutate(props.exercise.workout_exercise_id, {
     onSuccess: () => {
       showConfirmDeleteExercise.value = false;
       emit("close");
@@ -69,7 +69,7 @@ const handleSet = () => {
     } else {
       addSetMutation.mutate(
         {
-          exercise_id: props.exercise.exercice_id,
+          workout_exercise_id: props.exercise.workout_exercise_id,
           weight: newWeight.value,
           reps: newReps.value,
         },
@@ -117,7 +117,7 @@ watch(
         <i class="fa-solid fa-arrow-left" />
       </button>
       <div class="text-center text-4xl font-bold">
-        {{ exercise.equipName }}
+        {{ exercise.exercise_name }}
       </div>
       <Confirm
         v-model:isOpen="showConfirmDeleteExercise"
@@ -254,7 +254,7 @@ watch(
         <TextareaInfo
           v-model:edit-info="editInfo"
           :info="equip?.info"
-          :equip-id="props.equip?.equip_id"
+          :equip-id="props.equip?.exercise_id"
         />
       </div>
     </Dialog>

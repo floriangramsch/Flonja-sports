@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       const id = await readBody(event);
       const [rows] = await connection.execute(
         `
-        DELETE FROM WorkoutPlan 
+        DELETE FROM Plan 
         WHERE id = ?;
         `,
         [id],
@@ -21,9 +21,9 @@ export default defineEventHandler(async (event) => {
       if (workout_plan_id) {
         const [rows] = await connection.execute(
           `
-          SELECT * FROM WorkoutPlan w
-          LEFT JOIN WorkoutPlanEquip we ON w.id = we.workout_plan_id
-          LEFT JOIN Equip eq ON eq.equip_id = we.equip_id
+          SELECT * FROM Plan w
+          LEFT JOIN Plan_Exercise we ON w.id = we.plan_id
+          LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
           WHERE w.id = ?;
           `,
           [workout_plan_id],
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
       } else {
         const [rows] = await connection.execute(
           `
-          SELECT * FROM WorkoutPlan w;
+          SELECT * FROM Plan w;
           `,
           [],
         );
@@ -40,19 +40,12 @@ export default defineEventHandler(async (event) => {
       }
     }
     if (method === "PUT") {
-      // const connection = await connect();
-      // const { workout_id, updatedData } = await readBody(event);
-      // const [rows] = await connection.execute(
-      //   `UPDATE Workout SET ${updatedData} WHERE workout_id = ?`,
-      //   [workout_id]
-      // );
-      // return rows;
     }
     if (method === "POST") {
       const { name, day } = await readBody(event);
       const query = day
-        ? `INSERT INTO WorkoutPlan (name, day) VALUES (?, ?);`
-        : `INSERT INTO WorkoutPlan (name) VALUES (?);`;
+        ? `INSERT INTO Plan (name, day) VALUES (?, ?);`
+        : `INSERT INTO Plan (name) VALUES (?);`;
       const params = day ? [name, day] : [name];
       const [rows] = await connection.execute(query, params);
       return rows;

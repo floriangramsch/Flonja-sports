@@ -3,7 +3,6 @@ import { computed, ref } from "vue";
 import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
-import { useEquipStats } from "~/composables/useEquips";
 import NewEquip from "../Dialogs/NewEquip.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
@@ -12,52 +11,52 @@ import Textinput from "../ui/inputs/Textinput.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
 
 defineProps<{
-  muscles: MuscleType[];
+  categories: CategoryType[];
   users: UserType;
   workout: WorkoutType | undefined;
 }>();
 
 const filter = ref<number[]>([]);
-const exerciceFilter = defineModel<number[]>("filter");
+const workoutExerciceFilter = defineModel<number[]>("filter");
 const show = defineModel<ShowType>("show");
-const showDialogMuscle = ref<boolean>(false);
-const showDialogEquip = ref<boolean>(false);
-const showDialogUpdateEquip = ref<boolean>(false);
+const showDialogCategory = ref<boolean>(false);
+const showDialogExercise = ref<boolean>(false);
+const showDialogUpdateExercise = ref<boolean>(false);
 const searchFilter = ref<string>("");
 
-const deleteEquipMutation = useDeleteEquip();
-const showConfirmDeleteEquip = ref<boolean>(false);
+const deleteExerciseMutation = useDeleteExercise();
+const showConfirmDeleteExercise = ref<boolean>(false);
 
-const equipForm = ref<{
-  equip_name?: string;
-  equip_id?: number;
-  muscle_id?: number;
+const exerciseForm = ref<{
+  exercise_name?: string;
+  exercise_id?: number;
+  category_id?: number;
   info?: string;
   type?: EquipArtType;
   metric?: EquipMetricType;
 }>({
-  equip_name: undefined,
-  equip_id: undefined,
-  muscle_id: undefined,
+  exercise_name: undefined,
+  exercise_id: undefined,
+  category_id: undefined,
   info: undefined,
   type: undefined,
   metric: undefined,
 });
-const updateEquipMutation = useUpdateEquip();
-const updateEquip = () => {
-  if (equipForm.value && equipForm.value.equip_id) {
-    updateEquipMutation.mutate(
+const updateExerciseMutation = useUpdateExercise();
+const updateExercise = () => {
+  if (exerciseForm.value && exerciseForm.value.exercise_id) {
+    updateExerciseMutation.mutate(
       {
-        updatedData: `name = '${equipForm.value.equip_name}', muscle_group_id = '${equipForm.value.muscle_id}', info = '${equipForm.value.info}', type = '${equipForm.value.type}', metric = '${equipForm.value.metric}'`,
-        equip_id: equipForm.value.equip_id,
+        updatedData: `name = '${exerciseForm.value.exercise_name}', category_id = '${exerciseForm.value.category_id}', info = '${exerciseForm.value.info}', type = '${exerciseForm.value.type}', metric = '${exerciseForm.value.metric}'`,
+        exercise_id: exerciseForm.value.exercise_id,
       },
       {
         onSuccess: () => {
-          showDialogUpdateEquip.value = false;
-          equipForm.value = {
-            equip_name: undefined,
-            equip_id: undefined,
-            muscle_id: undefined,
+          showDialogUpdateExercise.value = false;
+          exerciseForm.value = {
+            exercise_name: undefined,
+            exercise_id: undefined,
+            category_id: undefined,
             info: undefined,
             type: undefined,
             metric: undefined,
@@ -68,61 +67,61 @@ const updateEquip = () => {
   }
 };
 
-const equipToDelete = ref<number>();
-const deleteEquip = (id: number) => {
-  deleteEquipMutation.mutate(id, {
-    onSuccess: () => (showConfirmDeleteEquip.value = false),
+const exerciseToDelete = ref<number>();
+const deleteExercise = (id: number) => {
+  deleteExerciseMutation.mutate(id, {
+    onSuccess: () => (showConfirmDeleteExercise.value = false),
   });
 };
 
-const { data: equipStats } = useEquipStats();
+const { data: exerciseStats } = useExerciseStats();
 
-const filteredEquips = computed(() => {
-  return equipStats.value?.filter((equip) => {
-    const matchesMuscleFilter =
-      filter.value.length === 0 || filter.value.includes(equip.muscle_id);
+const filteredExercises = computed(() => {
+  return exerciseStats.value?.filter((ex) => {
+    const matchesCategoryFilter =
+      filter.value.length === 0 || filter.value.includes(ex.category_id);
 
     const matchesSearchFilter =
       searchFilter.value === "" ||
-      equip.equip_name
+      ex.exercise_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase()) ||
-      equip.muscle_name
+      ex.category_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase());
 
-    return matchesMuscleFilter && matchesSearchFilter;
+    return matchesCategoryFilter && matchesSearchFilter;
   });
 });
 
-const equipList = computed<EquipStatsType[][] | undefined>(() => {
-  if (filteredEquips.value) {
-    const groupedData = filteredEquips.value?.reduce(
+const exerciseList = computed<EquipStatsType[][] | undefined>(() => {
+  if (filteredExercises.value) {
+    const groupedData = filteredExercises.value?.reduce(
       (acc: { [key: number]: any[] }, curr) => {
-        const equipId = curr.equip_id;
+        const exerciseId = curr.exercise_id;
         const userId = curr.user_id;
 
         // Wenn das equip_id noch nicht existiert, füge es hinzu
-        if (!acc[equipId]) {
-          acc[equipId] = [];
+        if (!acc[exerciseId]) {
+          acc[exerciseId] = [];
         }
 
         // Prüfen, ob das erste Objekt bereits für dieses equip_id existiert
-        const firstEntry = acc[equipId][0];
+        const firstEntry = acc[exerciseId][0];
 
         if (!firstEntry) {
-          acc[equipId].push({
-            equip_name: curr.equip_name,
-            equip_id: curr.equip_id,
-            muscle_name: curr.muscle_name,
-            muscle_id: curr.muscle_id,
+          acc[exerciseId].push({
+            exercise_name: curr.exercise_name,
+            exercise_id: curr.exercise_id,
+            category_name: curr.category_name,
+            category_id: curr.category_id,
             info: curr.info,
             type: curr.type,
             metric: curr.metric,
           });
         }
 
-        acc[equipId].push({
+        acc[exerciseId].push({
           user_id: userId,
           max_weight: curr.max_weight,
           last_weight: curr.last_weight,
@@ -135,9 +134,9 @@ const equipList = computed<EquipStatsType[][] | undefined>(() => {
     );
 
     // Umwandeln der Ergebnisse in ein Array von Arrays und nach Namen sortieren
-    return Object.values(groupedData).sort((a, b) => {
+    return Object.values(groupedData).sort((a: any, b: any) => {
       // TODO: variable sorting
-      return a[0].equip_name.localeCompare(b[0].equip_name);
+      return a[0].exercise_name.localeCompare(b[0].exercise_name);
     });
   }
 });
@@ -154,11 +153,11 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       <button
         v-if="show"
         class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="show.showRouter = 'musclelist'"
+        @click="show.showRouter = 'categorylist'"
       >
         <i class="fa-solid fa-repeat" />
       </button>
-      <div class="text-center text-4xl font-bold">Equip List</div>
+      <div class="text-center text-4xl font-bold">Exercise List</div>
       <button
         class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         @click="filterWrapperComponent?.toggle"
@@ -170,9 +169,9 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
     <FilterWrapper ref="filterWrapperComponent">
       <Filter
         :data="
-          muscles.map((muscle: MuscleType) => ({
-            id: muscle.muscle_group_id,
-            name: muscle.muscle_name,
+          categories.map((category: CategoryType) => ({
+            id: category.category_id,
+            name: category.category_name,
           }))
         "
         v-model="filter"
@@ -180,55 +179,55 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       <FilterEquips v-model="searchFilter" />
       <!-- New Equip -->
       <Dialog
-        :isOpen="showDialogEquip"
+        :isOpen="showDialogExercise"
         @close="
-          showDialogEquip = false;
-          showDialogMuscle = false;
+          showDialogExercise = false;
+          showDialogCategory = false;
         "
       >
         <template #trigger>
           <button
             class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-            @click="showDialogEquip = true"
+            @click="showDialogExercise = true"
           >
             <i class="fa-solid fa-plus" />
           </button>
         </template>
         <NewEquip
           @close="
-            showDialogEquip = false;
-            showDialogMuscle = false;
+            showDialogExercise = false;
+            showDialogCategory = false;
           "
         />
       </Dialog>
     </FilterWrapper>
     <!-- Update Equip -->
     <Dialog
-      :isOpen="showDialogUpdateEquip"
+      :isOpen="showDialogUpdateExercise"
       @close="
-        showDialogEquip = false;
-        showDialogMuscle = false;
-        showDialogUpdateEquip = false;
+        showDialogExercise = false;
+        showDialogCategory = false;
+        showDialogUpdateExercise = false;
       "
     >
       <div class="my-2 flex flex-col gap-4">
-        <Textinput v-model="equipForm.equip_name" label="Equip Name" focus />
+        <Textinput v-model="exerciseForm.exercise_name" label="Exercise Name" focus />
 
         <Select
           class="w-full"
-          v-model="equipForm.muscle_id"
-          default="Muskle..."
+          v-model="exerciseForm.category_id"
+          default="Category..."
           :options="
-            muscles.map((muscle) => ({
-              label: muscle.muscle_name,
-              value: muscle.muscle_group_id,
+            categories.map((category) => ({
+              label: category.category_name,
+              value: category.category_id,
             }))
           "
         />
 
         <Select
           class="w-full"
-          v-model="equipForm.type"
+          v-model="exerciseForm.type"
           default="Type..."
           :options="[
             { value: 'Bodyweight', label: 'Bodyweight' },
@@ -239,7 +238,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 
         <Select
           class="w-full"
-          v-model="equipForm.metric"
+          v-model="exerciseForm.metric"
           default="Metric..."
           :options="[
             { value: 'Time', label: 'Time' },
@@ -251,7 +250,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         <div class="relative">
           <textarea
             class="peer h-48 w-48 rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
-            v-model="equipForm.info"
+            v-model="exerciseForm.info"
             ref="infoRef"
             placeholder=" "
           />
@@ -263,65 +262,65 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           </label>
         </div>
       </div>
-      <Button @action="updateEquip">Update</Button>
+      <Button @action="updateExercise">Update</Button>
     </Dialog>
     <!-- Equip List -->
     <div
       class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg"
     >
-      <div v-for="equip in equipList" class="p-1">
+      <div v-for="exercise in exerciseList" class="p-1">
         <div
           @click="
             {
-              equipForm = {
-                equip_name: equip[0].equip_name,
-                equip_id: equip[0].equip_id,
-                muscle_id: equip[0].muscle_id,
-                info: equip[0].info,
-                type: equip[0].type,
-                metric: equip[0].metric,
+              exerciseForm = {
+                exercise_name: exercise[0].exercise_name,
+                exercise_id: exercise[0].exercise_id,
+                category_id: exercise[0].category_id,
+                info: exercise[0].info,
+                type: exercise[0].type,
+                metric: exercise[0].metric,
               };
-              showDialogUpdateEquip = true;
+              showDialogUpdateExercise = true;
             }
           "
           class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
-          {{ equip[0].equip_name }} [{{ equip[0].muscle_name }}]
-          <i v-if="equip[0].type === 'Machine'" class="fa-solid fa-cable-car" />
+          {{ exercise[0].exercise_name }} [{{ exercise[0].category_name }}]
+          <i v-if="exercise[0].type === 'Machine'" class="fa-solid fa-cable-car" />
           <i
-            v-else-if="equip[0].type === 'Bodyweight'"
+            v-else-if="exercise[0].type === 'Bodyweight'"
             class="fa-solid fa-child-reaching"
           />
           <i
-            v-else-if="equip[0].type === 'Dumbbell'"
+            v-else-if="exercise[0].type === 'Dumbbell'"
             class="fa-solid fa-dumbbell"
           />
-          <i v-if="equip[0].metric === 'Time'" class="fa-solid fa-clock" />
+          <i v-if="exercise[0].metric === 'Time'" class="fa-solid fa-clock" />
           <i
-            v-else-if="equip[0].metric === 'Weight'"
+            v-else-if="exercise[0].metric === 'Weight'"
             class="fa-solid fa-weight-hanging"
           />
           <button
             class="ml-2"
             @click.stop="
-              exerciceFilter?.push(equip[0].equip_id);
+              workoutExerciceFilter?.push(exercise[0].exercise_id);
               if (show) show.showRouter = 'exercises';
             "
           >
             <i class="fa-solid fa-chart-line text-sonja-akz" />
           </button>
-          <!-- Delete Equip -->
+          <!-- Delete exercise -->
           <button
             class="ml-2"
             @click.stop="
-              equipToDelete = Number(equip[0].equip_id);
-              showConfirmDeleteEquip = true;
+              exerciseToDelete = Number(exercise[0].exercise_id);
+              showConfirmDeleteExercise = true;
             "
           >
             <i class="fa-solid fa-close text-red-800" />
           </button>
         </div>
-        <div v-for="user in equip.slice(1)" class="flex gap-2">
+        <div v-for="user in exercise.slice(1)" class="flex gap-2">
           <div v-if="user.user_name" class="flex gap-2">
             <div v-if="user.user_name">{{ user.user_name }}:</div>
             <div v-if="user.max_weight">PB {{ user.max_weight }}</div>
@@ -334,8 +333,8 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
     </div>
     <!-- Confirm Delete Equip -->
     <Confirm
-      v-model:isOpen="showConfirmDeleteEquip"
-      @yes="deleteEquip(Number(equipToDelete))"
+      v-model:isOpen="showConfirmDeleteExercise"
+      @yes="deleteExercise(Number(exerciseToDelete))"
     />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="p-1" @click.prevent="showDialogWeight = workout ? true : false">
     <div class="font-bold">
-      {{ equip.equip_name }} [{{ equip.muscle_name }}]
+      {{ equip.exercise_name }} [{{ equip.category_name }}]
     </div>
     <div>
       <!-- <div v-if="workout">this: {{ workout.equips[equip.id] }} kg</div> -->

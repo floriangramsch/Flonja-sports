@@ -3,12 +3,12 @@ import useAddExercise from "~/composables/Exercises/useAddExercise";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
-import NewMuskle from "../Dialogs/NewMuskle.vue";
 import NewEquip from "../Dialogs/NewEquip.vue";
+import NewCategory from "../Dialogs/NewCategory.vue";
 
 const props = defineProps<{
   workoutId: number;
-  muscles: MuscleType[];
+  categories: CategoryType[];
   equips: EquipType[];
 }>();
 
@@ -18,39 +18,39 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const chosenMuscle = ref<MuscleType>();
-const chooseMuscle = (muscle: MuscleType) => {
-  chosenMuscle.value = muscle;
-  showMuscleOverview.value = false;
+const chosenCategory = ref<CategoryType>();
+const chooseCategory = (category: CategoryType) => {
+  chosenCategory.value = category;
+  showCategoryOverview.value = false;
   showEquipOverview.value = true;
 };
 
 const equipsToShow = computed(() => {
   return props.equips.filter(
-    (equip) => equip.muscle_name === chosenMuscle.value?.muscle_name,
+    (ex) => ex.category_name === chosenCategory.value?.category_name,
   );
 });
 
-const showMuscleOverview = ref<boolean>(true);
-const showDialogMuscle = ref<boolean>(false);
+const showCategoryOverview = ref<boolean>(true);
+const showDialogCategory = ref<boolean>(false);
 const showEquipOverview = ref<boolean>(false);
 const showDialogEquip = ref<boolean>(false);
 
 const mutation = useAddExercise();
 
-const addNewExercice = (equipId: number) => {
+const addNewExercice = (exercise_id: number) => {
   mutation.mutate(
     {
       workout_id: props.workoutId,
-      equip_id: equipId,
+      exercise_id: exercise_id,
     },
     {
       onSuccess: (res) => {
-        const equip = props.equips.find((equip) => equip.equip_id === equipId);
+        const equip = props.equips.find((ex) => ex.exercise_id === exercise_id);
         exToShow.value = {
-          equipName: equip?.equip_name,
-          equip_id: equipId,
-          exercice_id: res.id,
+          exercise_name: equip?.exercise_name,
+          exercise_id: exercise_id,
+          workout_exercise_id: res.id,
           type: equip?.type,
           metric: equip?.metric,
         };
@@ -63,9 +63,9 @@ const addNewExercice = (equipId: number) => {
 </script>
 
 <template>
-  <!-- Muscle Selection -->
+  <!-- category Selection -->
   <SlideTransition>
-    <div v-if="showMuscleOverview">
+    <div v-if="showCategoryOverview">
       <div class="flex w-full justify-evenly py-4">
         <button
           class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
@@ -73,7 +73,7 @@ const addNewExercice = (equipId: number) => {
         >
           <i class="fa-solid fa-arrow-left" />
         </button>
-        <div class="text-center text-4xl font-bold">Muskel</div>
+        <div class="text-center text-4xl font-bold">Category</div>
         <div></div>
       </div>
       <div
@@ -81,22 +81,22 @@ const addNewExercice = (equipId: number) => {
       >
         <div
           class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker"
-          @click="chooseMuscle(muscle)"
-          v-for="muscle in muscles"
-          :key="muscle.muscle_group_id"
+          @click="chooseCategory(category)"
+          v-for="category in categories"
+          :key="category.category_id"
         >
-          {{ muscle.muscle_name }}
+          {{ category.category_name }}
         </div>
-        <Dialog :isOpen="showDialogMuscle" @close="showDialogMuscle = false">
+        <Dialog :isOpen="showDialogCategory" @close="showDialogCategory = false">
           <template v-slot:trigger>
             <div
               class="flex size-28 cursor-pointer items-center overflow-auto border-4 border-black bg-sonja-text text-center text-sonja-akz2"
-              @click="showDialogMuscle = true"
+              @click="showDialogCategory = true"
             >
-              Neuer Muskle
+              New Category
             </div>
           </template>
-          <NewMuskle @close="showDialogMuscle = false" />
+          <NewCategory @close="showDialogCategory = false" />
         </Dialog>
       </div>
     </div>
@@ -109,7 +109,7 @@ const addNewExercice = (equipId: number) => {
         <button
           class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           @click="
-            showMuscleOverview = true;
+            showCategoryOverview = true;
             showEquipOverview = false;
           "
         >
@@ -121,10 +121,10 @@ const addNewExercice = (equipId: number) => {
       <div class="absolute inset-0 mt-16 flex flex-col">
         <div
           v-for="equip in equipsToShow"
-          @click="addNewExercice(Number(equip.equip_id))"
+          @click="addNewExercice(Number(equip.exercise_id))"
           class="flex cursor-pointer justify-center border-b-4 border-sonja-bg-darker py-2"
         >
-          {{ equip.equip_name }}
+          {{ equip.exercise_name }}
         </div>
         <Dialog :isOpen="showDialogEquip" @close="showDialogEquip = false">
           <template v-slot:trigger>
@@ -132,7 +132,7 @@ const addNewExercice = (equipId: number) => {
           </template>
           <NewEquip
             @close="showDialogEquip = false"
-            :muscleId="chosenMuscle?.muscle_group_id"
+            :category_id="chosenCategory?.category_id"
           />
         </Dialog>
       </div>

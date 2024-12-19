@@ -4,20 +4,20 @@ export default function useDeleteExercise() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (exercise_id: number) => {
+    mutationFn: async (workout_exercise_id: number) => {
       const response = await fetch("/api/exercise", {
         method: "Delete",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ exercise_id }),
+        body: JSON.stringify({ workout_exercise_id }),
       });
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
       queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
     },
   });
 }

@@ -46,7 +46,6 @@ export default defineEventHandler(async (event) => {
           res[element.name].push(element);
         }
       );
-      console.log("res", res);
       return res;
     }
     if (method === "POST") {
