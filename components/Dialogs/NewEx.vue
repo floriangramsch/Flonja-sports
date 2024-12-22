@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import useAddExercise from "~/composables/Exercises/useAddExercise";
+import useAddWorkoutExercise from '~/composables/useWorkoutExercise';
 
 const newWorkoutWeight = ref("");
 
@@ -31,7 +31,7 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const mutation = useAddExercise();
+const mutation = useAddWorkoutExercise();
 
 const addNewExercice = () => {
   if (

@@ -10,7 +10,6 @@ import type {
   workoutShowType,
   WorkoutType,
 } from "~/utils/types";
-import { useExercisesByWorkout } from "~/composables/Exercises/useExercisesByWorkout";
 import Confirm from "../Dialogs/Confirm.vue";
 
 const props = defineProps<{
@@ -37,7 +36,7 @@ const switchRouter = (route: WorkoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
 
-const { data: exercises } = useExercisesByWorkout(
+const { data: exercises } = useWorkoutExercisesByWorkout(
   computed(() => props.workout?.workout_id),
 );
 

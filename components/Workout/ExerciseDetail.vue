@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import useDeleteExercise from "~/composables/Exercises/useDeleteExercise";
 import { useGetSetsByExerciseId } from "~/composables/useSets";
 import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
@@ -21,7 +20,7 @@ const emit = defineEmits<{
   (emits: "startTimer"): void;
 }>();
 
-const mutation = useDeleteExercise();
+const mutation = useDeleteWorkoutExercise();
 const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSetsByExerciseId(props.exercise.workout_exercise_id);
 const addSetMutation = useAddSet();

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import useAddExercise from "~/composables/Exercises/useAddExercise";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import NewEquip from "../Dialogs/NewEquip.vue";
 import NewCategory from "../Dialogs/NewCategory.vue";
+import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 
 const props = defineProps<{
   workoutId: number;
@@ -36,7 +36,7 @@ const showDialogCategory = ref<boolean>(false);
 const showEquipOverview = ref<boolean>(false);
 const showDialogEquip = ref<boolean>(false);
 
-const mutation = useAddExercise();
+const mutation = useAddWorkoutExercise();
 
 const addNewExercice = (exercise_id: number) => {
   mutation.mutate(

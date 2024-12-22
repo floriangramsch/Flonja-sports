@@ -6,6 +6,23 @@ export default defineEventHandler(async (event) => {
   const connection = await connect();
 
   try {
+    if (method === "GET") {
+      const { id } = await getQuery(event);
+      if (id) {
+        const res = query(
+          connection,
+          `
+            SELECT workout_exercise_id, e.name AS exercise_name, we.exercise_id, e.category_id, c.name AS category_name, type, metric 
+            FROM Workout_Exercise we 
+            LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
+            LEFT JOIN Category c ON e.category_id = c.category_id
+            WHERE workout_id = ?;
+          `,
+          [id],
+        );
+        return res;
+      }
+    }
     if (method === "DELETE") {
       const { workout_exercise_id } = await readBody(event);
       const res = query(
@@ -13,7 +30,7 @@ export default defineEventHandler(async (event) => {
         `DELETE FROM Workout_Exercise WHERE workout_exercise_id = ?`,
         [workout_exercise_id],
       );
-      return res
+      return res;
     }
     if (method === "GET") {
       const [rows] = await connection.execute(
@@ -25,6 +42,12 @@ export default defineEventHandler(async (event) => {
         `,
       );
       return rows;
+    }
+    if (method === "POST") {
+      const { workout_id, exercise_id, weight } = await readBody(event);
+
+      const equips = await addExercise({ workout_id, exercise_id, weight });
+      return equips;
     }
   } catch (error) {
     console.error(error);
