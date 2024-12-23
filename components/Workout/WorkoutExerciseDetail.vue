@@ -6,7 +6,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
 
 const props = defineProps<{
-  exercise: WorkoutExerciseType;
+  workoutExercise: WorkoutExerciseType;
   workoutInfo: {
     start: Date;
     user_id: number;
@@ -22,19 +22,19 @@ const emit = defineEmits<{
 
 const mutation = useDeleteWorkoutExercise();
 const deleteSetMutation = useDeleteSet();
-const { data: sets } = useGetSetsByExerciseId(props.exercise.workout_exercise_id);
+const { data: sets } = useGetSetsByExerciseId(props.workoutExercise.workout_exercise_id);
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
 const { data: lastSets } = useGetLastSets({
-  exercise_id: props.exercise.exercise_id,
+  exercise_id: props.workoutExercise.exercise_id,
   user_id: props.workoutInfo?.user_id,
   start: props.workoutInfo?.start,
 });
 
-const removeExercise = () => {
-  mutation.mutate(props.exercise.workout_exercise_id, {
+const removeWorkoutExercise = () => {
+  mutation.mutate(props.workoutExercise.workout_exercise_id, {
     onSuccess: () => {
-      showConfirmDeleteExercise.value = false;
+      showConfirmDeleteWorkoutExercise.value = false;
       emit("close");
     },
   });
@@ -59,7 +59,7 @@ const handleSet = () => {
         {
           onSuccess: () => {
             showOldSets.value = false;
-            showUpdateExerciseDialog.value = false;
+            showUpdateWorkoutExerciseDialog.value = false;
             // newWeight.value = undefined;
             newReps.value = undefined;
           },
@@ -68,14 +68,14 @@ const handleSet = () => {
     } else {
       addSetMutation.mutate(
         {
-          workout_exercise_id: props.exercise.workout_exercise_id,
+          workout_exercise_id: props.workoutExercise.workout_exercise_id,
           weight: newWeight.value,
           reps: newReps.value,
         },
         {
           onSuccess: () => {
             showOldSets.value = false;
-            showUpdateExerciseDialog.value = false;
+            showUpdateWorkoutExerciseDialog.value = false;
             newReps.value = undefined;
             emit("startTimer");
           },
@@ -85,9 +85,9 @@ const handleSet = () => {
   }
 };
 
-const showUpdateExerciseDialog = ref<boolean>(false);
+const showUpdateWorkoutExerciseDialog = ref<boolean>(false);
 const showConfirmDeleteSet = ref<boolean>(false);
-const showConfirmDeleteExercise = ref<boolean>(false);
+const showConfirmDeleteWorkoutExercise = ref<boolean>(false);
 const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.equip?.info);
@@ -116,11 +116,11 @@ watch(
         <i class="fa-solid fa-arrow-left" />
       </button>
       <div class="text-center text-4xl font-bold">
-        {{ exercise.exercise_name }}
+        {{ workoutExercise.exercise_name }}
       </div>
       <Confirm
-        v-model:isOpen="showConfirmDeleteExercise"
-        @yes="removeExercise"
+        v-model:isOpen="showConfirmDeleteWorkoutExercise"
+        @yes="removeWorkoutExercise"
         class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow"
       >
         <i class="fa-solid fa-close" />
@@ -157,7 +157,7 @@ watch(
           @click="
             () => {
               setIdToUpdate = set.id;
-              showUpdateExerciseDialog = true;
+              showUpdateWorkoutExerciseDialog = true;
               newReps = set.reps;
               newWeight = set.weight;
             }
@@ -166,8 +166,8 @@ watch(
         >
           <div>Reps: {{ set.reps }}</div>
           <div>
-            {{ exercise.metric }}: {{ set.weight
-            }}{{ exercise.metric === "Time" ? "s" : " kg" }}
+            {{ workoutExercise.metric }}: {{ set.weight
+            }}{{ workoutExercise.metric === "Time" ? "s" : " kg" }}
           </div>
         </button>
 
@@ -190,8 +190,8 @@ watch(
         <div class="flex flex-col">
           <div>Reps: {{ set.reps }}</div>
           <div>
-            {{ exercise.metric }}: {{ set.weight
-            }}{{ exercise.metric === "Weight" ? " kg" : "s" }}
+            {{ workoutExercise.metric }}: {{ set.weight
+            }}{{ workoutExercise.metric === "Weight" ? " kg" : "s" }}
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ watch(
     <div v-if="sets?.length === 0 && !showOldSets">
       <div
         class="flex h-20 w-full cursor-pointer items-center justify-center rounded-t-3xl bg-sonja-bg-darker text-3xl font-bold"
-        @click="() => (showUpdateExerciseDialog = true)"
+        @click="() => (showUpdateWorkoutExerciseDialog = true)"
       >
         New Set
       </div>
@@ -207,7 +207,7 @@ watch(
     <!-- Add Set -->
     <button
       v-if="!showOldSets"
-      @click="showUpdateExerciseDialog = true"
+      @click="showUpdateWorkoutExerciseDialog = true"
       class="-mt-2 flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pt-1"
     >
       <i class="fa-solid fa-plus text-4xl"></i>
@@ -219,10 +219,10 @@ watch(
     />
     <!-- New Rep/Weigt -->
     <Dialog
-      :isOpen="showUpdateExerciseDialog"
+      :isOpen="showUpdateWorkoutExerciseDialog"
       @close="
         {
-          showUpdateExerciseDialog = false;
+          showUpdateWorkoutExerciseDialog = false;
           newReps = undefined;
           newWeight = undefined;
           setIdToUpdate = undefined;
@@ -235,7 +235,7 @@ watch(
           <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
           <UiNumberInput
             v-model:modelValue="newWeight"
-            :label="exercise.metric"
+            :label="workoutExercise.metric"
           />
         </div>
         <Button @action="handleSet"> Done </Button>

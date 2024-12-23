@@ -38,7 +38,7 @@ const showDialogEquip = ref<boolean>(false);
 
 const mutation = useAddWorkoutExercise();
 
-const addNewExercice = (exercise_id: number) => {
+const addNewWorkoutExercise = (exercise_id: number) => {
   mutation.mutate(
     {
       workout_id: props.workoutId,
@@ -121,7 +121,7 @@ const addNewExercice = (exercise_id: number) => {
       <div class="absolute inset-0 mt-16 flex flex-col">
         <div
           v-for="equip in equipsToShow"
-          @click="addNewExercice(Number(equip.exercise_id))"
+          @click="addNewWorkoutExercise(Number(equip.exercise_id))"
           class="flex cursor-pointer justify-center border-b-4 border-sonja-bg-darker py-2"
         >
           {{ equip.exercise_name }}

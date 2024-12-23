@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ExerciseOverview from "./Exercises/ExerciseOverview.vue";
 import WorkoutList from "./Workout/WorkoutList.vue";
 import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import SlideTransition from "./ui/transitions/SlideTransition.vue";
 import CategoryList from "./Categories/CategoryList.vue";
+import WorkoutExerciseOverview from "./WorkoutExercises/WorkoutExerciseOverview.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
@@ -26,8 +26,8 @@ const workoutExerciseFilter = ref<number[]>([]);
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
     <SlideTransition>
-      <div v-if="show.showRouter === 'exercises' && users">
-        <ExerciseOverview v-model="equips" v-model:filter="workoutExerciseFilter" />
+      <div v-if="show.showRouter === 'workoutexercises' && users">
+        <WorkoutExerciseOverview v-model="equips" v-model:filter="workoutExerciseFilter" />
       </div>
     </SlideTransition>
     <SlideTransition>

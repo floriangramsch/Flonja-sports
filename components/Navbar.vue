@@ -28,12 +28,12 @@ onBeforeUnmount(() => {
   <nav
     class="sticky bottom-0 flex w-full border-t-2 border-sonja-bg-darker bg-sonja-bg pb-7 pt-2 text-2xl text-sonja-text"
   >
-    <button @click="show.showRouter = 'exercises'" class="w-full">
+    <button @click="show.showRouter = 'workoutexercises'" class="w-full">
       <i
         class="fa-solid fa-chart-line"
         :class="{
-          'text-sonja-akz': show.showRouter === 'exercises',
-          'fa-bounce': activeBounce === 'exercises',
+          'text-sonja-akz': show.showRouter === 'workoutexercises',
+          'fa-bounce': activeBounce === 'workoutexercises',
         }"
       />
     </button>

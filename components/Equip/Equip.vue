@@ -14,7 +14,7 @@
     :isOpen="showDialogWeight"
     @close="showDialogWeight = false"
   >
-    <NewEx
+    <NewWorkoutExercise
       :equip="equip"
       :workout="workout"
       @close="showDialogWeight = false"
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Dialog from "../Dialogs/Dialog.vue";
-import NewEx from "../Dialogs/NewEx.vue";
+import NewWorkoutExercise from "../Dialogs/NewWorkoutExercise.vue";
 
 const showDialogWeight = ref(false);
 

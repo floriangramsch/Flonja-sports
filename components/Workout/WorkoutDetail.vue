@@ -36,11 +36,11 @@ const switchRouter = (route: WorkoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
 
-const { data: exercises } = useWorkoutExercisesByWorkout(
+const { data: workoutExercises } = useWorkoutExercisesByWorkout(
   computed(() => props.workout?.workout_id),
 );
 
-const exToShow = ref<WorkoutExerciseType>();
+const workoutExToShow = ref<WorkoutExerciseType>();
 
 const showLockerDialog = ref<boolean>(false);
 const newLocker = ref<number | undefined>(props.workout?.locker);
@@ -109,10 +109,10 @@ watch(
 );
 
 watch(
-  () => exToShow.value,
+  () => workoutExToShow.value,
   (newVal) => {
     if (newVal) {
-      switchRouter("exercisedetail");
+      switchRouter("workoutexercisedetail");
     }
   },
 );
@@ -135,7 +135,7 @@ watch(
       <Home v-model="logged" @switch="switchRouter('workoutdetail')" />
     </div>
   </SlideTransition>
-  <!-- Exercises List -->
+  <!-- Workout Exercises List -->
   <SlideTransition>
     <div
       v-if="workoutShow.showRouter === 'workoutdetail'"
@@ -177,20 +177,20 @@ watch(
         </Dialog>
       </div>
       <div
-        v-if="exercises?.length !== 0"
-        v-for="ex in exercises"
+        v-if="workoutExercises?.length !== 0"
+        v-for="wex in workoutExercises"
         class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
         @click="
-          exToShow = ex;
-          workoutShow.showRouter = 'exercisedetail';
+          workoutExToShow = wex;
+          workoutShow.showRouter = 'workoutexercisedetail';
         "
       >
-        {{ ex.exercise_name }}
+        {{ wex.exercise_name }}
         <button
           class="ml-2"
           @click.stop="
-            exerciceFilter = [ex.exercise_id];
-            if (show) show.showRouter = 'exercises';
+            exerciceFilter = [wex.exercise_id];
+            if (show) show.showRouter = 'workoutexercises';
           "
         >
           <i class="fa-solid fa-chart-line text-sonja-akz" />
@@ -199,17 +199,17 @@ watch(
           <div
             class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
-            {{ ex.category_name }}
+            {{ wex.category_name }}
           </div>
           <div
             class="rounded bg-yellow-500 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
-            {{ ex.metric }}
+            {{ wex.metric }}
           </div>
           <div
             class="rounded bg-red-700 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
-            {{ ex.type }}
+            {{ wex.type }}
           </div>
         </div>
       </div>
@@ -229,26 +229,26 @@ watch(
       </button>
     </div>
   </SlideTransition>
-  <!-- Exercise Detail -->
+  <!-- Workout Exercise Detail -->
   <SlideTransition>
     <WorkoutExerciseDetail
       v-if="
-        workoutShow.showRouter === 'exercisedetail' &&
+        workoutShow.showRouter === 'workoutexercisedetail' &&
         workout?.start &&
-        workout.user_id && exToShow
+        workout.user_id && workoutExToShow
       "
-      :exercise="exToShow"
+      :workout-exercise="workoutExToShow"
       :workout-info="{
         start: workout.start,
         user_id: workout.user_id,
         rest_time: workout.rest_time,
       }"
       :equip="
-        equips?.find((e: EquipType) => e.exercise_id === exToShow?.exercise_id)
+        equips?.find((e: EquipType) => e.exercise_id === workoutExToShow?.exercise_id)
       "
       v-model:workout-show="workoutShow"
       @close="
-        exToShow = undefined;
+        workoutExToShow = undefined;
         workoutShow.showRouter = 'workoutdetail';
       "
       @startTimer="$emit('startTimer')"
@@ -269,7 +269,7 @@ watch(
         :workoutId="workout.workout_id"
         :categories="categories"
         :equips="equips"
-        v-model="exToShow"
+        v-model="workoutExToShow"
         @close="workoutShow.showRouter = 'workoutdetail'"
       />
     </div>

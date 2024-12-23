@@ -17,7 +17,7 @@ defineProps<{
 }>();
 
 const filter = ref<number[]>([]);
-const workoutExerciceFilter = defineModel<number[]>("filter");
+const workoutExerciseFilter = defineModel<number[]>("filter");
 const show = defineModel<ShowType>("show");
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
@@ -101,12 +101,12 @@ const exerciseList = computed<EquipStatsType[][] | undefined>(() => {
         const exerciseId = curr.exercise_id;
         const userId = curr.user_id;
 
-        // Wenn das equip_id noch nicht existiert, füge es hinzu
+        // Wenn das exercise_id noch nicht existiert, füge es hinzu
         if (!acc[exerciseId]) {
           acc[exerciseId] = [];
         }
 
-        // Prüfen, ob das erste Objekt bereits für dieses equip_id existiert
+        // Prüfen, ob das erste Objekt bereits für dieses exercise_id existiert
         const firstEntry = acc[exerciseId][0];
 
         if (!firstEntry) {
@@ -177,7 +177,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         v-model="filter"
       />
       <FilterEquips v-model="searchFilter" />
-      <!-- New Equip -->
+      <!-- New Exercise -->
       <Dialog
         :isOpen="showDialogExercise"
         @close="
@@ -201,7 +201,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         />
       </Dialog>
     </FilterWrapper>
-    <!-- Update Equip -->
+    <!-- Update Exercise -->
     <Dialog
       :isOpen="showDialogUpdateExercise"
       @close="
@@ -264,7 +264,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       </div>
       <Button @action="updateExercise">Update</Button>
     </Dialog>
-    <!-- Equip List -->
+    <!-- Exercise List -->
     <div
       class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg"
     >
@@ -303,8 +303,8 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           <button
             class="ml-2"
             @click.stop="
-              workoutExerciceFilter?.push(exercise[0].exercise_id);
-              if (show) show.showRouter = 'exercises';
+              workoutExerciseFilter?.push(exercise[0].exercise_id);
+              if (show) show.showRouter = 'workoutexercises';
             "
           >
             <i class="fa-solid fa-chart-line text-sonja-akz" />
@@ -331,7 +331,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         </div>
       </div>
     </div>
-    <!-- Confirm Delete Equip -->
+    <!-- Confirm Delete Exercise -->
     <Confirm
       v-model:isOpen="showConfirmDeleteExercise"
       @yes="deleteExercise(Number(exerciseToDelete))"

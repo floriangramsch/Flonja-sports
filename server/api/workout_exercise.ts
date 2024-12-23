@@ -45,9 +45,20 @@ export default defineEventHandler(async (event) => {
     }
     if (method === "POST") {
       const { workout_id, exercise_id, weight } = await readBody(event);
+      const sql = `
+        INSERT INTO Workout_Exercise (workout_id, exercise_id${
+          weight !== undefined ? ", weight" : ""
+        }) VALUES (?, ?${weight !== undefined ? ", ?" : ""})
+      `;
 
-      const equips = await addExercise({ workout_id, exercise_id, weight });
-      return equips;
+      const params = [workout_id, exercise_id];
+
+      if (weight !== undefined) {
+        params.push(Number(weight));
+      }
+
+      const results = await query(connection, sql, params);
+      return results;
     }
   } catch (error) {
     console.error(error);

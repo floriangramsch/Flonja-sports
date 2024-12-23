@@ -109,7 +109,7 @@ export type RouterTypes =
   | "equiplist"
   | "categorylist"
   | "workouts"
-  | "exercises"
+  | "workoutexercises"
   | "stats";
 
 export type ShowType = {
@@ -121,7 +121,7 @@ export type WorkoutRouterTypes =
   | "home"
   | "equipselection"
   | "workoutdetail"
-  | "exercisedetail";
+  | "workoutexercisedetail";
 export type workoutShowType = {
   showRouter: WorkoutRouterTypes;
 };

@@ -8,7 +8,7 @@ export function useWorkoutExercisesByWorkout(
   return useQuery<WorkoutExerciseType[]>({
     queryKey: computed(() => ["workout_exercises", workoutId.value]),
     queryFn: async () => {
-      if (!workoutId.value) throw new Error("Exercises ID is undefined");
+      if (!workoutId.value) throw new Error("Workout Exercises ID is undefined");
       const response = await fetch(
         `/api/workout_exercise?id=${workoutId.value}`,
         {
