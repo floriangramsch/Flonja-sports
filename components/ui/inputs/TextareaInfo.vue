@@ -2,7 +2,7 @@
 import Button from "../buttons/Button.vue";
 
 const props = defineProps<{
-  equipId: number | undefined;
+  exerciseId: number | undefined;
   info: string | undefined;
 }>();
 
@@ -10,13 +10,13 @@ const newInfo = ref<string | undefined>(props.info);
 const editInfo = defineModel<boolean>("editInfo");
 const infoRef = ref<HTMLTextAreaElement | null>(null);
 
-const updateEquipMutation = useUpdateExercise();
+const updateExerciseMutation = useUpdateExercise();
 const updateInfo = () => {
-  if (props.equipId) {
-    updateEquipMutation.mutate(
+  if (props.exerciseId) {
+    updateExerciseMutation.mutate(
       {
         updatedData: `info = '${newInfo.value}'`,
-        exercise_id: props.equipId,
+        exercise_id: props.exerciseId,
       },
       {
         onSuccess: () => {

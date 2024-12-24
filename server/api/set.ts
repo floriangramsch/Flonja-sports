@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
         const groupedData = rows.reduce((acc: { [key: string]: any }, curr) => {
           const { exercise_name, exercise_id, user_name, weight, reps } = curr;
 
-          // Wenn das Equip-Objekt noch nicht existiert, füge es hinzu
+          // Wenn das Exercise-Objekt noch nicht existiert, füge es hinzu
           if (!acc[exercise_name]) {
             acc[exercise_name] = { exercise_id, users: {} };
           }

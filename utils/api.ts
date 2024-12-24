@@ -5,8 +5,8 @@ export const fetchUsers = async () => {
   return response.json();
 };
 
-export const fetchEquipment = async () => {
-  const response = await fetch("/api/equip");
+export const fetchExercises = async () => {
+  const response = await fetch("/api/exercises");
   if (!response.ok) throw new Error("Fehler beim Abrufen der Ausrüstungen");
   return response.json();
 };

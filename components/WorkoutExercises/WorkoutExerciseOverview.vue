@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
 
-const equips = defineModel<EquipType[]>();
+const exercises = defineModel<ExerciseType[]>();
 
 const { data: sets } = useGetSets();
 
@@ -37,7 +37,7 @@ const showLegacy = ref<boolean>(false);
     <FilterWrapper ref="filterWrapperComponent">
       <Filter
         :data="
-          equips?.map((exercise: EquipType) => ({
+          exercises?.map((exercise: ExerciseType) => ({
             id: exercise.exercise_id,
             name: exercise.exercise_name,
           }))

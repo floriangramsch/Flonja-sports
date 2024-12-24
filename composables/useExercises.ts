@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { EquipArtType, EquipMetricType } from "~/utils/types";
+import type { ExerciseArtType, ExerciseMetricType } from "~/utils/types";
 
-export default function useEquips() {
-  return useQuery<EquipType[]>({
-    queryKey: ["equips"],
+export default function useExercises() {
+  return useQuery<ExerciseType[]>({
+    queryKey: ["exercises"],
     queryFn: async () => {
-      const response = await fetch("/api/equip");
+      const response = await fetch("/api/exercises");
       if (!response.ok) throw new Error("Fehler beim Abrufen der Ausrüstungen");
       return response.json();
     },
@@ -13,11 +13,11 @@ export default function useEquips() {
 }
 
 export function useExerciseStats() {
-  return useQuery<EquipStatsType[]>({
-    queryKey: ["equipStats"],
+  return useQuery<ExerciseStatsType[]>({
+    queryKey: ["exerciseStats"],
     queryFn: async () => {
-      const response = await fetch("/api/equipStats");
-      if (!response.ok) throw new Error("Fehler beim Abrufen der Equip Stats");
+      const response = await fetch("/api/exerciseStats");
+      if (!response.ok) throw new Error("Fehler beim Abrufen der Exercise Stats");
       return response.json();
     },
   });
@@ -27,24 +27,24 @@ export const useAddExercise = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newEquip: {
+    mutationFn: async (newEx: {
       name: string;
       category_id: number;
-      type: EquipArtType;
-      metric: EquipMetricType;
+      type: ExerciseArtType;
+      metric: ExerciseMetricType;
     }) => {
-      const response = await fetch("/api/equip", {
+      const response = await fetch("/api/exercises", {
         method: "Post",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newEquip),
+        body: JSON.stringify(newEx),
       });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["exerciseStats"] });
     },
   });
 };
@@ -61,7 +61,7 @@ export const useUpdateExercise = () => {
       exercise_id: number;
     }) => {
       if (exercise_id) {
-        const response = await fetch("/api/equip", {
+        const response = await fetch("/api/exercises", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -73,17 +73,17 @@ export const useUpdateExercise = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to update equip");
+          throw new Error("Failed to update exercise");
         }
 
         return exercise_id;
       } else {
-        throw new Error("Failed to update equip");
+        throw new Error("Failed to update exercise");
       }
     },
     onSuccess: (exercise_id: number) => {
-      queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["exerciseStats"] });
     },
   });
 };
@@ -93,7 +93,7 @@ export const useDeleteExercise = () => {
 
   return useMutation({
     mutationFn: async (exercise_id: number) => {
-      const response = await fetch("/api/equip", {
+      const response = await fetch("/api/exercises", {
         method: "Delete",
         headers: {
           "Content-Type": "application/json",
@@ -103,8 +103,8 @@ export const useDeleteExercise = () => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["equips"] });
-      queryClient.invalidateQueries({ queryKey: ["equipStats"] });
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["exerciseStats"] });
     },
   });
 };

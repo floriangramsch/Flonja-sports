@@ -58,12 +58,12 @@ onBeforeUnmount(() => {
       />
     </button>
 
-    <button @click="show.showRouter = 'equiplist'" class="w-full">
+    <button @click="show.showRouter = 'exerciselist'" class="w-full">
       <i
         class="fa-solid fa-dumbbell"
         :class="{
-          'text-sonja-akz': show.showRouter === 'equiplist',
-          'fa-bounce': activeBounce === 'equiplist',
+          'text-sonja-akz': show.showRouter === 'exerciselist',
+          'fa-bounce': activeBounce === 'exerciselist',
         }"
       />
     </button>

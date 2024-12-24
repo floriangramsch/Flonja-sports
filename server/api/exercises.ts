@@ -50,6 +50,6 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error) {
     console.error(error);
-    return { error: "Failed to handle equip" };
+    return { error: "Failed to handle exercise" };
   }
 });

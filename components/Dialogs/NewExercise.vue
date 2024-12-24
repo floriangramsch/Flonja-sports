@@ -1,9 +1,9 @@
 <template>
   <div class="mb-2 flex flex-col gap-2">
-    <Textinput v-model="newEquipName" label="Gerätename" />
+    <Textinput v-model="newExerciseName" label="Gerätename" />
     <Select
       v-if="categories"
-      v-model="newEquipCategoryId"
+      v-model="newExerciseCategoryId"
       default="Category..."
       :options="
         categories.map((category) => ({
@@ -36,11 +36,11 @@
     />
   </div>
 
-  <Button @click="addNewEquip">Neue Gerät!</Button>
+  <Button @click="addNewExercise">Neue Gerät!</Button>
 </template>
 
 <script setup lang="ts">
-import type { EquipMetricType, EquipArtType } from "~/utils/types";
+import type { ExerciseMetricType, ExerciseArtType } from "~/utils/types";
 import Button from "../ui/buttons/Button.vue";
 import Textinput from "../ui/inputs/Textinput.vue";
 import Select from "../ui/select/Select.vue";
@@ -49,10 +49,10 @@ const props = defineProps<{
   category_id?: number;
 }>();
 
-const newEquipName = ref("");
-const newType = ref<EquipArtType>();
-const newMetric = ref<EquipMetricType>();
-const newEquipCategoryId = ref<number | undefined>(props.category_id ?? undefined);
+const newExerciseName = ref("");
+const newType = ref<ExerciseArtType>();
+const newMetric = ref<ExerciseMetricType>();
+const newExerciseCategoryId = ref<number | undefined>(props.category_id ?? undefined);
 
 const { data: categories } = useCategories();
 const mutation = useAddExercise();
@@ -61,19 +61,19 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const addNewEquip = () => {
+const addNewExercise = () => {
   if (
-    newEquipName.value &&
-    newEquipCategoryId.value &&
+    newExerciseName.value &&
+    newExerciseCategoryId.value &&
     newType.value &&
     newMetric.value
   ) {
     mutation.mutate(
       {
-        name: newEquipName.value,
+        name: newExerciseName.value,
         type: newType.value,
         metric: newMetric.value,
-        category_id: newEquipCategoryId.value,
+        category_id: newExerciseCategoryId.value,
       },
       {
         onSuccess: () => emit("close"),

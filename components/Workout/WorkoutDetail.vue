@@ -2,18 +2,19 @@
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
-import EquipSelection from "./EquipSelection.vue";
 import type {
-  EquipType,
+  ExerciseType,
   WorkoutExerciseType,
   WorkoutRouterTypes,
   workoutShowType,
   WorkoutType,
 } from "~/utils/types";
 import Confirm from "../Dialogs/Confirm.vue";
+import ExerciseSelection from "./ExerciseSelection.vue";
+import WorkoutExerciseDetail from "./WorkoutExerciseDetail.vue";
 
 const props = defineProps<{
-  equips: EquipType[] | undefined;
+  exercises: ExerciseType[] | undefined;
   categories: CategoryType[] | undefined;
   workout: WorkoutType | undefined;
 }>();
@@ -216,14 +217,14 @@ watch(
       <div v-else>
         <div
           class="flex h-20 w-full cursor-pointer items-center justify-center bg-sonja-bg-darker text-3xl font-bold"
-          @click="() => (workoutShow.showRouter = 'equipselection')"
+          @click="() => (workoutShow.showRouter = 'exerciseselection')"
         >
           Start Workout
         </div>
       </div>
       <button
         class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
-        @click="() => (workoutShow.showRouter = 'equipselection')"
+        @click="() => (workoutShow.showRouter = 'exerciseselection')"
       >
         <i class="fa-solid fa-plus text-5xl" />
       </button>
@@ -243,8 +244,8 @@ watch(
         user_id: workout.user_id,
         rest_time: workout.rest_time,
       }"
-      :equip="
-        equips?.find((e: EquipType) => e.exercise_id === workoutExToShow?.exercise_id)
+      :exercise="
+        exercises?.find((e: ExerciseType) => e.exercise_id === workoutExToShow?.exercise_id)
       "
       v-model:workout-show="workoutShow"
       @close="
@@ -254,21 +255,21 @@ watch(
       @startTimer="$emit('startTimer')"
     />
   </SlideTransition>
-  <!-- Equip Selection -->
+  <!-- Exercise Selection -->
   <SlideTransition>
     <div
       v-if="
-        workoutShow.showRouter === 'equipselection' &&
+        workoutShow.showRouter === 'exerciseselection' &&
         workout?.workout_id &&
         categories &&
-        equips
+        exercises
       "
       class="absolute inset-0"
     >
-      <EquipSelection
+      <ExerciseSelection
         :workoutId="workout.workout_id"
         :categories="categories"
-        :equips="equips"
+        :exercises="exercises"
         v-model="workoutExToShow"
         @close="workoutShow.showRouter = 'workoutdetail'"
       />

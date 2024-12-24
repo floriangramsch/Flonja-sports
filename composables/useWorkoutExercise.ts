@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
-
 import { useQuery } from "@tanstack/vue-query";
 
 export function useWorkoutExercisesByWorkout(
@@ -44,7 +43,6 @@ export default function useAddWorkoutExercise() {
       return response.json();
     },
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ["workouts"] });
       queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
     },
   });
@@ -65,7 +63,6 @@ export function useDeleteWorkoutExercise() {
       return response.json();
     },
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ["workouts"] });
       queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
     },
   });

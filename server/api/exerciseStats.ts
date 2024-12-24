@@ -39,6 +39,6 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
   } catch (error) {
-    return { error: "Failed to handle equip stats" };
+    return { error: "Failed to handle exercise stats" };
   }
 });

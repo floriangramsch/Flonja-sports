@@ -18,12 +18,12 @@ export default function usePreloadData() {
     queryFn: fetchUsers,
   });
   const {
-    isSuccess: isEquipsSuccess,
-    isError: isEquipsError,
-    isLoading: isEquipsLoading,
-  } = useQuery<EquipType>({
-    queryKey: ["equips"],
-    queryFn: fetchEquipment,
+    isSuccess: isExercisesSuccess,
+    isError: isExercisesError,
+    isLoading: isExercisesLoading,
+  } = useQuery<ExerciseType>({
+    queryKey: ["exercises"],
+    queryFn: fetchExercises,
   });
   const {
     isSuccess: isCategorySuccess,
@@ -45,7 +45,7 @@ export default function usePreloadData() {
   const isSuccess = computed(() => {
     return (
       isUsersSuccess.value &&
-      isEquipsSuccess.value &&
+      isExercisesSuccess.value &&
       isCategorySuccess.value &&
       isWorkoutsSuccess.value
     );
@@ -54,7 +54,7 @@ export default function usePreloadData() {
   const isError = computed(() => {
     return (
       isUsersError.value ||
-      isEquipsError.value ||
+      isExercisesError.value ||
       isCategoryError.value ||
       isWorkoutsError.value
     );
@@ -63,7 +63,7 @@ export default function usePreloadData() {
   const isLoading = computed(() => {
     return (
       isUsersLoading.value &&
-      isEquipsLoading.value &&
+      isExercisesLoading.value &&
       isCategoryLoading.value &&
       isWorkoutsLoading.value
     );

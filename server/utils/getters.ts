@@ -1,13 +1,4 @@
 import { connect, query } from "./db";
-import mysql from "mysql2/promise";
-
-interface ExerciseRow {
-  equip_id: number;
-  weight: number;
-  start: string;
-  user_id: number;
-  exercice_id: number;
-}
 
 export const getWorkouts = async () => {
   const pool = await connect();

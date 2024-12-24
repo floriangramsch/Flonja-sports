@@ -1,22 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { PlanExercise } from "~/utils/types";
 
-export function useWorkoutPlan() {
-  return useQuery<WorkoutPlan[]>({
+export function usePlan() {
+  return useQuery<Plan[]>({
     queryKey: ["plan"],
     queryFn: async () => {
-      const res = await fetch("api/workoutplan");
+      const res = await fetch("api/plan");
       const data = await res.json();
       return data;
     },
   });
 }
-export function useGetWorkoutPlan(workoutPlanId: Ref<number | undefined>) {
-  return useQuery<WorkoutPlanEquip[]>({
+export function useGetPlan(workoutPlanId: Ref<number | undefined>) {
+  return useQuery<PlanExercise[]>({
     queryKey: computed(() => ["plan", workoutPlanId.value]),
     queryFn: async () => {
       if (!workoutPlanId.value) throw new Error("Workout plan ID is undefined");
       const response = await fetch(
-        "/api/workoutplan" + "?workout_plan_id=" + workoutPlanId.value,
+        "/api/plan" + "?workout_plan_id=" + workoutPlanId.value,
       );
       if (!response.ok)
         throw new Error("Fehler beim Abrufen des Workout Plans");
@@ -26,11 +27,11 @@ export function useGetWorkoutPlan(workoutPlanId: Ref<number | undefined>) {
   });
 }
 
-export function useAddWorkoutPlan() {
+export function useAddPlan() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (form: { name: string; day?: number }) => {
-      const response = await fetch("/api/workoutplan", {
+      const response = await fetch("/api/plan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,11 +46,11 @@ export function useAddWorkoutPlan() {
   });
 }
 
-export function useDeleteWorkoutPlan() {
+export function useDeletePlan() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await fetch("/api/workoutplan", {
+      const response = await fetch("/api/plan", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +66,7 @@ export function useDeleteWorkoutPlan() {
 }
 
 // Plan Ex
-export function useAddWorkoutPlanExercise() {
+export function useAddPlanExercise() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (form: {
@@ -74,7 +75,7 @@ export function useAddWorkoutPlanExercise() {
       sets: number;
       reps: number;
     }) => {
-      const response = await fetch("/api/workoutplanequip", {
+      const response = await fetch("/api/plan_exercise", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,11 +91,11 @@ export function useAddWorkoutPlanExercise() {
 }
 
 
-export function useDeleteWorkoutPlanExercise() {
+export function useDeletePlanExercise() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await fetch("/api/workoutplanequip", {
+      const response = await fetch("/api/plan_exercise", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

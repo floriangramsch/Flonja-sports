@@ -4,6 +4,7 @@ import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import SlideTransition from "./ui/transitions/SlideTransition.vue";
 import CategoryList from "./Categories/CategoryList.vue";
 import WorkoutExerciseOverview from "./WorkoutExercises/WorkoutExerciseOverview.vue";
+import ExerciseList from "./Exercises/ExerciseList.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
@@ -15,7 +16,7 @@ const logged = defineModel<LoggedType>("logged");
 const show = defineModel<ShowType>("show");
 const workout = defineModel<WorkoutType | undefined>("workout");
 
-const { data: equips } = useEquips();
+const { data: exercises } = useExercises();
 const { data: categories } = useCategories();
 
 const workoutExerciseFilter = ref<number[]>([]);
@@ -27,7 +28,7 @@ const workoutExerciseFilter = ref<number[]>([]);
   >
     <SlideTransition>
       <div v-if="show.showRouter === 'workoutexercises' && users">
-        <WorkoutExerciseOverview v-model="equips" v-model:filter="workoutExerciseFilter" />
+        <WorkoutExerciseOverview v-model="exercises" v-model:filter="workoutExerciseFilter" />
       </div>
     </SlideTransition>
     <SlideTransition>
@@ -36,7 +37,7 @@ const workoutExerciseFilter = ref<number[]>([]);
       </div>
       <div v-if="show?.showRouter === 'workoutdetail'" class="absolute inset-0">
         <WorkoutDetail
-          :equips="equips"
+          :exercises="exercises"
           :categories="categories"
           :workout="workout"
           v-model:logged="logged"
@@ -47,9 +48,8 @@ const workoutExerciseFilter = ref<number[]>([]);
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div v-if="show.showRouter === 'equiplist' && equips && categories && users">
-        <EquipList
-          :equips="equips"
+      <div v-if="show.showRouter === 'exerciselist' && exercises && categories && users">
+        <ExerciseList
           :categories="categories"
           :users="users"
           :workout="workout"

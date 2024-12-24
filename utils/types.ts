@@ -20,19 +20,19 @@ export type CategoryType = {
   category_name: string;
 };
 
-export type EquipArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
-export type EquipMetricType = 'Weight' | 'Time';
-export type EquipType = {
+export type ExerciseArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
+export type ExerciseMetricType = 'Weight' | 'Time';
+export type ExerciseType = {
   exercise_id: number;
   exercise_name: string;
   category_id: number;
   category_name: string;
   info: string;
-  type: EquipArtType;
-  metric: EquipMetricType;
+  type: ExerciseArtType;
+  metric: ExerciseMetricType;
 };
 
-export type EquipStatsType = {
+export type ExerciseStatsType = {
   exercise_name: string;
   exercise_id: number;
   category_id: number;
@@ -42,8 +42,8 @@ export type EquipStatsType = {
   user_id: number;
   user_name: string;
   info: string;
-  type: EquipArtType;
-  metric: EquipMetricType;
+  type: ExerciseArtType;
+  metric: ExerciseMetricType;
 };
 
 export type WorkoutType = {
@@ -74,8 +74,8 @@ export type SetHelperType = {
 export type SetOriginalType = {
   weight: number;
   reps: number;
-  equip_id: number;
-  equip_name: string;
+  exercise_id: number;
+  exercise_name: string;
   start: Date;
   user_name: string;
 };
@@ -86,8 +86,8 @@ export type WorkoutExerciseType = {
   exercise_id: number;
   category_id: number;
   category_name: string;
-  type: EquipArtType;
-  metric: EquipMetricType;
+  type: ExerciseArtType;
+  metric: ExerciseMetricType;
 };
 
 export type StatsType = {
@@ -106,7 +106,7 @@ export type UserStatsType = {
 
 export type RouterTypes =
   | "workoutdetail"
-  | "equiplist"
+  | "exerciselist"
   | "categorylist"
   | "workouts"
   | "workoutexercises"
@@ -119,26 +119,26 @@ export type ShowType = {
 
 export type WorkoutRouterTypes =
   | "home"
-  | "equipselection"
+  | "exerciseselection"
   | "workoutdetail"
   | "workoutexercisedetail";
 export type workoutShowType = {
   showRouter: WorkoutRouterTypes;
 };
 
-export type WorkoutPlan = {
+export type Plan = {
   id: number;
   name: string;
   day?: number;
 }
 
-export type WorkoutPlanEquip = WorkoutPlan & {
-  equip_id: number;
+export type PlanExercise = Plan & {
+  exercise_id: number;
   sets: number;
   reps: number;
   weight: number;
   category_id: number;
   info: string;
-  type: EquipArtType;
-  metric: EquipMetricType;
+  type: ExerciseArtType;
+  metric: ExerciseMetricType;
 }

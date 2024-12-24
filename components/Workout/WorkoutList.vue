@@ -3,6 +3,7 @@ import useDeleteWorkout from "~/composables/Workouts/useDeleteWorkout";
 import Confirm from "../Dialogs/Confirm.vue";
 import Label from "../ui/label/Label.vue";
 import { showTime } from "~/utils/helpers";
+import Plan from "./Plan.vue";
 
 defineProps<{
   workouts: WorkoutType[];
@@ -93,6 +94,6 @@ const toggled = ref<boolean>(false);
         @yes="deleteWorkout()"
       />
     </div>
-    <WorkoutPlan v-else />
+    <Plan v-else />
   </div>
 </template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import FilterEquips from "../Filter/FilterEquips.vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
-import NewEquip from "../Dialogs/NewEquip.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import Select from "../ui/select/Select.vue";
 import Textinput from "../ui/inputs/Textinput.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
+import NewExercise from "../Dialogs/NewExercise.vue";
+import FilterExercises from "../Filter/FilterExercises.vue";
 
 defineProps<{
   categories: CategoryType[];
@@ -32,8 +32,8 @@ const exerciseForm = ref<{
   exercise_id?: number;
   category_id?: number;
   info?: string;
-  type?: EquipArtType;
-  metric?: EquipMetricType;
+  type?: ExerciseArtType;
+  metric?: ExerciseMetricType;
 }>({
   exercise_name: undefined,
   exercise_id: undefined,
@@ -94,7 +94,7 @@ const filteredExercises = computed(() => {
   });
 });
 
-const exerciseList = computed<EquipStatsType[][] | undefined>(() => {
+const exerciseList = computed<ExerciseStatsType[][] | undefined>(() => {
   if (filteredExercises.value) {
     const groupedData = filteredExercises.value?.reduce(
       (acc: { [key: number]: any[] }, curr) => {
@@ -176,7 +176,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         "
         v-model="filter"
       />
-      <FilterEquips v-model="searchFilter" />
+      <FilterExercises v-model="searchFilter" />
       <!-- New Exercise -->
       <Dialog
         :isOpen="showDialogExercise"
@@ -193,7 +193,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
             <i class="fa-solid fa-plus" />
           </button>
         </template>
-        <NewEquip
+        <NewExercise
           @close="
             showDialogExercise = false;
             showDialogCategory = false;

@@ -12,7 +12,7 @@ const props = defineProps<{
     user_id: number;
     rest_time: number;
   };
-  equip: EquipType | undefined;
+  exercise: ExerciseType | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -92,7 +92,7 @@ const showConfirmDeleteSet = ref<boolean>(false);
 const showConfirmDeleteWorkoutExercise = ref<boolean>(false);
 const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
-const editInfo = ref<boolean>(!props.equip?.info);
+const editInfo = ref<boolean>(!props.exercise?.info);
 
 const newWeight = ref<number>();
 const newReps = ref<number>();
@@ -248,14 +248,14 @@ watch(
       :isOpen="showInfo"
       @close="
         showInfo = false;
-        equip?.info ? (editInfo = false) : (editInfo = true);
+        exercise?.info ? (editInfo = false) : (editInfo = true);
       "
     >
       <div class="flex flex-col items-center justify-center gap-4">
         <TextareaInfo
           v-model:edit-info="editInfo"
-          :info="equip?.info"
-          :equip-id="props.equip?.exercise_id"
+          :info="exercise?.info"
+          :exerciseId="props.exercise?.exercise_id"
         />
       </div>
     </Dialog>

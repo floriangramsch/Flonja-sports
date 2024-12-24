@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import BetterEquipSelection from "./BetterEquipSelection.vue";
+import BetterExerciseSelection from './BetterExerciseSelection.vue';
 
-const { data: workoutplans } = useWorkoutPlan();
-const selectedWorkoutPlan = ref<WorkoutPlan>();
-const { data: workoutPlan } = useGetWorkoutPlan(
-  computed(() => selectedWorkoutPlan.value?.id),
+const { data: plans } = usePlan();
+const selectedPlan = ref<Plan>();
+const { data: plan } = useGetPlan(
+  computed(() => selectedPlan.value?.id),
 );
-const addWorkoutPlanMutation = useAddWorkoutPlan();
-const addWorkoutPlan = () => {
+const addPlanMutation = useAddPlan();
+const addPlan = () => {
   if (newPlanForm.value.name) {
-    addWorkoutPlanMutation.mutate(
+    addPlanMutation.mutate(
       {
         name: newPlanForm.value.name,
         day: newPlanForm.value.day,
@@ -18,12 +18,12 @@ const addWorkoutPlan = () => {
     );
   }
 };
-const workoutPlanToDelete = ref<number>();
+const PlanToDelete = ref<number>();
 const confirmDelete = ref<boolean>(false);
-const deleteMutation = useDeleteWorkoutPlan();
-const deleteWorkoutPlan = () => {
-  if (workoutPlanToDelete.value) {
-    deleteMutation.mutate(workoutPlanToDelete.value, {
+const deleteMutation = useDeletePlan();
+const deletePlan = () => {
+  if (PlanToDelete.value) {
+    deleteMutation.mutate(PlanToDelete.value, {
       onSuccess: () => (confirmDelete.value = false),
     });
   }
@@ -36,18 +36,18 @@ const newPlanForm = ref({
 });
 
 // detail
-const { data: equips } = useEquips();
+const { data: exercises } = useExercises();
 const { data: categories } = useCategories();
 
-const newExEquipDialog = ref<boolean>(false);
+const newExExerciseDialog = ref<boolean>(false);
 const newExDialog = ref<boolean>(false);
-const newExEquipId = ref<number>();
-const newExEquipSets = ref<number>();
-const newExEquipReps = ref<number>();
+const newExId = ref<number>();
+const newExSets = ref<number>();
+const newExReps = ref<number>();
 const toDeleteExId = ref<number>();
 
 const confirmDeleteEx = ref<boolean>(false);
-const deleteExMutation = useDeleteWorkoutPlanExercise();
+const deleteExMutation = useDeletePlanExercise();
 const deleteEx = () => {
   if (toDeleteExId.value) {
     deleteExMutation.mutate(toDeleteExId.value, {
@@ -59,52 +59,52 @@ const deleteEx = () => {
   }
 };
 
-const newExMutation = useAddWorkoutPlanExercise();
+const newExMutation = useAddPlanExercise();
 const newEx = () => {
   if (
-    selectedWorkoutPlan.value?.id &&
-    newExEquipId.value &&
-    newExEquipSets.value &&
-    newExEquipReps.value
+    selectedPlan.value?.id &&
+    newExId.value &&
+    newExSets.value &&
+    newExReps.value
   ) {
     newExMutation.mutate(
       {
-        plan_id: selectedWorkoutPlan.value.id,
-        exercise_id: newExEquipId.value,
-        sets: newExEquipSets.value,
-        reps: newExEquipReps.value,
+        plan_id: selectedPlan.value.id,
+        exercise_id: newExId.value,
+        sets: newExSets.value,
+        reps: newExReps.value,
       },
       {
         onSuccess: () => {
-          newExEquipSets.value = undefined;
-          newExEquipReps.value = undefined;
-          newExEquipDialog.value = false;
+          newExSets.value = undefined;
+          newExReps.value = undefined;
+          newExExerciseDialog.value = false;
           newExDialog.value = false;
-          newExEquipId.value = undefined;
+          newExId.value = undefined;
         },
       },
     );
   }
 };
 
-watch(newExEquipId, (newValue) => {
+watch(newExId, (newValue) => {
   if (newValue) {
     newExDialog.value = true;
   }
 });
 </script>
 <template>
-  <div v-if="!workoutPlan && !newExEquipDialog">
+  <div v-if="!plan && !newExExerciseDialog">
     <div
       class="cursor-pointer p-1"
-      @click="selectedWorkoutPlan = plan"
-      v-for="plan in workoutplans"
+      @click="selectedPlan = plan"
+      v-for="plan in plans"
     >
       {{ plan.name }}
       <button
         class="ml-2"
         @click.stop="
-          workoutPlanToDelete = Number(plan.id);
+          PlanToDelete = Number(plan.id);
           confirmDelete = true;
         "
       >
@@ -115,7 +115,7 @@ watch(newExEquipId, (newValue) => {
     <DialogsConfirm
       v-model:is-open="confirmDelete"
       @no="newPlanDialog = false"
-      @yes="deleteWorkoutPlan"
+      @yes="deletePlan"
     />
 
     <button
@@ -126,21 +126,21 @@ watch(newExEquipId, (newValue) => {
     </button>
     <DialogsDialog :is-open="newPlanDialog" @close="newPlanDialog = false">
       <UiInputsTextinput label="Name" v-model="newPlanForm.name" />
-      <UiButtonsButton @action="addWorkoutPlan" class="mt-2"
+      <UiButtonsButton @action="addPlan" class="mt-2"
         >New Plan</UiButtonsButton
       >
     </DialogsDialog>
   </div>
   <div v-else>
-    <div v-if="!newExEquipDialog && workoutPlan">
+    <div v-if="!newExExerciseDialog && plan">
       <button
         class="mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="selectedWorkoutPlan = undefined"
+        @click="selectedPlan = undefined"
       >
         <i class="fa-solid fa-arrow-left" />
       </button>
-      {{ selectedWorkoutPlan?.name }}
-      <div v-for="plan in workoutPlan" class="flex flex-col p-1" :key="plan.id">
+      {{ selectedPlan?.name }}
+      <div v-for="plan in plan" class="flex flex-col p-1" :key="plan.id">
         <div v-if="plan.name">
           {{ plan.name }}
           <button
@@ -160,23 +160,23 @@ watch(newExEquipId, (newValue) => {
 
       <button
         class="mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="newExEquipDialog = true"
+        @click="newExExerciseDialog = true"
       >
         <i class="fa-solid fa-plus" />
       </button>
     </div>
-    <BetterEquipSelection
-      v-if="newExEquipDialog && categories && equips"
+    <BetterExerciseSelection
+      v-if="newExExerciseDialog && categories && exercises"
       :categories="categories"
-      :equips="equips"
-      v-model:result="newExEquipId"
-      @close="newExEquipDialog = false"
+      :exercises="exercises"
+      v-model:result="newExId"
+      @close="newExExerciseDialog = false"
     />
 
     <DialogsDialog :is-open="newExDialog" @close="newExDialog = false">
       <div class="flex flex-col gap-1">
-        <UiInputsTextinput label="Sets" v-model="newExEquipSets" />
-        <UiInputsTextinput label="Reps" v-model="newExEquipReps" />
+        <UiInputsTextinput label="Sets" v-model="newExSets" />
+        <UiInputsTextinput label="Reps" v-model="newExReps" />
       </div>
       <UiButtonsButton @action="newEx" class="mt-2">New Ex</UiButtonsButton>
     </DialogsDialog>
