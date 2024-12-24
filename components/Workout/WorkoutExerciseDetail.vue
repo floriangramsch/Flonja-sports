@@ -22,7 +22,9 @@ const emit = defineEmits<{
 
 const mutation = useDeleteWorkoutExercise();
 const deleteSetMutation = useDeleteSet();
-const { data: sets } = useGetSetsByExerciseId(props.workoutExercise.workout_exercise_id);
+const { data: sets } = useGetSetsByExerciseId(
+  props.workoutExercise.workout_exercise_id,
+);
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
 const { data: lastSets } = useGetLastSets({

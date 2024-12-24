@@ -46,11 +46,12 @@ const addNewWorkoutExercise = (exercise_id: number) => {
     },
     {
       onSuccess: (res) => {
+        console.log('res', res)
         const equip = props.equips.find((ex) => ex.exercise_id === exercise_id);
         exToShow.value = {
           exercise_name: equip?.exercise_name,
           exercise_id: exercise_id,
-          workout_exercise_id: res.id,
+          workout_exercise_id: res.insertId,
           type: equip?.type,
           metric: equip?.metric,
         };
