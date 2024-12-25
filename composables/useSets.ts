@@ -15,11 +15,12 @@ export function useGetSets() {
   });
 }
 
-export function useGetSetsByExerciseId(workout_exercise_id: number) {
+export function useGetSetsByExerciseId(workout_exercise_id: Ref<number>) {
   return useQuery({
-    queryKey: ["sets", workout_exercise_id],
+    queryKey: computed(() => ["sets", workout_exercise_id.value]),
+    // queryKey: ["sets", workout_exercise_id],
     queryFn: async () =>
-      await fetch(`/api/set?workout_exercise_id=${workout_exercise_id}`, {
+      await fetch(`/api/set?workout_exercise_id=${workout_exercise_id.value}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -124,24 +125,31 @@ export function useDeleteSet() {
   });
 }
 
-export function useGetLastSets({
-  exercise_id,
-  user_id,
-  start,
-}: {
-  exercise_id: number;
-  user_id: number;
-  start: Date;
-}) {
+export function useGetLastSets(
+  lastSet: Ref<{
+    exercise_id: number;
+    user_id: number;
+    start: Date;
+  }>,
+) {
   return useQuery({
-    queryKey: ["sets", exercise_id, user_id, start],
+    queryKey: computed(() => [
+      "sets",
+      lastSet.value.exercise_id,
+      lastSet.value.user_id,
+      lastSet.value.start,
+    ]),
     queryFn: async () =>
       await fetch(`/api/lastSets`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ exercise_id, user_id, start }),
+        body: JSON.stringify({
+          exercise_id: lastSet.value.exercise_id,
+          user_id: lastSet.value.user_id,
+          start: lastSet.value.start,
+        }),
       })
         .then((res) => res.json())
         .catch((error) => console.log(error)),

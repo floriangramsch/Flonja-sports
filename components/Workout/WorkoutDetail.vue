@@ -41,6 +41,33 @@ const { data: workoutExercises } = useWorkoutExercisesByWorkout(
   computed(() => props.workout?.workout_id),
 );
 
+const nextExercise = () => {
+  if (!workoutExercises.value) return;
+  const index = workoutExercises.value.findIndex(
+    (ex) =>
+      ex.workout_exercise_id === workoutExToShow.value?.workout_exercise_id,
+  );
+  if (index < workoutExercises.value.length - 1) {
+    workoutExToShow.value = workoutExercises.value[index + 1];
+  } else {
+    workoutExToShow.value = workoutExercises.value[0];
+  }
+};
+
+const prevExercise = () => {
+  if (!workoutExercises.value) return;
+  const index = workoutExercises.value?.findIndex(
+    (ex) =>
+      ex.workout_exercise_id === workoutExToShow.value?.workout_exercise_id,
+  );
+  if (index === 0) {
+    workoutExToShow.value =
+      workoutExercises.value[workoutExercises.value.length - 1];
+  } else {
+    workoutExToShow.value = workoutExercises.value[index - 1];
+  }
+};
+
 const workoutExToShow = ref<WorkoutExerciseType>();
 
 const showLockerDialog = ref<boolean>(false);
@@ -236,7 +263,8 @@ watch(
       v-if="
         workoutShow.showRouter === 'workoutexercisedetail' &&
         workout?.start &&
-        workout.user_id && workoutExToShow
+        workout.user_id &&
+        workoutExToShow
       "
       :workout-exercise="workoutExToShow"
       :workout-info="{
@@ -245,7 +273,9 @@ watch(
         rest_time: workout.rest_time,
       }"
       :exercise="
-        exercises?.find((e: ExerciseType) => e.exercise_id === workoutExToShow?.exercise_id)
+        exercises?.find(
+          (e: ExerciseType) => e.exercise_id === workoutExToShow?.exercise_id,
+        )
       "
       v-model:workout-show="workoutShow"
       @close="
@@ -253,6 +283,8 @@ watch(
         workoutShow.showRouter = 'workoutdetail';
       "
       @startTimer="$emit('startTimer')"
+      @next="nextExercise"
+      @prev="prevExercise"
     />
   </SlideTransition>
   <!-- Exercise Selection -->

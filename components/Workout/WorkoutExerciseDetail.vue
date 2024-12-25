@@ -17,21 +17,23 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "close"): void;
-  (emits: "startTimer"): void;
+  (e: "startTimer"): void;
+  (e: "next"): void;
+  (e: "prev"): void;
 }>();
 
 const mutation = useDeleteWorkoutExercise();
 const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSetsByExerciseId(
-  props.workoutExercise.workout_exercise_id,
+  computed(() => props.workoutExercise.workout_exercise_id),
 );
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
-const { data: lastSets } = useGetLastSets({
+const { data: lastSets } = useGetLastSets(computed(() => ({
   exercise_id: props.workoutExercise.exercise_id,
   user_id: props.workoutInfo?.user_id,
   start: props.workoutInfo?.start,
-});
+})));
 
 const removeWorkoutExercise = () => {
   mutation.mutate(props.workoutExercise.workout_exercise_id, {
@@ -101,8 +103,10 @@ const setIdToUpdate = ref<number>();
 watch(
   () => sets.value,
   (newVal) => {
-    showOldSets.value =
-      newVal.length === 0 && lastSets.value && lastSets.value?.length !== 0;
+    if (newVal) {
+      showOldSets.value =
+        newVal.length === 0 && lastSets.value && lastSets.value?.length !== 0;
+    }
   },
 );
 </script>
@@ -129,8 +133,9 @@ watch(
       </Confirm>
     </div>
     <!-- Buttons -->
-    <div class="mb-5 flex w-full justify-center">
+    <div class="mb-5 flex gap-3 w-full justify-center items-center">
       <!-- Switch between current and old sets -->
+      <i class="fa-solid fa-arrow-left text-3xl" @click="emit('prev')" />
       <button
         class="text-3xl"
         :class="lastSets?.length === 0 ? 'opacity-50' : ''"
@@ -139,6 +144,7 @@ watch(
       >
         <i class="fa-solid fa-repeat" />
       </button>
+      <i class="fa-solid fa-arrow-right text-3xl" @click="emit('next')" />
       <!-- Open Info -->
       <button
         class="absolute right-9 text-3xl text-sonja-text"
