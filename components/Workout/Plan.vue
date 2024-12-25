@@ -140,12 +140,15 @@ watch(newExId, (newValue) => {
           {{ selectedPlan?.name }}
         </div>
       </div>
-      <div v-for="ex in plan" class="p-1" :key="ex.id">
+      <div
+        v-for="ex in plan"
+        class="cursor-pointer p-1"
+        :key="ex.id"
+      >
         <div v-if="ex.name" class="grid grid-cols-2">
           <div>
             {{ ex.name }}
             <button
-              class="ml-2"
               @click.stop="
                 toDeleteExId = Number(ex.id);
                 confirmDeleteEx = true;
@@ -177,14 +180,8 @@ watch(newExId, (newValue) => {
 
     <DialogsDialog :is-open="newExDialog" @close="newExDialog = false">
       <div class="flex gap-1">
-        <UiNumberInput
-            v-model:modelValue="newExReps"
-            label="Reps"
-          />
-          <UiNumberInput
-            v-model:modelValue="newExSets"
-            label="Metric"
-          />
+        <UiNumberInput v-model:modelValue="newExReps" label="Reps" />
+        <UiNumberInput v-model:modelValue="newExSets" label="Metric" />
       </div>
       <UiButtonsButton @action="newEx" class="mt-2">New Ex</UiButtonsButton>
     </DialogsDialog>
