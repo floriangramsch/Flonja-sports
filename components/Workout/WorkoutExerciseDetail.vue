@@ -29,11 +29,13 @@ const { data: sets } = useGetSetsByExerciseId(
 );
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
-const { data: lastSets } = useGetLastSets(computed(() => ({
-  exercise_id: props.workoutExercise.exercise_id,
-  user_id: props.workoutInfo?.user_id,
-  start: props.workoutInfo?.start,
-})));
+const { data: lastSets } = useGetLastSets(
+  computed(() => ({
+    exercise_id: props.workoutExercise.exercise_id,
+    user_id: props.workoutInfo?.user_id,
+    start: props.workoutInfo?.start,
+  })),
+);
 
 const removeWorkoutExercise = () => {
   mutation.mutate(props.workoutExercise.workout_exercise_id, {
@@ -97,7 +99,9 @@ const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.exercise?.info);
 
 const newWeight = ref<number>();
-const newReps = ref<number>();
+const newReps = ref<number | undefined>(
+  props.workoutExercise.metric === "Time" ? 1 : undefined,
+);
 const setIdToUpdate = ref<number>();
 
 watch(
@@ -133,7 +137,7 @@ watch(
       </Confirm>
     </div>
     <!-- Buttons -->
-    <div class="mb-5 flex gap-3 w-full justify-center items-center">
+    <div class="mb-5 flex w-full items-center justify-center gap-3">
       <!-- Switch between current and old sets -->
       <i class="fa-solid fa-arrow-left text-3xl" @click="emit('prev')" />
       <button
@@ -172,7 +176,9 @@ watch(
           "
           class="flex flex-col items-start"
         >
-          <div>Reps: {{ set.reps }}</div>
+          <div v-if="workoutExercise.metric !== 'Time'">
+            Reps: {{ set.reps }}
+          </div>
           <div>
             {{ workoutExercise.metric }}: {{ set.weight
             }}{{ workoutExercise.metric === "Time" ? "s" : " kg" }}
@@ -196,10 +202,12 @@ watch(
         class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
       >
         <div class="flex flex-col">
-          <div>Reps: {{ set.reps }}</div>
+          <div v-if="workoutExercise.metric !== 'Time'">
+            Reps: {{ set.reps }}
+          </div>
           <div>
-            {{ workoutExercise.metric }}: {{ set.weight
-            }}{{ workoutExercise.metric === "Weight" ? " kg" : "s" }}
+            {{ workoutExercise.metric }}: {{ set.weight }}
+            {{ workoutExercise.metric === "Weight" ? " kg" : "s" }}
           </div>
         </div>
       </div>
@@ -239,11 +247,23 @@ watch(
     >
       <div class="flex flex-col items-center justify-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
-        <div class="mt-2 grid grid-cols-2 gap-2">
-          <UiNumberInput v-model:modelValue="newReps" label="Reps" focus />
+        <div
+          class="mt-2 grid grid-cols-2 gap-2"
+          :class="{
+            'grid-cols-2': workoutExercise.metric === 'Weight',
+            'grid-cols-1': workoutExercise.metric === 'Time',
+          }"
+        >
+          <UiNumberInput
+            v-if="workoutExercise.metric !== 'Time'"
+            v-model:modelValue="newReps"
+            label="Reps"
+            :focus="workoutExercise.metric === 'Weight'"
+          />
           <UiNumberInput
             v-model:modelValue="newWeight"
             :label="workoutExercise.metric"
+            :focus="workoutExercise.metric === 'Time'"
           />
         </div>
         <Button @action="handleSet"> Done </Button>

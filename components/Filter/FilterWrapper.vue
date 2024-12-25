@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SlideDownTransition from "../ui/transitions/SlideDownTransition.vue";
 
-const isOpen = ref<boolean>(false);
+const isOpen = ref<boolean>(true);
 
 const toggle = () => (isOpen.value = !isOpen.value);
 

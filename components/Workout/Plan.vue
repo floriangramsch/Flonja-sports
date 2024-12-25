@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import BetterExerciseSelection from './BetterExerciseSelection.vue';
+import BetterExerciseSelection from "./BetterExerciseSelection.vue";
 
 const { data: plans } = usePlan();
 const selectedPlan = ref<Plan>();
-const { data: plan } = useGetPlan(
-  computed(() => selectedPlan.value?.id),
-);
+const { data: plan } = useGetPlan(computed(() => selectedPlan.value?.id));
 const addPlanMutation = useAddPlan();
 const addPlan = () => {
   if (newPlanForm.value.name) {
@@ -96,7 +94,7 @@ watch(newExId, (newValue) => {
 <template>
   <div v-if="!plan && !newExExerciseDialog">
     <div
-      class="cursor-pointer p-1"
+      class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
       @click="selectedPlan = plan"
       v-for="plan in plans"
     >
@@ -119,47 +117,51 @@ watch(newExId, (newValue) => {
     />
 
     <button
-      class="mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+      class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
       @click="newPlanDialog = true"
     >
       <i class="fa-solid fa-plus" />
     </button>
     <DialogsDialog :is-open="newPlanDialog" @close="newPlanDialog = false">
       <UiInputsTextinput label="Name" v-model="newPlanForm.name" />
-      <UiButtonsButton @action="addPlan" class="mt-2"
-        >New Plan</UiButtonsButton
-      >
+      <UiButtonsButton @action="addPlan" class="mt-2">New Plan</UiButtonsButton>
     </DialogsDialog>
   </div>
   <div v-else>
     <div v-if="!newExExerciseDialog && plan">
-      <button
-        class="mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="selectedPlan = undefined"
-      >
-        <i class="fa-solid fa-arrow-left" />
-      </button>
-      {{ selectedPlan?.name }}
-      <div v-for="plan in plan" class="flex flex-col p-1" :key="plan.id">
-        <div v-if="plan.name">
-          {{ plan.name }}
-          <button
-            class="ml-2"
-            @click.stop="
-              toDeleteExId = Number(plan.id);
-              confirmDeleteEx = true;
-            "
-          >
-            <i class="fa-solid fa-close text-red-800" />
-          </button>
+      <div class="flex w-full justify-evenly px-4 pb-4">
+        <button
+          class="absolute left-16 mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+          @click="selectedPlan = undefined"
+        >
+          <i class="fa-solid fa-arrow-left" />
+        </button>
+        <div class="text-center text-4xl font-bold">
+          {{ selectedPlan?.name }}
         </div>
-        <div v-if="plan.sets && plan.reps">
-          {{ plan.sets }} Sets {{ plan.reps }} Reps
+      </div>
+      <div v-for="ex in plan" class="p-1" :key="ex.id">
+        <div v-if="ex.name" class="grid grid-cols-2">
+          <div>
+            {{ ex.name }}
+            <button
+              class="ml-2"
+              @click.stop="
+                toDeleteExId = Number(ex.id);
+                confirmDeleteEx = true;
+              "
+            >
+              <i class="fa-solid fa-close text-red-800" />
+            </button>
+          </div>
+          <div class="ml-2" v-if="ex.sets && ex.reps">
+            {{ ex.sets }}x{{ ex.reps }}{{ ex.metric === "Time" ? "s" : "kg" }}
+          </div>
         </div>
       </div>
 
       <button
-        class="mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+        class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
         @click="newExExerciseDialog = true"
       >
         <i class="fa-solid fa-plus" />
@@ -174,9 +176,15 @@ watch(newExId, (newValue) => {
     />
 
     <DialogsDialog :is-open="newExDialog" @close="newExDialog = false">
-      <div class="flex flex-col gap-1">
-        <UiInputsTextinput label="Sets" v-model="newExSets" />
-        <UiInputsTextinput label="Reps" v-model="newExReps" />
+      <div class="flex gap-1">
+        <UiNumberInput
+            v-model:modelValue="newExReps"
+            label="Reps"
+          />
+          <UiNumberInput
+            v-model:modelValue="newExSets"
+            label="Metric"
+          />
       </div>
       <UiButtonsButton @action="newEx" class="mt-2">New Ex</UiButtonsButton>
     </DialogsDialog>
