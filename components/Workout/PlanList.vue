@@ -44,6 +44,7 @@ const data = ref(props.plan);
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
   if ((e.target as HTMLElement).tagName === "I") return;
+  e.preventDefault()
   isDragging.value = true;
   dragElement.value = element.closest(".draggable");
   const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
@@ -54,6 +55,7 @@ const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
 
 const moveElement = (e: MouseEvent | TouchEvent) => {
   if (!isDragging.value || !dragElement.value) return;
+  e.preventDefault()
   const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
   const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
 
@@ -145,7 +147,7 @@ watch(
 </script>
 
 <template>
-  <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
+  <div class="overflow-auto" :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
     <div
       v-for="ex in data"
       class="draggable cursor-move p-1"
@@ -182,6 +184,7 @@ watch(
         Update
       </button>
       <button
+        v-if="props.workout"
         @click.stop="apply"
         class="rounded border-2 border-sonja-text p-2 shadow"
       >

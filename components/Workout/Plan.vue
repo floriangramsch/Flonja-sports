@@ -143,7 +143,7 @@ watch(newExId, (newValue) => {
     <div v-if="!newExExerciseDialog && plan">
       <div class="flex w-full justify-evenly px-4 pb-4">
         <button
-          class="absolute left-16 mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+          class="absolute left-6 top-4 mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
           @click="selectedPlan = undefined"
         >
           <i class="fa-solid fa-arrow-left" />
