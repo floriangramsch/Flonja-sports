@@ -24,7 +24,8 @@ export default defineEventHandler(async (event) => {
           SELECT * FROM Plan w
           LEFT JOIN Plan_Exercise we ON w.id = we.plan_id
           LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
-          WHERE w.id = ?;
+          WHERE w.id = ?
+          ORDER BY we.order;
           `,
           [workout_plan_id],
         );

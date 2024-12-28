@@ -74,6 +74,8 @@ export function useAddPlanExercise() {
       exercise_id: number;
       sets: number;
       reps: number;
+      reps_to: number;
+      order: number
     }) => {
       const response = await fetch("/api/plan_exercise", {
         method: "POST",
@@ -83,14 +85,16 @@ export function useAddPlanExercise() {
         body: JSON.stringify(form),
       });
       if (!response.ok)
-        throw new Error("Fehler beim Hinzufügen der Exercise des Workout Plans");
+        throw new Error(
+          "Fehler beim Hinzufügen der Exercise des Workout Plans",
+        );
       return response.json();
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
   });
 }
 
-
+// squats zeichnen schach
 export function useDeletePlanExercise() {
   const client = useQueryClient();
   return useMutation({
@@ -101,6 +105,25 @@ export function useDeletePlanExercise() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(id),
+      });
+      if (!response.ok)
+        throw new Error("Fehler beim Löschen des Workout Plans Exercises");
+      return response.json();
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
+  });
+}
+
+export function useUpdatePlanExercise() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (d: { id: number; order: number }) => {
+      const response = await fetch("/api/plan_exercise", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: d.id, order: d.order }),
       });
       if (!response.ok)
         throw new Error("Fehler beim Löschen des Workout Plans Exercises");

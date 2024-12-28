@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import PlanList from "./PlanList.vue";
 
+defineProps<{
+  workout: WorkoutType | undefined;
+}>();
+
+const show = defineModel<ShowType>("show");
 const { data: plans } = usePlan();
 const selectedPlan = ref<Plan>();
 const { data: plan } = useGetPlan(computed(() => selectedPlan.value?.id));
@@ -42,6 +48,7 @@ const newExDialog = ref<boolean>(false);
 const newExId = ref<number>();
 const newExSets = ref<number>();
 const newExReps = ref<number>();
+const newExRepsTo = ref<number>();
 const toDeleteExId = ref<number>();
 
 const confirmDeleteEx = ref<boolean>(false);
@@ -63,7 +70,9 @@ const newEx = () => {
     selectedPlan.value?.id &&
     newExId.value &&
     newExSets.value &&
-    newExReps.value
+    newExReps.value &&
+    newExRepsTo.value &&
+    plan.value
   ) {
     newExMutation.mutate(
       {
@@ -71,11 +80,14 @@ const newEx = () => {
         exercise_id: newExId.value,
         sets: newExSets.value,
         reps: newExReps.value,
+        reps_to: newExRepsTo.value,
+        order: plan.value.length + 1,
       },
       {
         onSuccess: () => {
           newExSets.value = undefined;
           newExReps.value = undefined;
+          newExRepsTo.value = undefined;
           newExExerciseDialog.value = false;
           newExDialog.value = false;
           newExId.value = undefined;
@@ -140,28 +152,13 @@ watch(newExId, (newValue) => {
           {{ selectedPlan?.name }}
         </div>
       </div>
-      <div
-        v-for="ex in plan"
-        class="cursor-pointer p-1"
-        :key="ex.id"
-      >
-        <div v-if="ex.name" class="grid grid-cols-2">
-          <div>
-            {{ ex.name }}
-            <button
-              @click.stop="
-                toDeleteExId = Number(ex.id);
-                confirmDeleteEx = true;
-              "
-            >
-              <i class="fa-solid fa-close text-red-800" />
-            </button>
-          </div>
-          <div class="ml-2" v-if="ex.sets && ex.reps">
-            {{ ex.sets }}x{{ ex.reps }}{{ ex.metric === "Time" ? "s" : "kg" }}
-          </div>
-        </div>
-      </div>
+      <PlanList
+        :plan="plan"
+        :workout="workout"
+        v-model="toDeleteExId"
+        v-model:show="show"
+        @delete="confirmDeleteEx = true"
+      />
 
       <button
         class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
@@ -179,9 +176,10 @@ watch(newExId, (newValue) => {
     />
 
     <DialogsDialog :is-open="newExDialog" @close="newExDialog = false">
-      <div class="flex gap-1">
-        <UiNumberInput v-model:modelValue="newExReps" label="Reps" />
-        <UiNumberInput v-model:modelValue="newExSets" label="Metric" />
+      <UiNumberInput v-model:modelValue="newExSets" label="Sets" focus />
+      <div class="flex gap-1 items-center">
+        <UiNumberInput v-model:modelValue="newExReps" label="from" />
+        <UiNumberInput v-model:modelValue="newExRepsTo" label="to" />
       </div>
       <UiButtonsButton @action="newEx" class="mt-2">New Ex</UiButtonsButton>
     </DialogsDialog>

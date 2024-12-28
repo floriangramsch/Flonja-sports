@@ -58,9 +58,11 @@ const timer = ref<boolean>(false);
 const stopTimer = () => (timer.value = false);
 const startTimer = () => (timer.value = true);
 
+const debug = false
+
 const show = ref<ShowType>({
-  showLogin: false, // show login
-  showRouter: "workoutdetail",
+  showLogin: false, 
+  showRouter: debug ? 'test' : "workoutdetail",
 });
 
 const logged = ref<LoggedType>({

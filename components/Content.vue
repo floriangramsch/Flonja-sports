@@ -26,6 +26,7 @@ const workoutExerciseFilter = ref<number[]>([]);
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
+    <Test v-if="show?.showRouter === 'test'" />
     <SlideTransition>
       <div v-if="show.showRouter === 'workoutexercises' && users">
         <WorkoutExerciseOverview v-model="exercises" v-model:filter="workoutExerciseFilter" />
@@ -63,6 +64,7 @@ const workoutExerciseFilter = ref<number[]>([]);
         <WorkoutList
           :workouts="workouts"
           :users="users"
+          :workout="workout"
           v-model="logged"
           v-model:show="show"
         />

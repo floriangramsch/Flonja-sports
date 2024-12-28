@@ -17,11 +17,21 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "PUT") {
+      const { id, order } = await readBody(event);
+      const query = `
+        UPDATE Plan_Exercise
+        SET \`order\` = ?
+        WHERE id = ?;
+       `;
+      const params = [order, id];
+      const [rows] = await connection.execute(query, params);
+      return rows;
     }
     if (method === "POST") {
-      const { plan_id, exercise_id, sets, reps } = await readBody(event);
-      const query = `INSERT INTO Plan_Exercise (plan_id, exercise_id, sets, reps) VALUES (?, ?, ?, ?);`;
-      const params = [plan_id, exercise_id, sets, reps];
+      const { plan_id, exercise_id, sets, reps, reps_to, order } =
+        await readBody(event);
+      const query = `INSERT INTO Plan_Exercise (plan_id, exercise_id, sets, reps, reps_to, \`order\`) VALUES (?, ?, ?, ?, ?, ?);`;
+      const params = [plan_id, exercise_id, sets, reps, reps_to, order];
       const [rows] = await connection.execute(query, params);
       return rows;
     }

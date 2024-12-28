@@ -110,7 +110,8 @@ export type RouterTypes =
   | "categorylist"
   | "workouts"
   | "workoutexercises"
-  | "stats";
+  | "stats"
+  | "test";
 
 export type ShowType = {
   showLogin: false; // show login
@@ -136,9 +137,11 @@ export type PlanExercise = Plan & {
   exercise_id: number;
   sets: number;
   reps: number;
+  reps_to: number;
   weight: number;
   category_id: number;
   info: string;
   type: ExerciseArtType;
   metric: ExerciseMetricType;
+  order: number;
 }

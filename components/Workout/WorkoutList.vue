@@ -7,6 +7,7 @@ import Plan from "./Plan.vue";
 
 defineProps<{
   workouts: WorkoutType[];
+  workout: WorkoutType | undefined;
   users: UserType;
 }>();
 
@@ -94,6 +95,7 @@ const toggled = ref<boolean>(false);
         @yes="deleteWorkout()"
       />
     </div>
-    <Plan v-else />
+    <Plan :workout="workout" 
+    v-model:show="show" v-else />
   </div>
 </template>
