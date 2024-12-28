@@ -12,8 +12,7 @@ defineEmits<{
   (emits: "startTimer"): void;
 }>();
 
-const logged = defineModel<LoggedType>("logged");
-const show = defineModel<ShowType>("show");
+const routerStore = useRouterStore()
 const workout = defineModel<WorkoutType | undefined>("workout");
 
 const { data: exercises } = useExercises();
@@ -26,55 +25,49 @@ const workoutExerciseFilter = ref<number[]>([]);
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
-    <Test v-if="show?.showRouter === 'test'" />
+    <Test v-if="routerStore.route === 'test'" />
     <SlideTransition>
-      <div v-if="show.showRouter === 'workoutexercises' && users">
+      <div v-if="routerStore.route === 'workoutexercises' && users">
         <WorkoutExerciseOverview v-model="exercises" v-model:filter="workoutExerciseFilter" />
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div v-if="show.showRouter === 'categorylist' && categories">
-        <CategoryList :categories="categories" v-model:show="show" />
+      <div v-if="routerStore.route === 'categorylist' && categories">
+        <CategoryList :categories="categories" />
       </div>
-      <div v-if="show?.showRouter === 'workoutdetail'" class="absolute inset-0">
+      <div v-if="routerStore.route === 'workoutdetail'" class="absolute inset-0">
         <WorkoutDetail
           :exercises="exercises"
           :categories="categories"
           :workout="workout"
-          v-model:logged="logged"
           v-model:filter="workoutExerciseFilter"
-          v-model:show="show"
           @startTimer="$emit('startTimer')"
         />
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div v-if="show.showRouter === 'exerciselist' && exercises && categories && users">
+      <div v-if="routerStore.route === 'exerciselist' && exercises && categories && users">
         <ExerciseList
           :categories="categories"
           :users="users"
           :workout="workout"
           v-model:filter="workoutExerciseFilter"
-          v-model:show="show"
         />
       </div>
     </SlideTransition>
     <SlideTransition>
-      <div v-if="show.showRouter === 'workouts' && users && workouts">
+      <div v-if="routerStore.route === 'workouts' && users && workouts">
         <WorkoutList
           :workouts="workouts"
           :users="users"
           :workout="workout"
-          v-model="logged"
-          v-model:show="show"
         />
       </div>
     </SlideTransition>
 
     <SlideTransition>
       <Stats
-        v-if="show?.showRouter === 'stats' && logged"
-        :logged="logged"
+        v-if="routerStore.route === 'stats'"
         :workout="workout"
       />
     </SlideTransition>

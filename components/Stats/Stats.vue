@@ -5,11 +5,12 @@ import Button from "../ui/buttons/Button.vue";
 import Label from "../ui/label/Label.vue";
 
 const props = defineProps<{
-  logged: LoggedType;
   workout?: WorkoutType;
 }>();
 
 const showList = ref<boolean>(false);
+
+const loggedStore = useLoggedStore()
 
 const { data: stats } = useGetStats();
 const updateMutation = useUpdateStats();
@@ -29,10 +30,10 @@ const deleteStat = () => {
 const showNewStat = ref<boolean>(false);
 const newWeight = ref<number>();
 const newStat = () => {
-  if (props.logged.user?.id && newWeight.value) {
+  if (loggedStore.logged.user?.id && newWeight.value) {
     addMutation.mutate(
       {
-        user_id: props.logged.user?.id,
+        user_id: loggedStore.logged.user?.id,
         weight: newWeight.value,
       },
       {

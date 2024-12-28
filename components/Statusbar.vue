@@ -10,41 +10,32 @@ const props = defineProps<{
   timer: boolean;
 }>();
 
-const logged = defineModel<LoggedType>("logged");
-const show = defineModel<any>("show");
+const loggedStore = useLoggedStore()
 const emit = defineEmits<{
   (emit: "stopTimer"): void;
 }>();
 
 const switchUser = () => {
-  if (props.users && Object.keys(props.users).length === 2 && logged.value) {
-    if (logged.value.user?.name === "Florian") {
-      logged.value.user = {
+  console.log('eins')
+  if (props.users && Object.keys(props.users).length === 2 && loggedStore) {
+    console.log('zwei')
+    if (loggedStore.logged.user?.name === "Florian") {
+      loggedStore.logged.user = {
         id: 2,
         name: props.users[1].name,
       };
     } else {
-      logged.value.user = {
+      loggedStore.logged.user = {
         id: 1,
         name: props.users[0].name,
       };
     }
-    logged.value.isLogged = false;
-    logged.value.loggedWorkoutId = undefined;
-    show.value.showLogin = false;
+    loggedStore.logged.isLogged = false;
+    loggedStore.logged.loggedWorkoutId = undefined;
+    loggedStore.toStorage()
   }
 };
 
-// Funktion zum Ausloggen
-const logout = () => {
-  logged.value = {
-    isLogged: false,
-    user: logged.value?.user,
-    loggedWorkoutId: undefined,
-  };
-  show.value.showLogin = false;
-  localStorage.removeItem("logged");
-};
 </script>
 
 <template>
@@ -54,7 +45,7 @@ const logout = () => {
     <!-- Profilepic -->
     <div @click.prevent="switchUser" class="h-full w-16 cursor-pointer">
       <img
-        v-if="logged?.user?.name === 'Florian'"
+        v-if="loggedStore.logged.user?.name === 'Florian'"
         src="@/public/flo.jpg"
         class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
         alt="Flo"
@@ -68,10 +59,10 @@ const logout = () => {
     </div>
     <!-- Status -->
     <h1
-      v-if="logged?.user"
+      v-if="loggedStore.logged.user"
       class="flex flex-col text-2xl font-bold text-sonja-akz2"
     >
-      Hallo Se Bebi {{ logged.user.name }}
+      Hallo Se Bebi {{ loggedStore.logged.user.name }}
       <Timer
         v-if="props.workout?.user_id && props.workout?.rest_time"
         :isActive="timer"
@@ -80,49 +71,9 @@ const logout = () => {
         @stopped="emit('stopTimer')"
       />
     </h1>
-    <!-- Buttons -->
     <div class="mr-3 flex flex-col text-3xl">
       <!-- Start/End Workout -->
-      <button v-if="logged?.isLogged" @click.prevent="logout">
-        <i class="fa-solid fa-right-from-bracket" />
-      </button>
-      <div v-else>
-        <button
-          @click="
-            {
-              show.showLogin = !show.showLogin;
-              show.showNew = false;
-            }
-          "
-        >
-          <i class="fa-solid fa-dumbbell" />
-        </button>
-        <Transition name="slide-fade-dropdown">
-          <Start
-            v-if="show.showLogin"
-            v-outside
-            v-model="logged"
-            v-model:show="show"
-            :workouts="workouts"
-          />
-        </Transition>
-      </div>
+      <Start :workouts="workouts" />
     </div>
   </div>
 </template>
-
-<style scoped>
-.slide-fade-dropdown-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-dropdown-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-dropdown-enter-from,
-.slide-fade-dropdown-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-</style>

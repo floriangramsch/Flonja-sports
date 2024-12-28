@@ -18,7 +18,7 @@ defineProps<{
 
 const filter = ref<number[]>([]);
 const workoutExerciseFilter = defineModel<number[]>("filter");
-const show = defineModel<ShowType>("show");
+const routerStore = useRouterStore()
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
 const showDialogUpdateExercise = ref<boolean>(false);
@@ -151,9 +151,8 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
     <!-- Header -->
     <div class="flex w-full justify-evenly px-2 py-4">
       <button
-        v-if="show"
         class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="show.showRouter = 'categorylist'"
+        @click="routerStore.route = 'categorylist'"
       >
         <i class="fa-solid fa-repeat" />
       </button>
@@ -304,7 +303,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
             class="ml-2"
             @click.stop="
               workoutExerciseFilter?.push(exercise[0].exercise_id);
-              if (show) show.showRouter = 'workoutexercises';
+              routerStore.route = 'workoutexercises';
             "
           >
             <i class="fa-solid fa-chart-line text-sonja-akz" />

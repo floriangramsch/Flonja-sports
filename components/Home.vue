@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const logged = defineModel<LoggedType>();
+const loggedStore = useLoggedStore()
 
 const emit = defineEmits<{
   (e: "switch"): void;
@@ -8,12 +8,13 @@ const emit = defineEmits<{
 const mutation = useAddWorkout();
 
 const addWorkout = () => {
-  if (logged.value?.user?.id) {
-    mutation.mutate(logged.value?.user?.id, {
+  if (loggedStore.logged.user?.id) {
+    mutation.mutate(loggedStore.logged.user?.id, {
       onSuccess: ({ workoutId }) => {
-        if (logged.value) {
-          logged.value.isLogged = true;
-          logged.value.loggedWorkoutId = workoutId;
+        if (loggedStore.logged) {
+          loggedStore.logged.isLogged = true;
+          loggedStore.logged.loggedWorkoutId = workoutId;
+          loggedStore.toStorage()
           emit("switch");
         }
       },

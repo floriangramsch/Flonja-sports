@@ -11,11 +11,11 @@ defineProps<{
   users: UserType;
 }>();
 
-const logged = defineModel<LoggedType>();
-const show = defineModel<ShowType>("show");
+const loggedStore = useLoggedStore()
+const routerStore = useRouterStore()
 
 const editWorkout = (workout: WorkoutType) => {
-  logged.value = {
+  loggedStore.logged = {
     user: {
       id: workout.user_id,
       name: workout.name,
@@ -23,7 +23,8 @@ const editWorkout = (workout: WorkoutType) => {
     isLogged: true,
     loggedWorkoutId: workout.workout_id,
   };
-  if (show.value) show.value.showRouter = "workoutdetail";
+  loggedStore.toStorage()
+  routerStore.route = "workoutdetail";
 };
 
 const mutation = useDeleteWorkout();
@@ -33,10 +34,11 @@ const deleteWorkout = () => {
   if (workoutToDelete.value) {
     mutation.mutate(workoutToDelete.value, {
       onSuccess: () => {
-        if (logged.value) {
-          logged.value.isLogged = false;
-          logged.value.loggedWorkoutId = undefined;
+        if (loggedStore.logged) {
+          loggedStore.logged.isLogged = false;
+          loggedStore.logged.loggedWorkoutId = undefined;
           showConfirmDeleteWorkout.value = false;
+          loggedStore.toStorage()
         }
       },
     });
@@ -76,7 +78,7 @@ const toggled = ref<boolean>(false);
               (showTime(workout?.end)?.slice(-5) ?? '?')
             "
             :label="workout.name"
-            :selected="workout.workout_id === logged?.loggedWorkoutId"
+            :selected="workout.workout_id === loggedStore.logged.loggedWorkoutId"
           />
           <button
             class="ml-2"
@@ -95,7 +97,6 @@ const toggled = ref<boolean>(false);
         @yes="deleteWorkout()"
       />
     </div>
-    <Plan :workout="workout" 
-    v-model:show="show" v-else />
+    <Plan :workout="workout" v-else />
   </div>
 </template>

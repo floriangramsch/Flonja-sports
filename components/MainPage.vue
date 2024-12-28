@@ -18,21 +18,17 @@
       :workouts="workouts"
       :workout-start="workout?.start"
       :workout="workout"
-      v-model:logged="logged"
-      v-model:show="show"
       :timer="timer"
       @stopTimer="stopTimer"
     />
     <Content
-      v-if="users && workouts && logged && show"
+      v-if="users && workouts && loggedStore"
       :users="users"
       :workouts="workouts"
       v-model:workout="workout"
-      v-model:logged="logged"
-      v-model:show="show"
       @startTimer="startTimer"
     />
-    <Navbar v-model="show" />
+    <Navbar />
   </div>
   <!-- loading -->
   <div
@@ -46,7 +42,6 @@
 
 <script setup lang="ts">
 import useWorkouts from "~/composables/useWorkouts";
-import type { LoggedType, ShowType } from "~/utils/types";
 import Navbar from "./Navbar.vue";
 
 const { isSuccess } = usePreloadData();
@@ -58,43 +53,13 @@ const timer = ref<boolean>(false);
 const stopTimer = () => (timer.value = false);
 const startTimer = () => (timer.value = true);
 
-const debug = false
-
-const show = ref<ShowType>({
-  showLogin: false, 
-  showRouter: debug ? 'test' : "workoutdetail",
-});
-
-const logged = ref<LoggedType>({
-  isLogged: false,
-  user: {
-    id: 1,
-    name: "Florian",
-  },
-  loggedWorkoutId: undefined,
-});
+const loggedStore = useLoggedStore();
 
 const { data: workout } = useGetWorkout(
-  computed(() => logged.value.loggedWorkoutId),
+  computed(() => loggedStore.logged.loggedWorkoutId),
 );
 
-// Funktion zum Speichern des Anmeldezustands im Local Storage
-const saveLoggedState = () => {
-  localStorage.setItem("logged", JSON.stringify(logged.value));
-};
-
-// Funktion zum Laden des Anmeldezustands aus dem Local Storage
-const loadLoggedState = () => {
-  const savedLogged = localStorage.getItem("logged");
-  if (savedLogged) {
-    logged.value = JSON.parse(savedLogged);
-  } else {
-    saveLoggedState();
-  }
-};
-
 // Pull to Refresh
-
 const startY = ref(0); // Startpunkt des Touches
 const currentY = ref(0); // Aktuelle Position während des Moves
 const isPulling = ref(false); // Status des Pulls
@@ -139,9 +104,8 @@ const onTouchEnd = () => {
 };
 
 onMounted(() => {
-  loadLoggedState();
+  if (import.meta.client) {
+    loggedStore.initializeLogged();
+  }
 });
-
-// Beobachte Änderungen im Anmeldezustand und speichere diese
-watch(logged, saveLoggedState, { deep: true });
 </script>

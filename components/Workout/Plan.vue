@@ -6,7 +6,6 @@ defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const show = defineModel<ShowType>("show");
 const { data: plans } = usePlan();
 const selectedPlan = ref<Plan>();
 const { data: plan } = useGetPlan(computed(() => selectedPlan.value?.id));
@@ -156,7 +155,6 @@ watch(newExId, (newValue) => {
         :plan="plan"
         :workout="workout"
         v-model="toDeleteExId"
-        v-model:show="show"
         @delete="confirmDeleteEx = true"
       />
 

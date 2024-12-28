@@ -8,8 +8,7 @@ defineProps<{
   categories: CategoryType[];
 }>();
 
-const show = defineModel<ShowType>("show");
-
+const routerStore = useRouterStore()
 const showDialogNewCategory = ref<boolean>(false);
 const showDialogDeleteCategory = ref<boolean>(false);
 const showDialogCategory = ref<boolean>(false);
@@ -67,9 +66,8 @@ const deleteCategory = () => {
   <!-- Header -->
   <div class="flex w-full justify-center px-2 py-4">
     <button
-      v-if="show"
       class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-      @click="show.showRouter = 'exerciselist'"
+      @click="routerStore.route = 'exerciselist'"
     >
       <i class="fa-solid fa-repeat" />
     </button>

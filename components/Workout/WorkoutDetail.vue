@@ -20,9 +20,9 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const logged = defineModel<LoggedType | undefined>("logged");
+const loggedStore = useLoggedStore()
 const exerciceFilter = defineModel<number[]>("filter");
-const show = defineModel<ShowType>("show");
+const routerStore = useRouterStore()
 
 defineEmits<{
   (emits: "startTimer"): void;
@@ -31,7 +31,7 @@ defineEmits<{
 const showConfirmEndWorkout = ref<boolean>(false);
 
 const workoutShow = ref<workoutShowType>({
-  showRouter: logged.value?.loggedWorkoutId ? "workoutdetail" : "home",
+  showRouter: loggedStore.logged.loggedWorkoutId ? "workoutdetail" : "home",
 });
 
 const switchRouter = (route: WorkoutRouterTypes) => {
@@ -162,7 +162,7 @@ watch(
 );
 
 watch(
-  () => logged.value,
+  () => loggedStore.logged,
   (newVal) => {
     if (newVal?.loggedWorkoutId) {
       switchRouter("workoutdetail");
@@ -173,9 +173,9 @@ watch(
 );
 
 watch(
-  () => logged.value?.user,
+  () => loggedStore.logged.user,
   () => {
-    if (!logged.value?.loggedWorkoutId) {
+    if (!loggedStore.logged.loggedWorkoutId) {
       switchRouter("home");
     }
   },
@@ -205,7 +205,7 @@ watch(
 <template>
   <SlideTransition>
     <div v-if="workoutShow.showRouter === 'home'" class="absolute inset-0">
-      <Home v-model="logged" @switch="switchRouter('workoutdetail')" />
+      <Home @switch="switchRouter('workoutdetail')" />
     </div>
   </SlideTransition>
   <!-- Workout Exercises List -->
@@ -263,7 +263,7 @@ watch(
           class="ml-2"
           @click.stop="
             exerciceFilter = [wex.exercise_id];
-            if (show) show.showRouter = 'workoutexercises';
+            routerStore.route = 'workoutexercises';
           "
         >
           <i class="fa-solid fa-chart-line text-sonja-akz" />

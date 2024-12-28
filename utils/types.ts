@@ -114,7 +114,6 @@ export type RouterTypes =
   | "test";
 
 export type ShowType = {
-  showLogin: false; // show login
   showRouter: RouterTypes;
 };
 

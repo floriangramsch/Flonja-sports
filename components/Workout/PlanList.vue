@@ -10,7 +10,7 @@ defineEmits<{
   (e: "delete"): void;
 }>();
 
-const show = defineModel<ShowType>("show");
+const routerStore = useRouterStore();
 const updateOrderMutation = useUpdatePlanExercise();
 
 const mutation = useAddWorkoutExercise();
@@ -22,9 +22,7 @@ const addNewWorkoutExercise = (workoutId: number, exercise_id: number) => {
     },
     {
       onSuccess: () => {
-        if (show.value) {
-          show.value.showRouter = "workoutdetail";
-        }
+        routerStore.route = "workoutdetail";
       },
       onError: (e) => console.error(e),
     },
@@ -62,12 +60,11 @@ const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
     if (dragElement.value) {
       dragElement.value.style.visibility = "hidden";
       const belowId = document
-      .elementFromPoint(clientX, clientY)
-      ?.closest(".draggable")?.id;
+        .elementFromPoint(clientX, clientY)
+        ?.closest(".draggable")?.id;
       dragElement.value.style.visibility = "visible";
       pos.value = Number(belowId) || -1;
     }
-    
   }, 300);
 };
 
@@ -174,9 +171,7 @@ watch(
 
 <template>
   <!-- class="overflow-auto" -->
-  <div
-    :class="{ 'border-t-2 border-sonja-akz': pos === -1 }"
-  >
+  <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
     <div
       v-for="ex in data"
       class="draggable cursor-move p-1"
