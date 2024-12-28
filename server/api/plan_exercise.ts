@@ -30,7 +30,9 @@ export default defineEventHandler(async (event) => {
     if (method === "POST") {
       const { plan_id, exercise_id, sets, reps, reps_to, order } =
         await readBody(event);
-      const query = `INSERT INTO Plan_Exercise (plan_id, exercise_id, sets, reps, reps_to, \`order\`) VALUES (?, ?, ?, ?, ?, ?);`;
+      const query = `
+      INSERT INTO Plan_Exercise (plan_id, exercise_id, sets, reps, reps_to, \`order\`) 
+      VALUES (?, ?, ?, ?, ?, ?);`;
       const params = [plan_id, exercise_id, sets, reps, reps_to, order];
       const [rows] = await connection.execute(query, params);
       return rows;

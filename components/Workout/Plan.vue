@@ -175,7 +175,7 @@ watch(newExId, (newValue) => {
       @close="newExExerciseDialog = false"
     />
 
-    <DialogsDialog :is-open="newExDialog" @close="newExDialog = false">
+    <DialogsDialog :is-open="newExDialog" @close="newExDialog = false; newExId = undefined">
       <UiNumberInput v-model:modelValue="newExSets" label="Sets" focus />
       <div class="flex gap-1 items-center">
         <UiNumberInput v-model:modelValue="newExReps" label="from" />

@@ -44,7 +44,7 @@ const data = ref(props.plan);
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
   if ((e.target as HTMLElement).tagName === "I") return;
-  e.preventDefault()
+  e.preventDefault();
   isDragging.value = true;
   dragElement.value = element.closest(".draggable");
   const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
@@ -55,7 +55,7 @@ const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
 
 const moveElement = (e: MouseEvent | TouchEvent) => {
   if (!isDragging.value || !dragElement.value) return;
-  e.preventDefault()
+  e.preventDefault();
   const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
   const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
 
@@ -147,7 +147,10 @@ watch(
 </script>
 
 <template>
-  <div class="overflow-auto" :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
+  <div
+    class="overflow-auto"
+    :class="{ 'border-t-2 border-sonja-akz': pos === -1 }"
+  >
     <div
       v-for="ex in data"
       class="draggable cursor-move p-1"
@@ -172,7 +175,11 @@ watch(
         </div>
         <div class="ml-2" v-if="ex.sets && ex.reps">
           {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-          }}{{ ex.metric === "Time" ? "s" : "kg" }}
+          }}{{
+            ex.metric === "Time"
+              ? "s"
+              : ""
+          }}
         </div>
       </div>
     </div>

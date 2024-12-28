@@ -25,6 +25,7 @@ const chooseCategory = (category: CategoryType) => {
 
 const exercisesToShow = computed(() => {
   return props.exercises.filter(
+    // ex => true
     (ex) => ex.category_name === chosenCategory.value?.category_name,
   );
 });
