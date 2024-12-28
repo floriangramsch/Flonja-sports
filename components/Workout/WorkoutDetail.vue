@@ -10,8 +10,9 @@ import type {
   WorkoutType,
 } from "~/utils/types";
 import Confirm from "../Dialogs/Confirm.vue";
-import ExerciseSelection from "./ExerciseSelection.vue";
 import WorkoutExerciseDetail from "./WorkoutExerciseDetail.vue";
+import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
+import BetterExerciseSelection from "./BetterExerciseSelection.vue";
 
 const props = defineProps<{
   exercises: ExerciseType[] | undefined;
@@ -115,6 +116,50 @@ const endWorkout = () => {
     );
   }
 };
+
+const resultNewWorkoutExerciseId = ref<number>();
+const mutation = useAddWorkoutExercise();
+const addNewWorkoutExercise = (exercise_id: number) => {
+  if (props.workout?.workout_id) {
+    mutation.mutate(
+      {
+        workout_id: props.workout.workout_id,
+        exercise_id: exercise_id,
+      },
+      {
+        onSuccess: (res) => {
+          if (props.exercises) {
+            const exercise = props.exercises.find(
+              (ex) => ex.exercise_id === exercise_id,
+            );
+            if (exercise) {
+              workoutExToShow.value = {
+                exercise_name: exercise?.exercise_name,
+                exercise_id: exercise_id,
+                category_name: exercise.category_name,
+                category_id: exercise.category_id,
+                workout_exercise_id: res.insertId,
+                type: exercise?.type,
+                metric: exercise?.metric,
+              };
+            }
+            workoutShow.value.showRouter = "workoutdetail";
+          }
+        },
+        onError: (e) => console.error(e),
+      },
+    );
+  }
+};
+
+watch(
+  () => resultNewWorkoutExerciseId.value,
+  (newVal) => {
+    if (newVal) {
+      addNewWorkoutExercise(newVal)
+    }
+  },
+);
 
 watch(
   () => logged.value,
@@ -298,11 +343,10 @@ watch(
       "
       class="absolute inset-0"
     >
-      <ExerciseSelection
-        :workoutId="workout.workout_id"
+      <BetterExerciseSelection
         :categories="categories"
         :exercises="exercises"
-        v-model="workoutExToShow"
+        v-model:result="resultNewWorkoutExerciseId"
         @close="workoutShow.showRouter = 'workoutdetail'"
       />
     </div>

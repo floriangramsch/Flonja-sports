@@ -9,7 +9,6 @@ const props = defineProps<{
   exercises: ExerciseType[];
 }>();
 
-const exToShow = defineModel();
 const result = defineModel("result");
 
 const emit = defineEmits<{
@@ -25,7 +24,6 @@ const chooseCategory = (category: CategoryType) => {
 
 const exercisesToShow = computed(() => {
   return props.exercises.filter(
-    // ex => true
     (ex) => ex.category_name === chosenCategory.value?.category_name,
   );
 });
@@ -76,7 +74,7 @@ const showDialogExercise = ref<boolean>(false);
 
   <!-- Exercise Selection -->
   <div v-if="showExerciseOverview">
-    <div class="flex w-full justify-evenly">
+    <div class="flex w-full justify-evenly py-4">
       <button
         class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
         @click="
