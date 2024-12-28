@@ -37,6 +37,7 @@ const isDragging = ref(false);
 const dragElement = ref<HTMLElement | null>(null);
 const offsetX = ref(0);
 const offsetY = ref(0);
+const dragTimeout = ref<number | null>(null);
 
 const pos = ref<number | undefined>(undefined);
 
@@ -44,18 +45,34 @@ const data = ref(props.plan);
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
   if ((e.target as HTMLElement).tagName === "I") return;
-  e.preventDefault();
-  isDragging.value = true;
-  dragElement.value = element.closest(".draggable");
-  const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-  const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
-  offsetX.value = clientX - element.getBoundingClientRect().left;
-  offsetY.value = clientY - element.getBoundingClientRect().top;
+  dragTimeout.value = window.setTimeout(() => {
+    isDragging.value = true;
+    dragElement.value = element.closest(".draggable");
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("touchmove", preventDefault, { passive: false });
+    window.addEventListener("scroll", preventDefault, { passive: false });
+
+    const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+    const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
+    offsetX.value = clientX - element.getBoundingClientRect().left;
+    offsetY.value = clientY - element.getBoundingClientRect().top;
+
+    // show line where the element can be put
+    if (dragElement.value) {
+      dragElement.value.style.visibility = "hidden";
+      const belowId = document
+      .elementFromPoint(clientX, clientY)
+      ?.closest(".draggable")?.id;
+      dragElement.value.style.visibility = "visible";
+      pos.value = Number(belowId) || -1;
+    }
+    
+  }, 300);
 };
 
 const moveElement = (e: MouseEvent | TouchEvent) => {
   if (!isDragging.value || !dragElement.value) return;
-  e.preventDefault();
   const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
   const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
 
@@ -75,7 +92,12 @@ const moveElement = (e: MouseEvent | TouchEvent) => {
 };
 
 const stopMoving = (e: MouseEvent | TouchEvent) => {
+  if (dragTimeout.value) {
+    clearTimeout(dragTimeout.value);
+    dragTimeout.value = null;
+  }
   isDragging.value = false;
+  document.body.style.overflow = "auto"; // activate scrolling
   pos.value = undefined;
   if (dragElement.value) {
     const clientX =
@@ -102,18 +124,20 @@ const stopMoving = (e: MouseEvent | TouchEvent) => {
     data.value.splice(Number(belowIndex) + 1, 0, tmp);
   }
   dragElement.value = null;
+  document.body.style.overflow = "";
+  window.removeEventListener("touchmove", preventDefault);
+  window.removeEventListener("scroll", preventDefault);
 };
 
-const update = () => {
-  let i = 1;
-  data.value.map((el) => {
-    updateOrderMutation.mutate({
-      id: el.id,
-      order: i,
-    });
-    // el.order = i;
-    i++;
-  });
+const update = async () => {
+  const updates = data.value.map((el, index) => ({
+    id: el.id,
+    order: index + 1,
+  }));
+
+  for (const update of updates) {
+    await updateOrderMutation.mutateAsync(update);
+  }
 };
 
 const apply = () => {
@@ -123,6 +147,8 @@ const apply = () => {
     }
   });
 };
+
+const preventDefault = (e: Event) => e.preventDefault();
 
 onMounted(() => {
   document.addEventListener("mousemove", moveElement);
@@ -147,8 +173,8 @@ watch(
 </script>
 
 <template>
+  <!-- class="overflow-auto" -->
   <div
-    class="overflow-auto"
     :class="{ 'border-t-2 border-sonja-akz': pos === -1 }"
   >
     <div
@@ -162,7 +188,7 @@ watch(
       @mousedown="startMoving($event, $event.target as HTMLElement)"
       @touchstart="startMoving($event, $event.target as HTMLElement)"
     >
-      <div v-if="ex.name" class="grid grid-cols-2">
+      <div v-if="ex.name" class="mr-2 flex justify-between">
         <div>
           {{ ex.order }} {{ ex.name }}
           <i
@@ -175,11 +201,7 @@ watch(
         </div>
         <div class="ml-2" v-if="ex.sets && ex.reps">
           {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-          }}{{
-            ex.metric === "Time"
-              ? "s"
-              : ""
-          }}
+          }}{{ ex.metric === "Time" ? "s" : "" }}
         </div>
       </div>
     </div>

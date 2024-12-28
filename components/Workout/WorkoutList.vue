@@ -65,7 +65,7 @@ const toggled = ref<boolean>(false);
       <div
         v-for="workout in workouts"
         @click="editWorkout(workout)"
-        class="flex min-w-full snap-start flex-col p-2"
+        class="flex min-w-full snap-start flex-col p-2 cursor-pointer"
         :key="workout.workout_id"
       >
         <div class="flex">

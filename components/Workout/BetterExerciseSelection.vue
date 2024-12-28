@@ -53,7 +53,7 @@ const showDialogExercise = ref<boolean>(false);
       class="grid grid-cols-3 place-items-center gap-2 overflow-auto"
     >
       <div
-        class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker"
+        class="flex size-28 cursor-pointer items-center justify-center text-center overflow-auto border-4 border-sonja-bg-darker"
         @click="chooseCategory(category)"
         v-for="category in categories"
         :key="category.category_id"
@@ -102,7 +102,7 @@ const showDialogExercise = ref<boolean>(false);
       </div>
       <Dialog :isOpen="showDialogExercise" @close="showDialogExercise = false">
         <template v-slot:trigger>
-          <Button @action="showDialogExercise = true"> Neues Gerät </Button>
+          <Button @action="showDialogExercise = true"> New Exercise </Button>
         </template>
         <NewExercise
           @close="showDialogExercise = false"
