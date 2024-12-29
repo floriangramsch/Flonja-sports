@@ -9,7 +9,7 @@
       <div
         @click.stop
         ref="dialog"
-        class="absolute top-[15%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md"
+        class="absolute top-[15%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md max-h-[80%] overflow-scroll"
         :style="{width: w}"
       >
         <!-- <button @click="close" class="ml-auto flex rounded bg-sonja-akz p-2">

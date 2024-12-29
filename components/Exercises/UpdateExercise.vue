@@ -6,8 +6,8 @@ import MultiSelect from "../ui/select/MultiSelect.vue";
 import Select from "../ui/select/Select.vue";
 
 defineProps<{
-  categories: CategoryType[]
-}>()
+  categories: CategoryType[];
+}>();
 
 const exerciseForm = ref();
 
@@ -26,7 +26,7 @@ const setForm = (form: {
 defineExpose({
   open,
   close,
-  setForm
+  setForm,
 });
 
 const updateExerciseMutation = useUpdateExercise();
@@ -87,26 +87,26 @@ const updateExercise = () => {
         "
       />
 
-      <Select
-        class="w-full"
-        v-model="exerciseForm.type"
-        default="Type..."
-        :options="[
-          { value: 'Bodyweight', label: 'Bodyweight' },
-          { value: 'Machine', label: 'Machine' },
-          { value: 'Dumbbell', label: 'Dumbbell' },
-        ]"
-      />
+      <div class="flex gap-2">
+        <Select
+          v-model="exerciseForm.type"
+          default="Type..."
+          :options="[
+            { value: 'Bodyweight', label: 'Bodyweight' },
+            { value: 'Machine', label: 'Machine' },
+            { value: 'Dumbbell', label: 'Dumbbell' },
+          ]"
+        />
 
-      <Select
-        class="w-full"
-        v-model="exerciseForm.metric"
-        default="Metric..."
-        :options="[
-          { value: 'Time', label: 'Time' },
-          { value: 'Weight', label: 'Weight' },
-        ]"
-      />
+        <Select
+          v-model="exerciseForm.metric"
+          default="Metric..."
+          :options="[
+            { value: 'Time', label: 'Time' },
+            { value: 'Weight', label: 'Weight' },
+          ]"
+        />
+      </div>
 
       <!-- Info -->
       <div class="relative">

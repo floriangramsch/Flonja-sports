@@ -38,7 +38,7 @@ const showDialogExercise = ref<boolean>(false);
 </script>
 
 <template>
-  <Dialog :isOpen @close="$emit('close')" w="25rem">
+  <Dialog :isOpen @close="$emit('close')" w="24rem">
     <!-- category Selection -->
     <div v-if="showCategoryOverview">
       <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">

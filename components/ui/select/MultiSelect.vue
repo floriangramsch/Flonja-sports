@@ -46,12 +46,12 @@ const select = (id: number) => {
     <!-- options -->
     <div
       v-if="isOpen"
-      class="absolute top-10 z-50 rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
-      >
+      class="absolute top-10 max-h-72 overflow-auto z-50 rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
+    >
       <div
         v-for="opt in options"
         :key="opt.value"
-        class="hover:bg-sonja-akz p-1 px-2"
+        class="p-1 px-2"
         :class="{ 'bg-sonja-akz text-sonja-text': model?.includes(opt.value) }"
         @click.stop="select(opt.value)"
       >
