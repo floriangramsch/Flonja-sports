@@ -111,6 +111,7 @@ export type RouterTypes =
   | "workouts"
   | "workoutexercises"
   | "stats"
+  | "plans"
   | "test";
 
 export type ShowType = {

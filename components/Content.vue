@@ -4,6 +4,7 @@ import WorkoutDetail from "./Workout/WorkoutDetail.vue";
 import CategoryList from "./Categories/CategoryList.vue";
 import WorkoutExerciseOverview from "./WorkoutExercises/WorkoutExerciseOverview.vue";
 import ExerciseList from "./Exercises/ExerciseList.vue";
+import Plan from "./Workout/Plan.vue";
 
 defineProps<{ users: UserType; workouts: WorkoutType[] }>();
 
@@ -28,8 +29,8 @@ const { data: categories } = useCategories();
       />
     </Router>
 
-    <Router route="workouts">
-      <WorkoutList :workouts="workouts" :users="users" :workout="workout" />
+    <Router route="plans">
+      <Plan :workout="workout" />
     </Router>
 
     <Router route="workoutdetail">
@@ -57,6 +58,9 @@ const { data: categories } = useCategories();
     
     <Router route="stats">
       <Stats :workout="workout" />
+    </Router>
+    <Router route="workouts">
+      <WorkoutList :workouts="workouts" :users="users" :workout="workout" />
     </Router>
   </div>
 </template>

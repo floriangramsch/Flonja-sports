@@ -11,6 +11,7 @@ const props = defineProps<{
 const showList = ref<boolean>(false);
 
 const loggedStore = useLoggedStore();
+const routerStore = useRouterStore();
 
 const { data: stats } = useGetStats();
 const updateMutation = useUpdateStats();
@@ -85,7 +86,12 @@ watch(
 </script>
 <template>
   <div>
-    <Header @left="showList = !showList" leftIcon="fa-solid fa-list">
+    <Header
+      @left="showList = !showList"
+      @right="routerStore.route = 'workouts'"
+      leftIcon="fa-solid fa-list"
+      rightIcon="fa-solid fa-list"
+    >
       Stats
     </Header>
     <!-- Stats -->

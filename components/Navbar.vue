@@ -1,20 +1,23 @@
 <script setup lang="ts">
-const routerStore = useRouterStore()
+const routerStore = useRouterStore();
 const activeBounce = ref<string>("");
 let bounceTimeout: ReturnType<typeof setTimeout> | undefined;
 
-watch(() => routerStore.route, (newVal) => {
-  const timeout = 900;
-  activeBounce.value = newVal;
+watch(
+  () => routerStore.route,
+  (newVal) => {
+    const timeout = 900;
+    activeBounce.value = newVal;
 
-  if (bounceTimeout) {
-    clearTimeout(bounceTimeout);
-  }
+    if (bounceTimeout) {
+      clearTimeout(bounceTimeout);
+    }
 
-  bounceTimeout = setTimeout(() => {
-    activeBounce.value = "";
-  }, timeout);
-});
+    bounceTimeout = setTimeout(() => {
+      activeBounce.value = "";
+    }, timeout);
+  },
+);
 
 // Clear the timeout when the component is unmounted
 onBeforeUnmount(() => {
@@ -38,12 +41,12 @@ onBeforeUnmount(() => {
       />
     </button>
 
-    <button @click="routerStore.route = 'workouts'" class="w-full">
+    <button @click="routerStore.route = 'plans'" class="w-full">
       <i
         class="fa-solid fa-calendar"
         :class="{
-          'text-sonja-akz': routerStore.route === 'workouts',
-          'fa-bounce': activeBounce === 'workouts',
+          'text-sonja-akz': routerStore.route === 'plans',
+          'fa-bounce': activeBounce === 'plans',
         }"
       />
     </button>
@@ -62,7 +65,9 @@ onBeforeUnmount(() => {
       <i
         class="fa-solid fa-dumbbell"
         :class="{
-          'text-sonja-akz': routerStore.route === 'exerciselist',
+          'text-sonja-akz':
+            routerStore.route === 'exerciselist' ||
+            routerStore.route === 'categorylist',
           'fa-bounce': activeBounce === 'exerciselist',
         }"
       />
@@ -72,7 +77,8 @@ onBeforeUnmount(() => {
       <i
         class="fa-solid fa-weight-scale"
         :class="{
-          'text-sonja-akz': routerStore.route === 'stats',
+          'text-sonja-akz':
+            routerStore.route === 'stats' || routerStore.route === 'workouts',
           'fa-bounce': activeBounce === 'stats',
         }"
       />

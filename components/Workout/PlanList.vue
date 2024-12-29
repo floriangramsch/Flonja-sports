@@ -40,6 +40,9 @@ const dragTimeout = ref<number | null>(null);
 const pos = ref<number | undefined>(undefined);
 
 const data = ref(props.plan);
+const isOrdered = computed(() => {
+  return data.value.every((item, index) => item.order === index + 1);
+});
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
   if ((e.target as HTMLElement).tagName === "I") return;
@@ -147,6 +150,8 @@ const apply = () => {
 
 const preventDefault = (e: Event) => e.preventDefault();
 
+defineExpose({ update, apply, isOrdered });
+
 onMounted(() => {
   document.addEventListener("mousemove", moveElement);
   document.addEventListener("mouseup", stopMoving);
@@ -170,7 +175,6 @@ watch(
 </script>
 
 <template>
-  <!-- class="overflow-auto" -->
   <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
     <div
       v-for="ex in data"
@@ -199,21 +203,6 @@ watch(
           }}{{ ex.metric === "Time" ? "s" : "" }}
         </div>
       </div>
-    </div>
-    <div class="my-2 flex w-full justify-evenly">
-      <button
-        @click.stop="update"
-        class="rounded border-2 border-sonja-text p-2 shadow"
-      >
-        Update
-      </button>
-      <button
-        v-if="props.workout"
-        @click.stop="apply"
-        class="rounded border-2 border-sonja-text p-2 shadow"
-      >
-        Apply
-      </button>
     </div>
   </div>
 </template>

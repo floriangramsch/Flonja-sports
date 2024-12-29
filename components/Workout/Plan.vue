@@ -2,7 +2,7 @@
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
 import PlanList from "./PlanList.vue";
 
-defineProps<{
+const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
@@ -96,6 +96,30 @@ const newEx = () => {
   }
 };
 
+const planListRef = ref<InstanceType<typeof PlanList> | null>(null);
+
+const getRightIcon = () => {
+  if (selectedPlan.value && planListRef.value) {
+    if (planListRef.value.isOrdered && props.workout) {
+      return "fa-solid fa-plus";
+    } else if (!planListRef.value.isOrdered) {
+      return "fa-solid fa-refresh";
+    }
+  }
+  return undefined;
+};
+
+const getRightFunction = () => {
+  if (selectedPlan.value && planListRef.value) {
+    if (planListRef.value.isOrdered && props.workout) {
+      return planListRef?.value?.apply();
+    } else if (!planListRef.value.isOrdered) {
+      return planListRef?.value?.update();
+    }
+  }
+  return undefined;
+};
+
 watch(newExId, (newValue) => {
   if (newValue) {
     newExDialog.value = true;
@@ -103,6 +127,14 @@ watch(newExId, (newValue) => {
 });
 </script>
 <template>
+  <Header
+    @left="selectedPlan ? (selectedPlan = undefined) : undefined"
+    @right="getRightFunction"
+    :leftIcon="selectedPlan ? 'fa-solid fa-arrow-left' : undefined"
+    :rightIcon="getRightIcon()"
+  >
+    {{ selectedPlan ? selectedPlan?.name : "Plans" }}
+  </Header>
   <div v-if="!plan && !newExExerciseDialog">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
@@ -140,18 +172,8 @@ watch(newExId, (newValue) => {
   </div>
   <div v-else>
     <div v-if="!newExExerciseDialog && plan">
-      <div class="flex w-full justify-evenly px-4 pb-4">
-        <button
-          class="absolute left-6 top-4 mb-2 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-          @click="selectedPlan = undefined"
-        >
-          <i class="fa-solid fa-arrow-left" />
-        </button>
-        <div class="text-center text-4xl font-bold">
-          {{ selectedPlan?.name }}
-        </div>
-      </div>
       <PlanList
+        ref="planListRef"
         :plan="plan"
         :workout="workout"
         v-model="toDeleteExId"
@@ -173,9 +195,15 @@ watch(newExId, (newValue) => {
       @close="newExExerciseDialog = false"
     />
 
-    <DialogsDialog :is-open="newExDialog" @close="newExDialog = false; newExId = undefined">
+    <DialogsDialog
+      :is-open="newExDialog"
+      @close="
+        newExDialog = false;
+        newExId = undefined;
+      "
+    >
       <UiNumberInput v-model:modelValue="newExSets" label="Sets" focus />
-      <div class="flex gap-1 items-center">
+      <div class="flex items-center gap-1">
         <UiNumberInput v-model:modelValue="newExReps" label="from" />
         <UiNumberInput v-model:modelValue="newExRepsTo" label="to" />
       </div>

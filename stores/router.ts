@@ -6,8 +6,8 @@ export const useRouterStore = defineStore('router', {
     route: "workoutdetail",
   }),
   actions: {
-    toggleVisibility(route: string) {
-      this.route = route;
-    },
+    setRoute(route: RouterTypes) {
+      this.route = route
+    }
   }
 });

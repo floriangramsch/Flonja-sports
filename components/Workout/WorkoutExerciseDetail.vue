@@ -119,7 +119,6 @@ watch(
   <div class="absolute inset-0 pb-52">
     <Header
       @left="emit('close')"
-      @right="console.log('right')"
       leftIcon="fa-solid fa-arrow-left"
     >
       {{ workoutExercise.exercise_name }}

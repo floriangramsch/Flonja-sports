@@ -44,52 +44,45 @@ const deleteWorkout = () => {
     });
   }
 };
-
-const toggled = ref<boolean>(false);
 </script>
 
 <template>
   <div class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-auto">
-    <Header @right="toggled = !toggled" rightIcon="fa-solid fa-list">
+    <Header @right="routerStore.setRoute('stats')" rightIcon="fa-solid fa-list">
       Workout List
     </Header>
     <!-- workout list -->
-    <div v-if="toggled">
-      <div
-        v-for="workout in workouts"
-        @click="editWorkout(workout)"
-        class="flex min-w-full cursor-pointer snap-start flex-col p-2"
-        :key="workout.workout_id"
-      >
-        <div class="flex">
-          <Label
-            :value="
-              showTime(workout?.start) +
-              '-' +
-              (showTime(workout?.end)?.slice(-5) ?? '?')
-            "
-            :label="workout.name"
-            :selected="
-              workout.workout_id === loggedStore.logged.loggedWorkoutId
-            "
-          />
-          <button
-            class="ml-2"
-            @click.stop="
-              workoutToDelete = Number(workout.workout_id);
-              showConfirmDeleteWorkout = true;
-            "
-          >
-            <i class="fa-solid fa-close text-red-800" />
-          </button>
-        </div>
+    <div
+      v-for="workout in workouts"
+      @click="editWorkout(workout)"
+      class="flex min-w-full cursor-pointer snap-start flex-col p-2"
+      :key="workout.workout_id"
+    >
+      <div class="flex">
+        <Label
+          :value="
+            showTime(workout?.start) +
+            '-' +
+            (showTime(workout?.end)?.slice(-5) ?? '?')
+          "
+          :label="workout.name"
+          :selected="workout.workout_id === loggedStore.logged.loggedWorkoutId"
+        />
+        <button
+          class="ml-2"
+          @click.stop="
+            workoutToDelete = Number(workout.workout_id);
+            showConfirmDeleteWorkout = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
       </div>
-      <Confirm
-        v-model:is-open="showConfirmDeleteWorkout"
-        class="ml-5"
-        @yes="deleteWorkout()"
-      />
     </div>
-    <Plan :workout="workout" v-else />
+    <Confirm
+      v-model:is-open="showConfirmDeleteWorkout"
+      class="ml-5"
+      @yes="deleteWorkout()"
+    />
   </div>
 </template>
