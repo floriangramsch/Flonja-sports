@@ -1,7 +1,6 @@
 import type { DirectiveBinding } from "vue";
 
-// @ts-ignore
-export default defineNuxtPlugin((app: NuxtApp) => {
+export default defineNuxtPlugin((app) => {
   const routerStore = useRouterStore();
 
   app.vueApp.directive("route", {

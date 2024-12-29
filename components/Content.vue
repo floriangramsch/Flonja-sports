@@ -25,57 +25,45 @@ const workoutExerciseFilter = ref<number[]>([]);
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
-    <!-- <Test v-route="'test'"  /> -->
-    <SlideTransition>
-      <div v-if="routerStore.route === 'workoutexercises' && users">
-        <WorkoutExerciseOverview
-          v-model="exercises"
-          v-model:filter="workoutExerciseFilter"
-        />
-      </div>
-    </SlideTransition>
-    <SlideTransition>
-      <div v-if="routerStore.route === 'categorylist' && categories">
-        <CategoryList :categories="categories" />
-      </div>
-      <div
-        v-if="routerStore.route === 'workoutdetail'"
-        class="absolute inset-0"
-      >
-        <WorkoutDetail
-          :exercises="exercises"
-          :categories="categories"
-          :workout="workout"
-          v-model:filter="workoutExerciseFilter"
-          @startTimer="$emit('startTimer')"
-        />
-      </div>
-    </SlideTransition>
-    <SlideTransition>
-      <div
-        v-if="
-          routerStore.route === 'exerciselist' &&
-          exercises &&
-          categories &&
-          users
-        "
-      >
-        <ExerciseList
-          :categories="categories"
-          :users="users"
-          :workout="workout"
-          v-model:filter="workoutExerciseFilter"
-        />
-      </div>
-    </SlideTransition>
-    <SlideTransition>
-      <div v-if="routerStore.route === 'workouts' && users && workouts">
-        <WorkoutList :workouts="workouts" :users="users" :workout="workout" />
-      </div>
-    </SlideTransition>
+    <Test v-route="'test'"  />
+    <Router route="workoutexercises">
+      <WorkoutExerciseOverview
+        v-model="exercises"
+        v-model:filter="workoutExerciseFilter"
+      />
+    </Router>
 
-    <SlideTransition>
-      <Stats v-if="routerStore.route === 'stats'" :workout="workout" />
-    </SlideTransition>
+    <Router route="workouts">
+      <WorkoutList :workouts="workouts" :users="users" :workout="workout" />
+    </Router>
+
+    <Router route="workoutdetail">
+      <WorkoutDetail
+        :exercises="exercises"
+        :categories="categories"
+        :workout="workout"
+        v-model:filter="workoutExerciseFilter"
+        @startTimer="$emit('startTimer')"
+      />
+    </Router>
+
+    <Router route="categorylist">
+      <CategoryList v-if="categories" :categories="categories" />
+    </Router>
+    <Router route="exerciselist">
+      <ExerciseList
+        v-if="
+          categories
+        "
+        :categories="categories"
+        :users="users"
+        :workout="workout"
+        v-model:filter="workoutExerciseFilter"
+      />
+    </Router>
+    
+    <Router route="stats">
+      <Stats :workout="workout" />
+    </Router>
   </div>
 </template>
