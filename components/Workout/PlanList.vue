@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
+import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   plan: PlanExercise[];
@@ -10,8 +12,73 @@ defineEmits<{
   (e: "delete"): void;
 }>();
 
+const selectedPlan = defineModel<Plan>();
+
 const routerStore = useRouterStore();
 const updateOrderMutation = useUpdatePlanExercise();
+
+const { data: exercises } = useExercises();
+const { data: categories } = useCategories();
+
+const newExExerciseDialog = ref<boolean>(false);
+const newExDialog = ref<boolean>(false);
+const newExId = ref<number>();
+const newExSets = ref<number>();
+const newExReps = ref<number>();
+const newExRepsTo = ref<number>();
+const toDeleteExId = ref<number>();
+
+const confirmDeleteEx = ref<boolean>(false);
+const deleteExMutation = useDeletePlanExercise();
+const deleteEx = () => {
+  if (toDeleteExId.value) {
+    deleteExMutation.mutate(toDeleteExId.value, {
+      onSuccess: () => {
+        confirmDeleteEx.value = false;
+        toDeleteExId.value = undefined;
+      },
+    });
+  }
+};
+
+const newExMutation = useAddPlanExercise();
+const newEx = () => {
+  if (
+    selectedPlan.value?.id &&
+    newExId.value &&
+    newExSets.value &&
+    newExReps.value &&
+    newExRepsTo.value &&
+    props.plan
+  ) {
+    newExMutation.mutate(
+      {
+        plan_id: selectedPlan.value.id,
+        exercise_id: newExId.value,
+        sets: newExSets.value,
+        reps: newExReps.value,
+        reps_to: newExRepsTo.value,
+        order: props.plan.length + 1,
+      },
+      {
+        onSuccess: () => {
+          newExSets.value = undefined;
+          newExReps.value = undefined;
+          newExRepsTo.value = undefined;
+          newExExerciseDialog.value = false;
+          newExDialog.value = false;
+          newExId.value = undefined;
+        },
+      },
+    );
+  }
+};
+
+watch(newExId, (newValue) => {
+  if (newValue) {
+    newExDialog.value = true;
+  }
+});
 
 const mutation = useAddWorkoutExercise();
 const addNewWorkoutExercise = (workoutId: number, exercise_id: number) => {
@@ -28,8 +95,6 @@ const addNewWorkoutExercise = (workoutId: number, exercise_id: number) => {
     },
   );
 };
-
-const toDeleteExId = defineModel();
 
 const isDragging = ref(false);
 const dragElement = ref<HTMLElement | null>(null);
@@ -175,34 +240,70 @@ watch(
 </script>
 
 <template>
-  <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
-    <div
-      v-for="ex in data"
-      class="draggable cursor-move p-1"
-      :class="{
-        'border-b-2 border-sonja-akz': ex.order === pos,
-      }"
-      :key="ex.order"
-      :id="String(ex.order)"
-      @mousedown="startMoving($event, $event.target as HTMLElement)"
-      @touchstart="startMoving($event, $event.target as HTMLElement)"
-    >
-      <div v-if="ex.name" class="mr-2 flex justify-between">
-        <div>
-          {{ ex.order }} {{ ex.name }}
-          <i
-            class="fa-solid fa-close cursor-pointer text-red-800"
-            @click.="
-              $emit('delete');
-              toDeleteExId = Number(ex.id);
-            "
-          />
-        </div>
-        <div class="ml-2" v-if="ex.sets && ex.reps">
-          {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-          }}{{ ex.metric === "Time" ? "s" : "" }}
+  <template v-if="!newExExerciseDialog">
+    <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
+      <div
+        v-for="ex in data"
+        class="draggable cursor-move p-1"
+        :class="{
+          'border-b-2 border-sonja-akz': ex.order === pos,
+        }"
+        :key="ex.order"
+        :id="String(ex.order)"
+        @mousedown="startMoving($event, $event.target as HTMLElement)"
+        @touchstart="startMoving($event, $event.target as HTMLElement)"
+      >
+        <div v-if="ex.name" class="mr-2 flex justify-between">
+          <div>
+            {{ ex.order }} {{ ex.name }}
+            <i
+              class="fa-solid fa-close cursor-pointer text-red-800"
+              @click.="
+                confirmDeleteEx = true;
+                toDeleteExId = Number(ex.id);
+              "
+            />
+          </div>
+          <div class="ml-2" v-if="ex.sets && ex.reps">
+            {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
+            }}{{ ex.metric === "Time" ? "s" : "" }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
+      @click="newExExerciseDialog = true"
+    >
+      <i class="fa-solid fa-plus" />
+    </button>
+  </template>
+  <BetterExerciseSelection
+    v-if="newExExerciseDialog && categories && exercises"
+    :categories="categories"
+    :exercises="exercises"
+    v-model:result="newExId"
+    @close="newExExerciseDialog = false"
+  />
+
+  <DialogsDialog
+    :is-open="newExDialog"
+    @close="
+      newExDialog = false;
+      newExId = undefined;
+    "
+  >
+    <UiNumberInput v-model:modelValue="newExSets" label="Sets" focus />
+    <div class="flex items-center gap-1">
+      <UiNumberInput v-model:modelValue="newExReps" label="from" />
+      <UiNumberInput v-model:modelValue="newExRepsTo" label="to" />
+    </div>
+    <UiButtonsButton @action="newEx" class="mt-2">New Ex</UiButtonsButton>
+  </DialogsDialog>
+
+  <DialogsConfirm
+    v-model:is-open="confirmDeleteEx"
+    @no="confirmDeleteEx = false"
+    @yes="deleteEx"
+  />
 </template>

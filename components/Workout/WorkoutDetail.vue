@@ -152,6 +152,8 @@ const addNewWorkoutExercise = (exercise_id: number) => {
   }
 };
 
+const isOpenExerciseSelection = ref<boolean>(false)
+
 watch(
   () => resultNewWorkoutExerciseId.value,
   (newVal) => {
@@ -282,14 +284,14 @@ watch(
       <div v-else>
         <div
           class="flex h-20 w-full cursor-pointer items-center justify-center bg-sonja-bg-darker text-3xl font-bold"
-          @click="() => (workoutShow.showRouter = 'exerciseselection')"
+          @click="() => (isOpenExerciseSelection = true)"
         >
           Start Workout
         </div>
       </div>
       <button
         class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
-        @click="() => (workoutShow.showRouter = 'exerciseselection')"
+        @click="() => (isOpenExerciseSelection = true)"
       >
         <i class="fa-solid fa-plus text-5xl" />
       </button>
@@ -325,23 +327,16 @@ watch(
       @prev="prevExercise"
     />
   </SlideTransition>
-  <!-- Exercise Selection -->
-  <SlideTransition>
-    <div
-      v-if="
-        workoutShow.showRouter === 'exerciseselection' &&
-        workout?.workout_id &&
-        categories &&
-        exercises
-      "
-      class="absolute inset-0"
-    >
-      <BetterExerciseSelection
-        :categories="categories"
-        :exercises="exercises"
-        v-model:result="resultNewWorkoutExerciseId"
-        @close="workoutShow.showRouter = 'workoutdetail'"
-      />
-    </div>
-  </SlideTransition>
+  <BetterExerciseSelection
+    v-if="
+      isOpenExerciseSelection &&
+      workout?.workout_id &&
+      categories &&
+      exercises
+    "
+    :categories="categories"
+    :exercises="exercises"
+    v-model:result="resultNewWorkoutExerciseId"
+    @close="isOpenExerciseSelection = false"
+  />
 </template>

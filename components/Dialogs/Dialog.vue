@@ -9,21 +9,29 @@
       <div
         @click.stop
         ref="dialog"
-        class="absolute top-[15%] w-80 rounded bg-sonja-bg p-4 text-sonja-text shadow-md"
+        class="absolute top-[15%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md"
+        :style="{width: w}"
       >
-        <button @click="close" class="ml-auto flex rounded bg-sonja-akz p-2">
-          <i class="fa-solid fa-x"></i>
-        </button>
-        <slot></slot>
+        <!-- <button @click="close" class="ml-auto flex rounded bg-sonja-akz p-2">
+          <i class="fa-solid fa-x" />
+        </button> -->
+        <slot />
       </div>
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  isOpen: boolean;
-}>();
+defineProps({
+  isOpen: {
+    type: Boolean,
+    required: true
+  },
+  w: {
+    type: String,
+    default: '20rem'
+  }
+});
 
 const emit = defineEmits<{
   (e: "close"): void;
