@@ -90,8 +90,8 @@ const deleteCategory = () => {
     v-for="category in categories"
     @click="
       categoryForm = {
-        category_id: category.category_id,
-        category_name: category.category_name,
+        category_id: category.id,
+        category_name: category.name,
       };
       showDialogCategory = true;
     "
@@ -100,7 +100,7 @@ const deleteCategory = () => {
     <div
       class="flex w-1/2 justify-center rounded bg-sonja-text p-2 text-sonja-akz2 shadow"
     >
-      {{ category.category_name }}
+      {{ category.name }}
     </div>
   </div>
 

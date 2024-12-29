@@ -55,9 +55,11 @@ export const useUpdateExercise = () => {
   return useMutation({
     mutationFn: async ({
       updatedData,
+      categorieIds,
       exercise_id,
     }: {
       updatedData: any;
+      categorieIds: number[];
       exercise_id: number;
     }) => {
       if (exercise_id) {
@@ -69,6 +71,7 @@ export const useUpdateExercise = () => {
           body: JSON.stringify({
             exercise_id,
             updatedData,
+            categorieIds
           }),
         });
 

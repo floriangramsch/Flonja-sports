@@ -16,8 +16,8 @@ export type UserType = {
 };
 
 export type CategoryType = {
-  category_id: number;
-  category_name: string;
+  id: number;
+  name: string;
 };
 
 export type ExerciseArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
@@ -25,8 +25,7 @@ export type ExerciseMetricType = 'Weight' | 'Time';
 export type ExerciseType = {
   exercise_id: number;
   exercise_name: string;
-  category_id: number;
-  category_name: string;
+  categories: CategoryType[];
   info: string;
   type: ExerciseArtType;
   metric: ExerciseMetricType;
@@ -35,10 +34,9 @@ export type ExerciseType = {
 export type ExerciseStatsType = {
   exercise_name: string;
   exercise_id: number;
-  category_id: number;
-  category_name: string;
   last_weight: number;
   max_weight: number;
+  categories: CategoryType[];
   user_id: number;
   user_name: string;
   info: string;
@@ -84,8 +82,7 @@ export type WorkoutExerciseType = {
   workout_exercise_id: number;
   exercise_name: string;
   exercise_id: number;
-  category_id: number;
-  category_name: string;
+  categories: CategoryType[];
   type: ExerciseArtType;
   metric: ExerciseMetricType;
 };

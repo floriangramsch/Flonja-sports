@@ -117,6 +117,8 @@ watch(
 
 <template>
   <div class="absolute inset-0 pb-52">
+    <!-- {{ exercise }} -->
+    <!-- {{ workoutExercise }} -->
     <Header
       @left="emit('close')"
       leftIcon="fa-solid fa-arrow-left"

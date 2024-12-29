@@ -136,8 +136,7 @@ const addNewWorkoutExercise = (exercise_id: number) => {
               workoutExToShow.value = {
                 exercise_name: exercise?.exercise_name,
                 exercise_id: exercise_id,
-                category_name: exercise.category_name,
-                category_id: exercise.category_id,
+                categories: exercise.categories,
                 workout_exercise_id: res.insertId,
                 type: exercise?.type,
                 metric: exercise?.metric,
@@ -265,9 +264,10 @@ watch(
         </button>
         <div class="absolute -top-1 right-auto z-0 flex gap-1">
           <div
+            v-for="category in wex.categories"
             class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
           >
-            {{ wex.category_name }}
+            {{ category.name }}
           </div>
           <div
             class="rounded bg-yellow-500 p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"

@@ -21,21 +21,54 @@ export default defineEventHandler(async (event) => {
       const rows = await query(
         connection,
         `
-          SELECT exercise_id, e.name AS exercise_name, c.category_id as category_id, c.name as category_name, info, type, metric
+          SELECT e.exercise_id, e.name AS exercise_name, info, type, metric,
+          JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories
           FROM Exercise e
-          LEFT JOIN Category c 
-          ON c.category_id = e.category_id
+          JOIN Exercise_Category ec ON e.exercise_id = ec.exercise_id
+          JOIN Category c ON ec.category_id = c.category_id
+          GROUP BY 
+            e.exercise_id;
         `,
         [],
       );
-      return rows;
+      const parsedRows = rows.map((row: any) => ({
+        ...row,
+        categories: JSON.parse(row.categories),
+      }));
+
+      return parsedRows;
     }
     if (method === "PUT") {
-      const { exercise_id, updatedData } = await readBody(event);
+      const { exercise_id, updatedData, categorieIds } = await readBody(event);
       const [rows] = await connection.execute(
         `UPDATE Exercise SET ${updatedData} WHERE exercise_id = ?`,
         [exercise_id],
       );
+
+      const placeholders = categorieIds.map(() => "?").join(", ");
+      await query(
+        connection,
+        `DELETE FROM Exercise_Category 
+         WHERE exercise_id = ? 
+         AND category_id NOT IN (${placeholders})`,
+        [exercise_id, ...categorieIds],
+      );
+
+      for (const categoryId of categorieIds) {
+        await query(
+          connection,
+          `
+            INSERT INTO Exercise_Category (exercise_id, category_id)
+            SELECT ?, ?
+            WHERE NOT EXISTS (
+              SELECT 1 FROM Exercise_Category ec 
+              WHERE ec.exercise_id = ? AND ec.category_id = ?
+            );
+          `,
+          [exercise_id, categoryId, exercise_id, categoryId]
+        );
+      }
+
       return rows;
     }
     if (method === "POST") {
@@ -43,10 +76,15 @@ export default defineEventHandler(async (event) => {
 
       const response = await query(
         connection,
-        `INSERT INTO Exercise (name, category_id, type, metric) VALUES (?, ?, ?, ?)`,
-        [name, category_id, type, metric],
+        `INSERT INTO Exercise (name, type, metric) VALUES (?, ?, ?)`,
+        [name, type, metric],
       );
-      return response;
+      const response2 = await query(
+        connection,
+        `INSERT INTO Exercise_Category (exercise_id, category_id) VALUES (?, ?)`,
+        [response.insertId, category_id],
+      );
+      return response2;
     }
   } catch (error) {
     console.error(error);

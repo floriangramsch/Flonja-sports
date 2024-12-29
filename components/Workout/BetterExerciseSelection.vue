@@ -26,7 +26,8 @@ const chooseCategory = (category: CategoryType) => {
 
 const exercisesToShow = computed(() => {
   return props.exercises.filter(
-    (ex) => ex.category_name === chosenCategory.value?.category_name,
+    // (ex) => ex.category_name === chosenCategory.value?.category_name,
+    (ex) => ex.categories.some(c => chosenCategory.value?.name === c.name),
   );
 });
 
@@ -45,12 +46,12 @@ const showDialogExercise = ref<boolean>(false);
       </Header>
       <div class="grid grid-cols-3 place-items-center gap-2 overflow-auto">
         <div
-          class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker text-center"
+          class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker text-center font-bold"
           @click="chooseCategory(category)"
           v-for="category in categories"
-          :key="category.category_id"
+          :key="category.id"
         >
-          {{ category.category_name }}
+          {{ category.name }}
         </div>
         <Dialog
           :isOpen="showDialogCategory"
@@ -100,7 +101,7 @@ const showDialogExercise = ref<boolean>(false);
           </template>
           <NewExercise
             @close="showDialogExercise = false"
-            :category_id="chosenCategory?.category_id"
+            :category_id="chosenCategory?.id"
           />
         </Dialog>
       </div>

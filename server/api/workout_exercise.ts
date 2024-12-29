@@ -9,18 +9,28 @@ export default defineEventHandler(async (event) => {
     if (method === "GET") {
       const { id } = await getQuery(event);
       if (id) {
-        const res = query(
+        const res = await query(
           connection,
           `
-            SELECT workout_exercise_id, e.name AS exercise_name, we.exercise_id, e.category_id, c.name AS category_name, type, metric 
+            SELECT 
+            workout_exercise_id, we.exercise_id, e.name AS exercise_name, 
+            JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories, 
+            e.type, e.metric 
             FROM Workout_Exercise we 
             LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
-            LEFT JOIN Category c ON e.category_id = c.category_id
-            WHERE workout_id = ?;
+            JOIN Exercise_Category ec ON e.exercise_id = ec.exercise_id
+            JOIN Category c ON ec.category_id = c.category_id
+            WHERE workout_id = ?
+            GROUP BY we.workout_exercise_id, e.name, e.type, e.metric;
           `,
           [id],
         );
-        return res;
+        const parsedRows = res.map((row: any) => ({
+          ...row,
+          categories: JSON.parse(row.categories),
+        }));
+        
+        return parsedRows;
       }
     }
     if (method === "DELETE") {

@@ -6,14 +6,14 @@ export default defineEventHandler(async (event) => {
 
   try {
     if (method === "GET") {
-      const [rows] = await connection.execute(
+      const rows = await query(
+        connection,
         `
         SELECT
         MAX(s.weight) AS max_weight,
         w.user_id,
         e.name AS exercise_name,
-        c.category_id AS category_id,
-        c.name AS category_name,
+        JSON_ARRAYAGG(DISTINCT JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories,
         e.exercise_id,
         u.name AS user_name,
         e.info,
@@ -31,12 +31,18 @@ export default defineEventHandler(async (event) => {
         LEFT JOIN Workout_Exercise we ON we.exercise_id = e.exercise_id
         LEFT JOIN Sets s ON s.workout_exercise_id = we.workout_exercise_id
         LEFT JOIN Workout w ON w.workout_id = we.workout_id
-        LEFT JOIN Category c ON c.category_id = e.category_id
+		    LEFT JOIN Exercise_Category ec ON e.exercise_id = ec.exercise_id
+        LEFT JOIN Category c ON c.category_id = ec.category_id
         LEFT JOIN User u ON u.user_id = w.user_id
-        GROUP BY e.name, w.user_id, e.exercise_id, e.info, c.category_id, c.name, u.name;`,
+        GROUP BY e.exercise_id, w.user_id, e.name, e.info, e.type, e.metric, u.name;`,
         [],
       );
-      return rows;
+      const parsedRows = rows.map((row: any) => ({
+        ...row,
+        categories: row.categories ? JSON.parse(row.categories) : [],
+      }));
+      
+      return parsedRows;
     }
   } catch (error) {
     return { error: "Failed to handle exercise stats" };

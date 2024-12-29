@@ -9,6 +9,7 @@ import Textinput from "../ui/inputs/Textinput.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
 import NewExercise from "../Dialogs/NewExercise.vue";
 import FilterExercises from "../Filter/FilterExercises.vue";
+import MultiSelect from "../ui/select/MultiSelect.vue";
 
 defineProps<{
   categories: CategoryType[];
@@ -27,28 +28,31 @@ const searchFilter = ref<string>("");
 const deleteExerciseMutation = useDeleteExercise();
 const showConfirmDeleteExercise = ref<boolean>(false);
 
+
 const exerciseForm = ref<{
   exercise_name?: string;
   exercise_id?: number;
-  category_id?: number;
+  categories: number[];
   info?: string;
   type?: ExerciseArtType;
   metric?: ExerciseMetricType;
 }>({
   exercise_name: undefined,
   exercise_id: undefined,
-  category_id: undefined,
+  categories: [],
   info: undefined,
   type: undefined,
   metric: undefined,
 });
+
 const updateExerciseMutation = useUpdateExercise();
 const updateExercise = () => {
-  if (exerciseForm.value && exerciseForm.value.exercise_id) {
+  if (exerciseForm.value && exerciseForm.value.exercise_id && exerciseForm.value.categories) {
     updateExerciseMutation.mutate(
       {
-        updatedData: `name = '${exerciseForm.value.exercise_name}', category_id = '${exerciseForm.value.category_id}', info = '${exerciseForm.value.info}', type = '${exerciseForm.value.type}', metric = '${exerciseForm.value.metric}'`,
+        updatedData: `name = '${exerciseForm.value.exercise_name}', info = '${exerciseForm.value.info}', type = '${exerciseForm.value.type}', metric = '${exerciseForm.value.metric}'`,
         exercise_id: exerciseForm.value.exercise_id,
+        categorieIds: exerciseForm.value.categories,
       },
       {
         onSuccess: () => {
@@ -56,7 +60,7 @@ const updateExercise = () => {
           exerciseForm.value = {
             exercise_name: undefined,
             exercise_id: undefined,
-            category_id: undefined,
+            categories: [],
             info: undefined,
             type: undefined,
             metric: undefined,
@@ -79,14 +83,17 @@ const { data: exerciseStats } = useExerciseStats();
 const filteredExercises = computed(() => {
   return exerciseStats.value?.filter((ex) => {
     const matchesCategoryFilter =
-      filter.value.length === 0 || filter.value.includes(ex.category_id);
+      filter.value.length === 0 ||
+      ex.categories.some((category) => filter.value.includes(category.id));
 
-    const matchesSearchFilter =
-      searchFilter.value === "" ||
+    const matchesSearchFilter = true;
+    searchFilter.value === "" ||
       ex.exercise_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase()) ||
-      ex.category_name.toLowerCase().includes(searchFilter.value.toLowerCase());
+      ex.categories.some((category) =>
+        category.name.toLowerCase().includes(searchFilter.value.toLowerCase()),
+      );
 
     return matchesCategoryFilter && matchesSearchFilter;
   });
@@ -111,8 +118,7 @@ const exerciseList = computed<ExerciseStatsType[][] | undefined>(() => {
           acc[exerciseId].push({
             exercise_name: curr.exercise_name,
             exercise_id: curr.exercise_id,
-            category_name: curr.category_name,
-            category_id: curr.category_id,
+            categories: curr.categories,
             info: curr.info,
             type: curr.type,
             metric: curr.metric,
@@ -159,8 +165,8 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       <Filter
         :data="
           categories.map((category: CategoryType) => ({
-            id: category.category_id,
-            name: category.category_name,
+            id: category.id,
+            name: category.name,
           }))
         "
         v-model="filter"
@@ -206,14 +212,13 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           focus
         />
 
-        <Select
-          class="w-full"
-          v-model="exerciseForm.category_id"
-          default="Category..."
+        <MultiSelect
+          v-model="exerciseForm.categories"
+          name="Category..."
           :options="
             categories.map((category) => ({
-              label: category.category_name,
-              value: category.category_id,
+              label: category.name,
+              value: category.id,
             }))
           "
         />
@@ -268,7 +273,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
               exerciseForm = {
                 exercise_name: exercise[0].exercise_name,
                 exercise_id: exercise[0].exercise_id,
-                category_id: exercise[0].category_id,
+                categories: exercise[0].categories.map(c => c.id),
                 info: exercise[0].info,
                 type: exercise[0].type,
                 metric: exercise[0].metric,
@@ -278,7 +283,12 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           "
           class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
-          {{ exercise[0].exercise_name }} [{{ exercise[0].category_name }}]
+          <div class="flex">
+            {{ exercise[0].exercise_name }}
+            [
+            <div v-for="c in exercise[0].categories">{{ c.name }},</div>
+            ]
+          </div>
           <i
             v-if="exercise[0].type === 'Machine'"
             class="fa-solid fa-cable-car"

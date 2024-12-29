@@ -7,8 +7,8 @@
       default="Category..."
       :options="
         categories.map((category) => ({
-          label: category.category_name,
-          value: category.category_id,
+          label: category.name,
+          value: category.id,
         }))
       "
     />
