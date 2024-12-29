@@ -16,7 +16,7 @@ export default defineNuxtPlugin((app) => {
 
   const updateDisplay = (el: HTMLElement, route: string) => {
     el.style.display = routerStore.route !== route ? "none" : "";
-    console.log(`Route check: ${routerStore.route} === ${route}`);
+    // console.log(`Route check: ${routerStore.route} === ${route}`);
   };
 
   const watchRoute = (el: HTMLElement, route: string) => {

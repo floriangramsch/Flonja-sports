@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 
 const loggedStore = useLoggedStore()
-const exerciceFilter = defineModel<number[]>("filter");
+const filterStore = useWorkoutExerciseFilterStore()
 const routerStore = useRouterStore()
 
 defineEmits<{
@@ -262,7 +262,7 @@ watch(
         <button
           class="ml-2"
           @click.stop="
-            exerciceFilter = [wex.exercise_id];
+            filterStore.setId(wex.exercise_id)
             routerStore.route = 'workoutexercises';
           "
         >

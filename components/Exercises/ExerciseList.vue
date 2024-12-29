@@ -17,7 +17,7 @@ defineProps<{
 }>();
 
 const filter = ref<number[]>([]);
-const workoutExerciseFilter = defineModel<number[]>("filter");
+const weFilterStore = useWorkoutExerciseFilterStore()
 const routerStore = useRouterStore()
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
@@ -302,7 +302,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           <button
             class="ml-2"
             @click.stop="
-              workoutExerciseFilter?.push(exercise[0].exercise_id);
+              weFilterStore.addId(exercise[0].exercise_id)
               routerStore.route = 'workoutexercises';
             "
           >

@@ -7,13 +7,13 @@ const exercises = defineModel<ExerciseType[]>();
 
 const { data: sets } = useGetSets();
 
-const filter = defineModel<number[]>("filter");
+const filterStore = useWorkoutExerciseFilterStore();
 
 const filtered = computed(() => {
   return sets.value?.filter(
     (exercise) =>
-      filter.value?.length === 0 ||
-      filter.value?.includes(Number(exercise.exercise_id)),
+      filterStore.ids.length === 0 ||
+      filterStore.ids.includes(Number(exercise.exercise_id)),
   );
 });
 
@@ -44,7 +44,7 @@ const showLegacy = ref<boolean>(false);
               name: exercise.exercise_name,
             }))
           "
-          v-model="filter"
+          v-model="filterStore.ids"
         />
         <button
           class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"

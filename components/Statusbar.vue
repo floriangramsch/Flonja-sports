@@ -6,7 +6,6 @@ const props = defineProps<{
   users: UserType | undefined;
   workouts: WorkoutType[] | undefined;
   workout: WorkoutType | undefined;
-  workoutStart: Date | undefined;
   timer: boolean;
 }>();
 
@@ -16,9 +15,7 @@ const emit = defineEmits<{
 }>();
 
 const switchUser = () => {
-  console.log('eins')
   if (props.users && Object.keys(props.users).length === 2 && loggedStore) {
-    console.log('zwei')
     if (loggedStore.logged.user?.name === "Florian") {
       loggedStore.logged.user = {
         id: 2,
