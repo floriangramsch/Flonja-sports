@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const showList = ref<boolean>(false);
 
-const loggedStore = useLoggedStore()
+const loggedStore = useLoggedStore();
 
 const { data: stats } = useGetStats();
 const updateMutation = useUpdateStats();
@@ -85,14 +85,9 @@ watch(
 </script>
 <template>
   <div>
-    <!-- Header -->
-    <div class="flex w-full justify-evenly px-2 py-4">
-      <i
-        class="fa-solid fa-list absolute left-4 pl-2 text-3xl"
-        @click="showList = !showList"
-      />
-      <div class="text-center text-4xl font-bold">Stats</div>
-    </div>
+    <Header @left="showList = !showList" leftIcon="fa-solid fa-list">
+      Stats
+    </Header>
     <!-- Stats -->
     <div v-if="workout" class="mb-2 flex w-full flex-col items-center gap-3">
       <!-- <div>Locker: {{ workout?.locker }}</div> -->

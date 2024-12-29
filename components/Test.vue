@@ -1,18 +1,17 @@
 <script setup lang="ts">
-const counterStore = useCounterStore();
-
-function incrementCounter() {
-  counterStore.increment();
-}
+import Header from "./Header/Header.vue";
 </script>
 
 <template>
-  <div>
-    <p>Count: {{ counterStore.count }}</p>
-    <button @click="incrementCounter">Increment</button>
-  </div>
+  <Header
+    @left="console.log('left')"
+    @right="console.log('right')"
+    leftIcon="fa-solid fa-filter"
+    rightIcon="fa-solid fa-filter"
+  >
+    Exercise List
+  </Header>
 </template>
-
 
 <!-- <script setup lang="ts">
 import { ref } from "vue";

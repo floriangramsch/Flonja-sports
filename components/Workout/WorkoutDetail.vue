@@ -20,9 +20,9 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const loggedStore = useLoggedStore()
-const filterStore = useWorkoutExerciseFilterStore()
-const routerStore = useRouterStore()
+const loggedStore = useLoggedStore();
+const filterStore = useWorkoutExerciseFilterStore();
+const routerStore = useRouterStore();
 
 defineEmits<{
   (emits: "startTimer"): void;
@@ -156,7 +156,7 @@ watch(
   () => resultNewWorkoutExerciseId.value,
   (newVal) => {
     if (newVal) {
-      addNewWorkoutExercise(newVal)
+      addNewWorkoutExercise(newVal);
     }
   },
 );
@@ -214,41 +214,34 @@ watch(
       v-if="workoutShow.showRouter === 'workoutdetail'"
       class="absolute inset-0"
     >
-      <!-- Header -->
-      <div class="flex w-full justify-evenly px-2 py-4">
-        <!-- End Workout -->
-        <Confirm
-          v-model:isOpen="showConfirmEndWorkout"
-          @yes="endWorkout"
-          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-          :disabled="workout?.end ? true : false"
-        >
-          <i
-            class="fa-solid fa-cat"
-            :class="workout?.end ? 'opacity-50' : ''"
-          />
-        </Confirm>
-        <div class="text-center text-4xl font-bold">Exercises</div>
-        <!-- Locker -->
-        <button
-          @click="showLockerDialog = true"
-          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        >
-          <i class="fa-solid fa-lock" />
-        </button>
-        <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
-          <div class="flex flex-col items-center justify-center gap-4">
-            <div class="flex gap-2">
-              <UiNumberInput
-                v-model:modelValue="newLocker"
-                label="Lockernummer"
-                :focus="!workout?.locker"
-              />
-            </div>
-            <Button @action="updateWorkout"> Done </Button>
+      <Header @right="showLockerDialog = true" rightIcon="fa-solid fa-lock">
+        Exercises
+        <template #left-pure>
+          <Confirm
+            v-model:isOpen="showConfirmEndWorkout"
+            @yes="endWorkout"
+            class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+            :disabled="workout?.end ? true : false"
+          >
+            <i
+              class="fa-solid fa-cat"
+              :class="workout?.end ? 'opacity-50' : ''"
+            />
+          </Confirm>
+        </template>
+      </Header>
+      <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
+        <div class="flex flex-col items-center justify-center gap-4">
+          <div class="flex gap-2">
+            <UiNumberInput
+              v-model:modelValue="newLocker"
+              label="Lockernummer"
+              :focus="!workout?.locker"
+            />
           </div>
-        </Dialog>
-      </div>
+          <Button @action="updateWorkout"> Done </Button>
+        </div>
+      </Dialog>
       <div
         v-if="workoutExercises?.length !== 0"
         v-for="wex in workoutExercises"
@@ -262,7 +255,7 @@ watch(
         <button
           class="ml-2"
           @click.stop="
-            filterStore.setId(wex.exercise_id)
+            filterStore.setId(wex.exercise_id);
             routerStore.route = 'workoutexercises';
           "
         >

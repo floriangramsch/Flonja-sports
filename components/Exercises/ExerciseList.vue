@@ -17,8 +17,8 @@ defineProps<{
 }>();
 
 const filter = ref<number[]>([]);
-const weFilterStore = useWorkoutExerciseFilterStore()
-const routerStore = useRouterStore()
+const weFilterStore = useWorkoutExerciseFilterStore();
+const routerStore = useRouterStore();
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
 const showDialogUpdateExercise = ref<boolean>(false);
@@ -86,9 +86,7 @@ const filteredExercises = computed(() => {
       ex.exercise_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase()) ||
-      ex.category_name
-        .toLowerCase()
-        .includes(searchFilter.value.toLowerCase());
+      ex.category_name.toLowerCase().includes(searchFilter.value.toLowerCase());
 
     return matchesCategoryFilter && matchesSearchFilter;
   });
@@ -148,22 +146,14 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 
 <template>
   <div class="relativ">
-    <!-- Header -->
-    <div class="flex w-full justify-evenly px-2 py-4">
-      <button
-        class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="routerStore.route = 'categorylist'"
-      >
-        <i class="fa-solid fa-repeat" />
-      </button>
-      <div class="text-center text-4xl font-bold">Exercise List</div>
-      <button
-        class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="filterWrapperComponent?.toggle"
-      >
-        <i class="fa-solid fa-filter" />
-      </button>
-    </div>
+    <Header
+      @left="routerStore.route = 'categorylist'"
+      @right="filterWrapperComponent?.toggle"
+      leftIcon="fa-solid fa-repeat"
+      rightIcon="fa-solid fa-filter"
+    >
+      Exercise List
+    </Header>
 
     <FilterWrapper ref="filterWrapperComponent">
       <Filter
@@ -210,7 +200,11 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       "
     >
       <div class="my-2 flex flex-col gap-4">
-        <Textinput v-model="exerciseForm.exercise_name" label="Exercise Name" focus />
+        <Textinput
+          v-model="exerciseForm.exercise_name"
+          label="Exercise Name"
+          focus
+        />
 
         <Select
           class="w-full"
@@ -285,7 +279,10 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >
           {{ exercise[0].exercise_name }} [{{ exercise[0].category_name }}]
-          <i v-if="exercise[0].type === 'Machine'" class="fa-solid fa-cable-car" />
+          <i
+            v-if="exercise[0].type === 'Machine'"
+            class="fa-solid fa-cable-car"
+          />
           <i
             v-else-if="exercise[0].type === 'Bodyweight'"
             class="fa-solid fa-child-reaching"
@@ -302,7 +299,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
           <button
             class="ml-2"
             @click.stop="
-              weFilterStore.addId(exercise[0].exercise_id)
+              weFilterStore.addId(exercise[0].exercise_id);
               routerStore.route = 'workoutexercises';
             "
           >

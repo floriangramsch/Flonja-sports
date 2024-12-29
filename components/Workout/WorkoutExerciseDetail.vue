@@ -117,25 +117,22 @@ watch(
 
 <template>
   <div class="absolute inset-0 pb-52">
-    <!-- Header -->
-    <div class="flex w-full justify-evenly px-4 py-4">
-      <button
-        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="emit('close')"
-      >
-        <i class="fa-solid fa-arrow-left" />
-      </button>
-      <div class="text-center text-4xl font-bold">
-        {{ workoutExercise.exercise_name }}
-      </div>
-      <Confirm
-        v-model:isOpen="showConfirmDeleteWorkoutExercise"
-        @yes="removeWorkoutExercise"
-        class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow"
-      >
-        <i class="fa-solid fa-close" />
-      </Confirm>
-    </div>
+    <Header
+      @left="emit('close')"
+      @right="console.log('right')"
+      leftIcon="fa-solid fa-arrow-left"
+    >
+      {{ workoutExercise.exercise_name }}
+      <template #right-pure>
+        <Confirm
+          v-model:isOpen="showConfirmDeleteWorkoutExercise"
+          @yes="removeWorkoutExercise"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-red-800 shadow"
+        >
+          <i class="fa-solid fa-close" />
+        </Confirm>
+      </template>
+    </Header>
     <!-- Buttons -->
     <div class="mb-5 flex w-full items-center justify-center gap-3">
       <!-- Switch between current and old sets -->

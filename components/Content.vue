@@ -21,7 +21,7 @@ const { data: categories } = useCategories();
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
-    <!-- <Test v-route="'test'"  /> -->
+    <Test v-route="'test'"  />
     <Router route="workoutexercises">
       <WorkoutExerciseOverview
         v-model="exercises"

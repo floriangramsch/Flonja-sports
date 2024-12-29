@@ -11,8 +11,8 @@ defineProps<{
   users: UserType;
 }>();
 
-const loggedStore = useLoggedStore()
-const routerStore = useRouterStore()
+const loggedStore = useLoggedStore();
+const routerStore = useRouterStore();
 
 const editWorkout = (workout: WorkoutType) => {
   loggedStore.logged = {
@@ -23,7 +23,7 @@ const editWorkout = (workout: WorkoutType) => {
     isLogged: true,
     loggedWorkoutId: workout.workout_id,
   };
-  loggedStore.toStorage()
+  loggedStore.toStorage();
   routerStore.route = "workoutdetail";
 };
 
@@ -38,7 +38,7 @@ const deleteWorkout = () => {
           loggedStore.logged.isLogged = false;
           loggedStore.logged.loggedWorkoutId = undefined;
           showConfirmDeleteWorkout.value = false;
-          loggedStore.toStorage()
+          loggedStore.toStorage();
         }
       },
     });
@@ -49,25 +49,16 @@ const toggled = ref<boolean>(false);
 </script>
 
 <template>
-  <div
-    class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-auto"
-  >
-    <!-- Header -->
-    <div class="flex w-full justify-evenly px-2 py-4">
-      <div class="text-center text-4xl font-bold">Workout List</div>
-      <button
-        class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-        @click="toggled = !toggled"
-      >
-        <i class="fa-solid fa-list" />
-      </button>
-    </div>
+  <div class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-auto">
+    <Header @right="toggled = !toggled" rightIcon="fa-solid fa-list">
+      Workout List
+    </Header>
     <!-- workout list -->
     <div v-if="toggled">
       <div
         v-for="workout in workouts"
         @click="editWorkout(workout)"
-        class="flex min-w-full snap-start flex-col p-2 cursor-pointer"
+        class="flex min-w-full cursor-pointer snap-start flex-col p-2"
         :key="workout.workout_id"
       >
         <div class="flex">
@@ -78,7 +69,9 @@ const toggled = ref<boolean>(false);
               (showTime(workout?.end)?.slice(-5) ?? '?')
             "
             :label="workout.name"
-            :selected="workout.workout_id === loggedStore.logged.loggedWorkoutId"
+            :selected="
+              workout.workout_id === loggedStore.logged.loggedWorkoutId
+            "
           />
           <button
             class="ml-2"

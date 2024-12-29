@@ -8,7 +8,7 @@ defineProps<{
   categories: CategoryType[];
 }>();
 
-const routerStore = useRouterStore()
+const routerStore = useRouterStore();
 const showDialogNewCategory = ref<boolean>(false);
 const showDialogDeleteCategory = ref<boolean>(false);
 const showDialogCategory = ref<boolean>(false);
@@ -63,29 +63,28 @@ const deleteCategory = () => {
 </script>
 
 <template>
-  <!-- Header -->
-  <div class="flex w-full justify-center px-2 py-4">
-    <button
-      class="absolute left-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-      @click="routerStore.route = 'exerciselist'"
-    >
-      <i class="fa-solid fa-repeat" />
-    </button>
-    <div class="text-center text-4xl font-bold">Category List</div>
-    <!-- New Category -->
-    <Dialog :isOpen="showDialogNewCategory" @close="showDialogNewCategory = false">
-      <template v-slot:trigger>
-        <button
-          class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-          @click="showDialogNewCategory = true"
-        >
-          <i class="fa-solid fa-plus" />
-        </button>
-      </template>
-      <NewCategory @close="showDialogNewCategory = false" />
-    </Dialog>
-  </div>
-
+  <Header
+    @left="routerStore.route = 'exerciselist'"
+    leftIcon="fa-solid fa-repeat"
+  >
+    Category List
+    <template #right-pure>
+      <Dialog
+        :isOpen="showDialogNewCategory"
+        @close="showDialogNewCategory = false"
+      >
+        <template v-slot:trigger>
+          <button
+            class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+            @click="showDialogNewCategory = true"
+          >
+            <i class="fa-solid fa-plus" />
+          </button>
+        </template>
+        <NewCategory @close="showDialogNewCategory = false" />
+      </Dialog>
+    </template>
+  </Header>
   <!-- Category list -->
   <div
     v-for="category in categories"
@@ -107,7 +106,11 @@ const deleteCategory = () => {
 
   <!-- Handle Category -->
   <Dialog :isOpen="showDialogCategory" @close="showDialogCategory = false">
-    <UiInputsTextinput v-model="categoryForm.category_name" label="Category name" focus />
+    <UiInputsTextinput
+      v-model="categoryForm.category_name"
+      label="Category name"
+      focus
+    />
     <div class="mt-4 flex w-full justify-center gap-2">
       <Button @action="updateCategory">Update</Button>
       <Confirm

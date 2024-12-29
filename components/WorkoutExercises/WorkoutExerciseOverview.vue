@@ -25,16 +25,12 @@ const showLegacy = ref<boolean>(false);
 <template>
   <SlideTransition>
     <div class="bg-sonja-bg text-sonja-text">
-      <!-- Header -->
-      <div class="flex w-full justify-evenly px-2 py-4">
-        <div class="text-center text-4xl font-bold">Exercises Done</div>
-        <button
-          class="absolute right-3 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-          @click="filterWrapperComponent?.toggle"
-        >
-          <i class="fa-solid fa-filter" />
-        </button>
-      </div>
+      <Header
+        @right="filterWrapperComponent?.toggle"
+        rightIcon="fa-solid fa-filter"
+      >
+        Exercises Done
+      </Header>
 
       <FilterWrapper ref="filterWrapperComponent">
         <Filter
