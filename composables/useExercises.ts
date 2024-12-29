@@ -84,7 +84,8 @@ export const useUpdateExercise = () => {
         throw new Error("Failed to update exercise");
       }
     },
-    onSuccess: (exercise_id: number) => {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
       queryClient.invalidateQueries({ queryKey: ["exercises"] });
       queryClient.invalidateQueries({ queryKey: ["exerciseStats"] });
     },

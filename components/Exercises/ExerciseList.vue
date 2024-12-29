@@ -3,13 +3,10 @@ import { computed, ref } from "vue";
 import Filter from "../Filter/Filter.vue";
 import Confirm from "../Dialogs/Confirm.vue";
 import Dialog from "../Dialogs/Dialog.vue";
-import Button from "../ui/buttons/Button.vue";
-import Select from "../ui/select/Select.vue";
-import Textinput from "../ui/inputs/Textinput.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
 import NewExercise from "../Dialogs/NewExercise.vue";
 import FilterExercises from "../Filter/FilterExercises.vue";
-import MultiSelect from "../ui/select/MultiSelect.vue";
+import UpdateExercise from "./UpdateExercise.vue";
 
 defineProps<{
   categories: CategoryType[];
@@ -22,54 +19,10 @@ const weFilterStore = useWorkoutExerciseFilterStore();
 const routerStore = useRouterStore();
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
-const showDialogUpdateExercise = ref<boolean>(false);
 const searchFilter = ref<string>("");
 
 const deleteExerciseMutation = useDeleteExercise();
 const showConfirmDeleteExercise = ref<boolean>(false);
-
-
-const exerciseForm = ref<{
-  exercise_name?: string;
-  exercise_id?: number;
-  categories: number[];
-  info?: string;
-  type?: ExerciseArtType;
-  metric?: ExerciseMetricType;
-}>({
-  exercise_name: undefined,
-  exercise_id: undefined,
-  categories: [],
-  info: undefined,
-  type: undefined,
-  metric: undefined,
-});
-
-const updateExerciseMutation = useUpdateExercise();
-const updateExercise = () => {
-  if (exerciseForm.value && exerciseForm.value.exercise_id && exerciseForm.value.categories) {
-    updateExerciseMutation.mutate(
-      {
-        updatedData: `name = '${exerciseForm.value.exercise_name}', info = '${exerciseForm.value.info}', type = '${exerciseForm.value.type}', metric = '${exerciseForm.value.metric}'`,
-        exercise_id: exerciseForm.value.exercise_id,
-        categorieIds: exerciseForm.value.categories,
-      },
-      {
-        onSuccess: () => {
-          showDialogUpdateExercise.value = false;
-          exerciseForm.value = {
-            exercise_name: undefined,
-            exercise_id: undefined,
-            categories: [],
-            info: undefined,
-            type: undefined,
-            metric: undefined,
-          };
-        },
-      },
-    );
-  }
-};
 
 const exerciseToDelete = ref<number>();
 const deleteExercise = (id: number) => {
@@ -148,6 +101,7 @@ const exerciseList = computed<ExerciseStatsType[][] | undefined>(() => {
 const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
 
 const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
+const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
 </script>
 
 <template>
@@ -197,71 +151,10 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       </Dialog>
     </FilterWrapper>
     <!-- Update Exercise -->
-    <Dialog
-      :isOpen="showDialogUpdateExercise"
-      @close="
-        showDialogExercise = false;
-        showDialogCategory = false;
-        showDialogUpdateExercise = false;
-      "
-    >
-      <div class="my-2 flex flex-col gap-4">
-        <Textinput
-          v-model="exerciseForm.exercise_name"
-          label="Exercise Name"
-          focus
-        />
-
-        <MultiSelect
-          v-model="exerciseForm.categories"
-          name="Category..."
-          :options="
-            categories.map((category) => ({
-              label: category.name,
-              value: category.id,
-            }))
-          "
-        />
-
-        <Select
-          class="w-full"
-          v-model="exerciseForm.type"
-          default="Type..."
-          :options="[
-            { value: 'Bodyweight', label: 'Bodyweight' },
-            { value: 'Machine', label: 'Machine' },
-            { value: 'Dumbbell', label: 'Dumbbell' },
-          ]"
-        />
-
-        <Select
-          class="w-full"
-          v-model="exerciseForm.metric"
-          default="Metric..."
-          :options="[
-            { value: 'Time', label: 'Time' },
-            { value: 'Weight', label: 'Weight' },
-          ]"
-        />
-
-        <!-- Info -->
-        <div class="relative">
-          <textarea
-            class="peer h-48 w-48 rounded border-2 border-sonja-text bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
-            v-model="exerciseForm.info"
-            ref="infoRef"
-            placeholder=" "
-          />
-          <label
-            :for="labelId"
-            class="absolute left-2 -translate-y-1/2 rounded bg-sonja-akz p-[2px] text-xs text-sonja-text shadow transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-xl peer-placeholder-shown:text-sonja-akz2 peer-focus:left-2 peer-focus:top-0 peer-focus:bg-sonja-akz peer-focus:p-[2px] peer-focus:text-xs peer-focus:text-sonja-text"
-          >
-            Info
-          </label>
-        </div>
-      </div>
-      <Button @action="updateExercise">Update</Button>
-    </Dialog>
+    <UpdateExercise
+      ref="updateExerciseRef"
+      :categories="categories"
+    />
     <!-- Exercise List -->
     <div
       class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg"
@@ -269,17 +162,15 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       <div v-for="exercise in exerciseList" class="p-1">
         <div
           @click="
-            {
-              exerciseForm = {
-                exercise_name: exercise[0].exercise_name,
-                exercise_id: exercise[0].exercise_id,
-                categories: exercise[0].categories.map(c => c.id),
-                info: exercise[0].info,
-                type: exercise[0].type,
-                metric: exercise[0].metric,
-              };
-              showDialogUpdateExercise = true;
-            }
+            updateExerciseRef?.setForm({
+              exercise_name: exercise[0].exercise_name,
+              exercise_id: exercise[0].exercise_id,
+              categories: exercise[0].categories.map((c) => c.id),
+              info: exercise[0].info,
+              type: exercise[0].type,
+              metric: exercise[0].metric,
+            });
+            updateExerciseRef?.open();
           "
           class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
         >

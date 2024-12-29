@@ -89,7 +89,7 @@ watch(
     <Header
       @left="showList = !showList"
       @right="routerStore.route = 'workouts'"
-      leftIcon="fa-solid fa-list"
+      leftIcon="fa-solid fa-barcode"
       rightIcon="fa-solid fa-list"
     >
       Stats

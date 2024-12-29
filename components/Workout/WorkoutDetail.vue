@@ -13,6 +13,7 @@ import Confirm from "../Dialogs/Confirm.vue";
 import WorkoutExerciseDetail from "./WorkoutExerciseDetail.vue";
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import UpdateExercise from "../Exercises/UpdateExercise.vue";
 
 const props = defineProps<{
   exercises: ExerciseType[] | undefined;
@@ -151,7 +152,9 @@ const addNewWorkoutExercise = (exercise_id: number) => {
   }
 };
 
-const isOpenExerciseSelection = ref<boolean>(false)
+const isOpenExerciseSelection = ref<boolean>(false);
+
+const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
 
 watch(
   () => resultNewWorkoutExerciseId.value,
@@ -243,6 +246,11 @@ watch(
           <Button @action="updateWorkout"> Done </Button>
         </div>
       </Dialog>
+      <UpdateExercise
+        v-if="categories"
+        ref="updateExerciseRef"
+        :categories="categories"
+      />
       <div
         v-if="workoutExercises?.length !== 0"
         v-for="wex in workoutExercises"
@@ -260,7 +268,22 @@ watch(
             routerStore.route = 'workoutexercises';
           "
         >
-          <i class="fa-solid fa-chart-line text-sonja-akz" />
+          <i class="fa-solid fa-chart-line text-sonja-fg" />
+        </button>
+        <button
+          class="ml-2"
+          @click.stop="
+            updateExerciseRef?.setForm({
+              exercise_name: wex.exercise_name,
+              exercise_id: wex.exercise_id,
+              categories: wex.categories.map((c) => c.id),
+              type: wex.type,
+              metric: wex.metric,
+            });
+            updateExerciseRef?.open();
+          "
+        >
+          <i class="fa-solid fa-edit text-sonja-text" />
         </button>
         <div class="absolute -top-1 right-auto z-0 flex gap-1">
           <div
@@ -329,10 +352,7 @@ watch(
   </SlideTransition>
   <BetterExerciseSelection
     v-if="
-      isOpenExerciseSelection &&
-      workout?.workout_id &&
-      categories &&
-      exercises
+      isOpenExerciseSelection && workout?.workout_id && categories && exercises
     "
     :categories="categories"
     :exercises="exercises"
