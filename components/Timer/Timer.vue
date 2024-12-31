@@ -43,16 +43,20 @@ const formattedTime = computed(() => {
 
 let interval: ReturnType<typeof setInterval> | undefined;
 
-const startTimer = async () => {
+const startTimer = async (event?: MouseEvent, time?: number) => {
+  const restTime = time ? time : props.restTime
+  if (time) {
+    remainingTime.value = time
+  }
   if (!startTime.value) {
     startTime.value = Date.now();
-    sendTimerToSW(props.restTime); // Service Worker Timer starten
+    sendTimerToSW(restTime); // Service Worker Timer starten
   }
 
   interval = setInterval(() => {
     if (startTime.value) {
       const elapsed = Date.now() - startTime.value;
-      remainingTime.value = Math.max(props.restTime - elapsed, 0);
+      remainingTime.value = Math.max(restTime - elapsed, 0);
 
       if (remainingTime.value <= 0) {
         stopTimer();
@@ -143,7 +147,10 @@ onUnmounted(() => {
 
 <template>
   <div class="flex w-full justify-center gap-3 text-2xl z-50">
-    <DialogsDialog
+    <div v-if="startTime">
+      {{ formattedTime }}
+    </div>
+    <!-- <DialogsDialog
       :is-open="showAdjustRestTime"
       @close="showAdjustRestTime = false"
     >
@@ -161,10 +168,23 @@ onUnmounted(() => {
           class="dark:yellow flex justify-center rounded bg-sonja-text p-4 text-3xl text-sonja-akz2 shadow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
         />
       </div>
-    </DialogsDialog>
-    <button v-if="!startTime" @click="startTimer">
-      <i class="fa-solid fa-play" />
+    </DialogsDialog> -->
+    <button v-if="!startTime" @click="(event) => startTimer(event, 30000)">
+      <i class="fa-solid fa-3" />
+      <i class="fa-solid fa-0" />
     </button>
+    <button v-if="!startTime" @click="(event) => startTimer(event, 90000)">
+      <i class="fa-solid fa-9" />
+      <i class="fa-solid fa-0" />
+    </button>
+    <button v-if="!startTime" @click="(event) => startTimer(event, 120000)">
+      <i class="fa-solid fa-1" />
+      <i class="fa-solid fa-2" />
+      <i class="fa-solid fa-0" />
+    </button>
+    <!-- <button v-if="!startTime" @click="(event) => startTimer(event)">
+      <i class="fa-solid fa-play" />
+    </button> -->
     <button v-if="startTime" @click="interuptTimer">
       <i class="fa-solid fa-stop" />
     </button>
