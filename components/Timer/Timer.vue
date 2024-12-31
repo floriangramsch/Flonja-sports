@@ -170,17 +170,17 @@ onUnmounted(() => {
       </div>
     </DialogsDialog> -->
     <button v-if="!startTime" @click="(event) => startTimer(event, 30000)">
-      <i class="fa-solid fa-3" />
-      <i class="fa-solid fa-0" />
+      <i class="fa-solid fa-3 text-xl" />
+      <i class="fa-solid fa-0 text-xl" />
     </button>
     <button v-if="!startTime" @click="(event) => startTimer(event, 90000)">
-      <i class="fa-solid fa-9" />
-      <i class="fa-solid fa-0" />
+      <i class="fa-solid fa-9 text-xl" />
+      <i class="fa-solid fa-0 text-xl" />
     </button>
     <button v-if="!startTime" @click="(event) => startTimer(event, 120000)">
-      <i class="fa-solid fa-1" />
-      <i class="fa-solid fa-2" />
-      <i class="fa-solid fa-0" />
+      <i class="fa-solid fa-1 text-xl" />
+      <i class="fa-solid fa-2 text-xl" />
+      <i class="fa-solid fa-0 text-xl" />
     </button>
     <!-- <button v-if="!startTime" @click="(event) => startTimer(event)">
       <i class="fa-solid fa-play" />
