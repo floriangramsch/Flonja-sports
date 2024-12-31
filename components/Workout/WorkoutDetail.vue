@@ -31,10 +31,6 @@ defineEmits<{
 
 const showConfirmEndWorkout = ref<boolean>(false);
 
-const workoutShow = ref<workoutShowType>({
-  showRouter: loggedStore.logged.loggedWorkoutId ? "workoutdetail" : "home",
-});
-
 const switchRouter = (route: WorkoutRouterTypes) => {
   workoutShow.value.showRouter = route;
 };
@@ -46,31 +42,37 @@ const { data: workoutExercises } = useWorkoutExercisesByWorkout(
 const nextExercise = () => {
   if (!workoutExercises.value) return;
   const index = workoutExercises.value.findIndex(
-    (ex) =>
-      ex.workout_exercise_id === workoutExToShow.value?.workout_exercise_id,
+    (ex) => ex.workout_exercise_id === wexToShow.wex?.workout_exercise_id,
   );
   if (index < workoutExercises.value.length - 1) {
-    workoutExToShow.value = workoutExercises.value[index + 1];
+    wexToShow.wex = workoutExercises.value[index + 1];
   } else {
-    workoutExToShow.value = workoutExercises.value[0];
+    wexToShow.wex = workoutExercises.value[0];
   }
 };
 
 const prevExercise = () => {
   if (!workoutExercises.value) return;
   const index = workoutExercises.value?.findIndex(
-    (ex) =>
-      ex.workout_exercise_id === workoutExToShow.value?.workout_exercise_id,
+    (ex) => ex.workout_exercise_id === wexToShow.wex?.workout_exercise_id,
   );
   if (index === 0) {
-    workoutExToShow.value =
-      workoutExercises.value[workoutExercises.value.length - 1];
+    wexToShow.wex = workoutExercises.value[workoutExercises.value.length - 1];
   } else {
-    workoutExToShow.value = workoutExercises.value[index - 1];
+    wexToShow.wex = workoutExercises.value[index - 1];
   }
 };
 
-const workoutExToShow = ref<WorkoutExerciseType>();
+// const workoutExToShow = ref<WorkoutExerciseType>();
+const wexToShow = useExToShowStore();
+
+const workoutShow = ref<workoutShowType>({
+  showRouter: loggedStore.logged.loggedWorkoutId
+    ? wexToShow.wex?.workout_exercise_id
+      ? "workoutexercisedetail"
+      : "workoutdetail"
+    : "home",
+});
 
 const showLockerDialog = ref<boolean>(false);
 const newLocker = ref<number | undefined>(props.workout?.locker);
@@ -134,7 +136,7 @@ const addNewWorkoutExercise = (exercise_id: number) => {
               (ex) => ex.exercise_id === exercise_id,
             );
             if (exercise) {
-              workoutExToShow.value = {
+              wexToShow.wex = {
                 exercise_name: exercise?.exercise_name,
                 exercise_id: exercise_id,
                 categories: exercise.categories,
@@ -186,7 +188,7 @@ watch(
 );
 
 watch(
-  () => workoutExToShow.value,
+  () => wexToShow.wex,
   (newVal) => {
     if (newVal) {
       switchRouter("workoutexercisedetail");
@@ -256,7 +258,7 @@ watch(
         v-for="wex in workoutExercises"
         class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
         @click="
-          workoutExToShow = wex;
+          wexToShow.wex = wex;
           workoutShow.showRouter = 'workoutexercisedetail';
         "
       >
@@ -327,9 +329,8 @@ watch(
         workoutShow.showRouter === 'workoutexercisedetail' &&
         workout?.start &&
         workout.user_id &&
-        workoutExToShow
+        wexToShow.wex
       "
-      :workout-exercise="workoutExToShow"
       :workout-info="{
         start: workout.start,
         user_id: workout.user_id,
@@ -337,12 +338,12 @@ watch(
       }"
       :exercise="
         exercises?.find(
-          (e: ExerciseType) => e.exercise_id === workoutExToShow?.exercise_id,
+          (e: ExerciseType) => e.exercise_id === wexToShow.wex?.exercise_id,
         )
       "
       v-model:workout-show="workoutShow"
       @close="
-        workoutExToShow = undefined;
+        wexToShow.reset();
         workoutShow.showRouter = 'workoutdetail';
       "
       @startTimer="$emit('startTimer')"

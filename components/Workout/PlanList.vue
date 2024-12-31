@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
-import SlideTransition from "../ui/transitions/SlideTransition.vue";
 
 const props = defineProps<{
   plan: PlanExercise[];
@@ -12,7 +11,7 @@ defineEmits<{
   (e: "delete"): void;
 }>();
 
-const selectedPlan = defineModel<Plan>();
+const selectedPlan = usePlanStore();
 
 const routerStore = useRouterStore();
 const updateOrderMutation = useUpdatePlanExercise();
@@ -44,7 +43,7 @@ const deleteEx = () => {
 const newExMutation = useAddPlanExercise();
 const newEx = () => {
   if (
-    selectedPlan.value?.id &&
+    selectedPlan.plan?.id &&
     newExId.value &&
     newExSets.value &&
     newExReps.value &&
@@ -53,7 +52,7 @@ const newEx = () => {
   ) {
     newExMutation.mutate(
       {
-        plan_id: selectedPlan.value.id,
+        plan_id: selectedPlan.plan.id,
         exercise_id: newExId.value,
         sets: newExSets.value,
         reps: newExReps.value,

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import SlideTransition from "../ui/transitions/SlideTransition.vue";
-import BetterExerciseSelection from "./BetterExerciseSelection.vue";
 import PlanList from "./PlanList.vue";
 
 const props = defineProps<{
@@ -8,8 +6,8 @@ const props = defineProps<{
 }>();
 
 const { data: plans } = usePlan();
-const selectedPlan = ref<Plan>();
-const { data: plan } = useGetPlan(computed(() => selectedPlan.value?.id));
+const selectedPlan = usePlanStore()
+const { data: plan } = useGetPlan(computed(() => selectedPlan.plan?.id));
 const addPlanMutation = useAddPlan();
 const addPlan = () => {
   if (newPlanForm.value.name) {
@@ -47,7 +45,7 @@ const newPlanForm = ref({
 const planListRef = ref<InstanceType<typeof PlanList> | null>(null);
 
 const getRightIcon = () => {
-  if (selectedPlan.value && planListRef.value) {
+  if (selectedPlan.plan && planListRef.value) {
     if (planListRef.value.isOrdered && props.workout) {
       return "fa-solid fa-check";
     } else if (!planListRef.value.isOrdered) {
@@ -58,7 +56,7 @@ const getRightIcon = () => {
 };
 
 const getRightFunction = () => {
-  if (selectedPlan.value && planListRef.value) {
+  if (selectedPlan.plan && planListRef.value) {
     if (planListRef.value.isOrdered && props.workout) {
       return planListRef?.value?.apply();
     } else if (!planListRef.value.isOrdered) {
@@ -70,17 +68,17 @@ const getRightFunction = () => {
 </script>
 <template>
   <Header
-    @left="selectedPlan ? (selectedPlan = undefined) : undefined"
+    @left="selectedPlan ? (selectedPlan.reset()) : undefined"
     @right="getRightFunction"
     :leftIcon="selectedPlan ? 'fa-solid fa-arrow-left' : undefined"
     :rightIcon="getRightIcon()"
   >
-    {{ selectedPlan ? selectedPlan?.name : "Workout Plans" }}
+    {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
   </Header>
   <div v-if="!plan">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
-      @click="selectedPlan = plan"
+      @click="selectedPlan.setPlan(plan)"
       v-for="plan in plans"
     >
       {{ plan.name }}
@@ -117,6 +115,5 @@ const getRightFunction = () => {
     ref="planListRef"
     :plan="plan"
     :workout="workout"
-    v-model="selectedPlan"
   />
 </template>

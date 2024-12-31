@@ -28,6 +28,7 @@ export function useGetSetsByExerciseId(workout_exercise_id: Ref<number>) {
       })
         .then((res) => res.json())
         .catch((error) => console.log(error)),
+    // enabled: workout_exercise_id.value !== 0,
   });
 }
 

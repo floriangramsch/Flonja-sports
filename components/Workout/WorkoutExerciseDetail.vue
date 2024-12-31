@@ -6,7 +6,6 @@ import Confirm from "../Dialogs/Confirm.vue";
 import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
 
 const props = defineProps<{
-  workoutExercise: WorkoutExerciseType;
   workoutInfo: {
     start: Date;
     user_id: number;
@@ -14,6 +13,8 @@ const props = defineProps<{
   };
   exercise: ExerciseType | undefined;
 }>();
+
+const wexToShow = useExToShowStore();
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -25,25 +26,27 @@ const emit = defineEmits<{
 const mutation = useDeleteWorkoutExercise();
 const deleteSetMutation = useDeleteSet();
 const { data: sets } = useGetSetsByExerciseId(
-  computed(() => props.workoutExercise.workout_exercise_id),
+  computed(() => wexToShow.wex?.workout_exercise_id ?? 0),
 );
 const addSetMutation = useAddSet();
 const updateSetMutaiton = useUpdateSet();
 const { data: lastSets } = useGetLastSets(
   computed(() => ({
-    exercise_id: props.workoutExercise.exercise_id,
+    exercise_id: wexToShow.wex?.exercise_id ?? 0,
     user_id: props.workoutInfo?.user_id,
     start: props.workoutInfo?.start,
   })),
 );
 
 const removeWorkoutExercise = () => {
-  mutation.mutate(props.workoutExercise.workout_exercise_id, {
-    onSuccess: () => {
-      showConfirmDeleteWorkoutExercise.value = false;
-      emit("close");
-    },
-  });
+  if (wexToShow.wex?.workout_exercise_id) {
+    mutation.mutate(wexToShow.wex.workout_exercise_id, {
+      onSuccess: () => {
+        showConfirmDeleteWorkoutExercise.value = false;
+        emit("close");
+      },
+    });
+  }
 };
 
 const setToDelete = ref<number>();
@@ -72,21 +75,23 @@ const handleSet = () => {
         },
       );
     } else {
-      addSetMutation.mutate(
-        {
-          workout_exercise_id: props.workoutExercise.workout_exercise_id,
-          weight: newWeight.value,
-          reps: newReps.value,
-        },
-        {
-          onSuccess: () => {
-            showOldSets.value = false;
-            showUpdateWorkoutExerciseDialog.value = false;
-            newReps.value = undefined;
-            emit("startTimer");
+      if (wexToShow.wex?.workout_exercise_id) {
+        addSetMutation.mutate(
+          {
+            workout_exercise_id: wexToShow.wex?.workout_exercise_id,
+            weight: newWeight.value,
+            reps: newReps.value,
           },
-        },
-      );
+          {
+            onSuccess: () => {
+              showOldSets.value = false;
+              showUpdateWorkoutExerciseDialog.value = false;
+              newReps.value = undefined;
+              emit("startTimer");
+            },
+          },
+        );
+      }
     }
   }
 };
@@ -100,7 +105,7 @@ const editInfo = ref<boolean>(!props.exercise?.info);
 
 const newWeight = ref<number>();
 const newReps = ref<number | undefined>(
-  props.workoutExercise.metric === "Time" ? 1 : undefined,
+  wexToShow.wex?.metric === "Time" ? 1 : undefined,
 );
 const setIdToUpdate = ref<number>();
 
@@ -117,13 +122,8 @@ watch(
 
 <template>
   <div class="absolute inset-0 pb-52">
-    <!-- {{ exercise }} -->
-    <!-- {{ workoutExercise }} -->
-    <Header
-      @left="emit('close')"
-      leftIcon="fa-solid fa-arrow-left"
-    >
-      {{ workoutExercise.exercise_name }}
+    <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">
+      {{ wexToShow.wex?.exercise_name }}
       <template #right-pure>
         <Confirm
           v-model:isOpen="showConfirmDeleteWorkoutExercise"
@@ -174,12 +174,10 @@ watch(
           "
           class="flex flex-col items-start"
         >
-          <div v-if="workoutExercise.metric !== 'Time'">
-            Reps: {{ set.reps }}
-          </div>
+          <div v-if="wexToShow.wex?.metric !== 'Time'">Reps: {{ set.reps }}</div>
           <div>
-            {{ workoutExercise.metric }}: {{ set.weight
-            }}{{ workoutExercise.metric === "Time" ? "s" : " kg" }}
+            {{ wexToShow.wex?.metric }}: {{ set.weight
+            }}{{ wexToShow.wex?.metric === "Time" ? "s" : " kg" }}
           </div>
         </button>
 
@@ -200,12 +198,10 @@ watch(
         class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
       >
         <div class="flex flex-col">
-          <div v-if="workoutExercise.metric !== 'Time'">
-            Reps: {{ set.reps }}
-          </div>
+          <div v-if="wexToShow.wex?.metric !== 'Time'">Reps: {{ set.reps }}</div>
           <div>
-            {{ workoutExercise.metric }}: {{ set.weight }}
-            {{ workoutExercise.metric === "Weight" ? " kg" : "s" }}
+            {{ wexToShow.wex?.metric }}: {{ set.weight }}
+            {{ wexToShow.wex?.metric === "Weight" ? " kg" : "s" }}
           </div>
         </div>
       </div>
@@ -248,20 +244,20 @@ watch(
         <div
           class="mt-2 grid grid-cols-2 gap-2"
           :class="{
-            'grid-cols-2': workoutExercise.metric === 'Weight',
-            'grid-cols-1': workoutExercise.metric === 'Time',
+            'grid-cols-2': wexToShow.wex?.metric === 'Weight',
+            'grid-cols-1': wexToShow.wex?.metric === 'Time',
           }"
         >
           <UiNumberInput
-            v-if="workoutExercise.metric !== 'Time'"
+            v-if="wexToShow.wex?.metric !== 'Time'"
             v-model:modelValue="newReps"
             label="Reps"
-            :focus="workoutExercise.metric === 'Weight'"
+            :focus="wexToShow.wex?.metric === 'Weight'"
           />
           <UiNumberInput
             v-model:modelValue="newWeight"
-            :label="workoutExercise.metric"
-            :focus="workoutExercise.metric === 'Time'"
+            :label="wexToShow.wex?.metric"
+            :focus="wexToShow.wex?.metric === 'Time'"
           />
         </div>
         <Button @action="handleSet"> Done </Button>
