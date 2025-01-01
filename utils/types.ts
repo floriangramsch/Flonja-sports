@@ -15,10 +15,11 @@ export type UserType = {
   };
 };
 
+export type CategoryTypes = 'muscle' | 'exercise'
 export type CategoryType = {
   id: number;
   name: string;
-  type: 'muscle' | 'exercise'
+  type: CategoryTypes
 };
 
 export type ExerciseArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';

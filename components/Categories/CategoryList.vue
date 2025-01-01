@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { CategoryTypes } from "~/utils/types";
 import Confirm from "../Dialogs/Confirm.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import NewCategory from "../Dialogs/NewCategory.vue";
 import Button from "../ui/buttons/Button.vue";
+import Select from "../ui/select/Select.vue";
 
 defineProps<{
   categories: CategoryType[];
@@ -16,9 +18,11 @@ const showDialogCategory = ref<boolean>(false);
 const categoryForm = ref<{
   category_id?: number;
   category_name?: string;
+  category_type: CategoryTypes;
 }>({
   category_id: undefined,
   category_name: undefined,
+  category_type: "muscle",
 });
 const mutation = useUpdateCategory();
 const deleteMutation = useDeleteCategory();
@@ -29,6 +33,7 @@ const updateCategory = () => {
       {
         category_id: categoryForm.value.category_id,
         name: categoryForm.value.category_name,
+        category_type: categoryForm.value.category_type
       },
       {
         onSuccess: () => {
@@ -38,6 +43,7 @@ const updateCategory = () => {
           categoryForm.value = {
             category_id: undefined,
             category_name: undefined,
+            category_type: "muscle",
           };
         },
       },
@@ -55,6 +61,7 @@ const deleteCategory = () => {
         categoryForm.value = {
           category_id: undefined,
           category_name: undefined,
+          category_type: 'muscle',
         };
       },
     });
@@ -92,6 +99,7 @@ const deleteCategory = () => {
       categoryForm = {
         category_id: category.id,
         category_name: category.name,
+        category_type: category.type,
       };
       showDialogCategory = true;
     "
@@ -106,11 +114,22 @@ const deleteCategory = () => {
 
   <!-- Handle Category -->
   <Dialog :isOpen="showDialogCategory" @close="showDialogCategory = false">
-    <UiInputsTextinput
-      v-model="categoryForm.category_name"
-      label="Category name"
-      focus
-    />
+    <div class="flex flex-col gap-2">
+      <UiInputsTextinput
+        v-model="categoryForm.category_name"
+        label="Category name"
+        focus
+      />
+      <Select
+        :options="[
+          { value: 'muscle', label: 'muscle' },
+          { value: 'exercise', label: 'exercise' },
+        ]"
+        :defaultSelected="categoryForm.category_type"
+        default="Type"
+        v-model="categoryForm.category_type"
+      />
+    </div>
     <div class="mt-4 flex w-full justify-center gap-2">
       <Button @action="updateCategory">Update</Button>
       <Confirm

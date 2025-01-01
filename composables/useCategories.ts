@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { CategoryTypes } from "~/utils/types";
 
 export default function useCategories() {
   return useQuery<CategoryType[]>({
@@ -18,9 +19,11 @@ export const useUpdateCategory = () => {
     mutationFn: async ({
       name,
       category_id,
+      category_type,
     }: {
       name: string;
       category_id: number;
+      category_type: CategoryTypes;
     }) => {
       if (category_id) {
         const response = await fetch("/api/category", {
@@ -31,6 +34,7 @@ export const useUpdateCategory = () => {
           body: JSON.stringify({
             category_id,
             name,
+            category_type
           }),
         });
 

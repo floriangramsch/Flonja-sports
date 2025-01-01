@@ -35,11 +35,11 @@ export default defineEventHandler(async (event) => {
     if (method === "PUT") {
       const connection = await connect();
       const body = await readBody(event);
-      const { name, category_id } = body;
+      const { name, category_id, category_type } = body;
 
       const [rows] = await connection.execute(
-        "UPDATE Category SET name = ? WHERE category_id = ?",
-        [name, category_id],
+        "UPDATE Category SET name = ?, type = ? WHERE category_id = ?",
+        [name, category_type, category_id],
       );
 
       return rows;
