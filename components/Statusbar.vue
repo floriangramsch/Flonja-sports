@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useQueryClient } from "@tanstack/vue-query";
 import Start from "./Dialogs/Start.vue";
 import Timer from "./Timer/Timer.vue";
 
@@ -14,6 +15,7 @@ const emit = defineEmits<{
   (emit: "stopTimer"): void;
 }>();
 
+const client = useQueryClient();
 const switchUser = () => {
   if (props.users && loggedStore) {
     const userIndex = props.users.findIndex(
@@ -24,20 +26,10 @@ const switchUser = () => {
       id: props.users[newIndex].user_id,
       name: props.users[newIndex].name,
     };
-    // if (loggedStore.logged.user?.name === "Florian") {
-    //   loggedStore.logged.user = {
-    //     id: props.users[1].user_id,
-    //     name: props.users[1].name,
-    //   };
-    // } else {
-    //   loggedStore.logged.user = {
-    //     id: props.users[0].user_id,
-    //     name: props.users[0].name,
-    //   };
-    // }
     loggedStore.logged.isLogged = false;
     loggedStore.logged.loggedWorkoutId = undefined;
     loggedStore.toStorage();
+    client.refetchQueries({ queryKey: ["plan"] });
   }
 };
 

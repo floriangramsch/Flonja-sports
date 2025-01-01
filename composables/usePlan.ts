@@ -11,6 +11,18 @@ export function usePlan() {
     },
   });
 }
+export function useUserPlans(user_id: Ref<number | undefined>) {
+  return useQuery<Plan[]>({
+    queryKey: ["plan", user_id.value],
+    queryFn: async () => {
+      const res = await fetch(`api/plan?user_id=${user_id.value}`);
+      const data = await res.json();
+      return data;
+    },
+    enabled: computed(() => user_id.value !== undefined)
+  });
+}
+
 export function useGetPlan(workoutPlanId: Ref<number | undefined>) {
   return useQuery<PlanExercise[]>({
     queryKey: computed(() => ["plan", workoutPlanId.value]),
@@ -30,7 +42,7 @@ export function useGetPlan(workoutPlanId: Ref<number | undefined>) {
 export function useAddPlan() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (form: { name: string; day?: number }) => {
+    mutationFn: async (form: { name: string; user_id: number, day?: number }) => {
       const response = await fetch("/api/plan", {
         method: "POST",
         headers: {

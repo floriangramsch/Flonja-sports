@@ -17,17 +17,26 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "GET") {
-      const { workout_plan_id } = getQuery(event);
+      const { workout_plan_id, user_id } = getQuery(event);
       if (workout_plan_id) {
         const [rows] = await connection.execute(
           `
-          SELECT * FROM Plan w
-          LEFT JOIN Plan_Exercise we ON w.id = we.plan_id
+          SELECT * FROM Plan p
+          LEFT JOIN Plan_Exercise we ON p.id = we.plan_id
           LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
-          WHERE w.id = ?
+          WHERE p.id = ? AND we.id IS NOT NULL
           ORDER BY we.order;
           `,
           [workout_plan_id],
+        );
+        return rows;
+      } else if (user_id) {
+        const [rows] = await connection.execute(
+          `
+          SELECT * FROM Plan p
+          WHERE p.user_id = ?;
+          `,
+          [user_id],
         );
         return rows;
       } else {
@@ -43,11 +52,11 @@ export default defineEventHandler(async (event) => {
     if (method === "PUT") {
     }
     if (method === "POST") {
-      const { name, day } = await readBody(event);
+      const { name, day, user_id } = await readBody(event);
       const query = day
-        ? `INSERT INTO Plan (name, day) VALUES (?, ?);`
-        : `INSERT INTO Plan (name) VALUES (?);`;
-      const params = day ? [name, day] : [name];
+        ? `INSERT INTO Plan (name, day, user_id) VALUES (?, ?, ?);`
+        : `INSERT INTO Plan (name, user_id) VALUES (?, ?);`;
+      const params = day ? [name, day, user_id] : [name, user_id];
       const [rows] = await connection.execute(query, params);
       return rows;
     }

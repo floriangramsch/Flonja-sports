@@ -5,16 +5,19 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const { data: plans } = usePlan();
+const logged = useLoggedStore()
+
+const { data: plans } = useUserPlans(computed(() => logged.logged.user.id));
 const selectedPlan = usePlanStore()
 const { data: plan } = useGetPlan(computed(() => selectedPlan.plan?.id));
 const addPlanMutation = useAddPlan();
 const addPlan = () => {
-  if (newPlanForm.value.name) {
+  if (newPlanForm.value.name && logged.logged.user.id) {
     addPlanMutation.mutate(
       {
         name: newPlanForm.value.name,
         day: newPlanForm.value.day,
+        user_id: logged.logged.user.id
       },
       {
         onSuccess: () => {
@@ -68,9 +71,9 @@ const getRightFunction = () => {
 </script>
 <template>
   <Header
-    @left="selectedPlan ? (selectedPlan.reset()) : undefined"
+    @left="selectedPlan.plan ? (selectedPlan.reset()) : undefined"
     @right="getRightFunction"
-    :leftIcon="selectedPlan ? 'fa-solid fa-arrow-left' : undefined"
+    :leftIcon="selectedPlan.plan ? 'fa-solid fa-arrow-left' : undefined"
     :rightIcon="getRightIcon()"
   >
     {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
