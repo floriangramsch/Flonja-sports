@@ -44,9 +44,10 @@ const formattedTime = computed(() => {
 let interval: ReturnType<typeof setInterval> | undefined;
 
 const startTimer = async (event?: MouseEvent, time?: number) => {
-  const restTime = time ? time : props.restTime
+  showAdjustRestTime.value = false;
+  const restTime = time ? time : props.restTime;
   if (time) {
-    remainingTime.value = time
+    remainingTime.value = time;
   }
   if (!startTime.value) {
     startTime.value = Date.now();
@@ -146,29 +147,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex w-full justify-center gap-3 text-2xl z-50">
+  <div class="z-50 flex w-full justify-center gap-3 text-2xl">
     <div v-if="startTime">
       {{ formattedTime }}
     </div>
-    <!-- <DialogsDialog
-      :is-open="showAdjustRestTime"
-      @close="showAdjustRestTime = false"
-    >
-      <template v-slot:trigger>
-        <div @click="showAdjustRestTime = true">
-          {{ formattedTime }}
-        </div>
-      </template>
-      <div class="flex w-full justify-center">
-        <input
-          type="time"
-          min="00:01"
-          v-model="restTimeInput"
-          @change="changeRestTime"
-          class="dark:yellow flex justify-center rounded bg-sonja-text p-4 text-3xl text-sonja-akz2 shadow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
-        />
-      </div>
-    </DialogsDialog> -->
+
     <button v-if="!startTime" @click="(event) => startTimer(event, 30000)">
       <i class="fa-solid fa-3 text-xl" />
       <i class="fa-solid fa-0 text-xl" />
@@ -188,5 +171,31 @@ onUnmounted(() => {
     <button v-if="startTime" @click="interuptTimer">
       <i class="fa-solid fa-stop" />
     </button>
+    <DialogsDialog
+      :is-open="showAdjustRestTime"
+      @close="showAdjustRestTime = false"
+    >
+      <template v-slot:trigger>
+        <div v-if="!startTime" @click="showAdjustRestTime = true">
+          <!-- {{ formattedTime }} -->
+          <i class="fa-solid fa-clock text-xl" />
+        </div>
+      </template>
+      <div class="flex w-full flex-col justify-center">
+        <input
+          type="time"
+          min="00:01"
+          v-model="restTimeInput"
+          @change="changeRestTime"
+          class="dark:yellow flex justify-center rounded bg-sonja-text p-4 text-3xl text-sonja-akz2 shadow focus:outline-none focus:ring-1 focus:ring-sonja-akz"
+        />
+        <button
+          v-if="!startTime"
+          @click="(event) => startTimer(event, Number(restTimeInput))"
+        >
+          <i class="fa-solid fa-play" />
+        </button>
+      </div>
+    </DialogsDialog>
   </div>
 </template>

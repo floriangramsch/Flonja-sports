@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   try {
     if (method === "GET") {
       const [rows] = await connection.execute(
-        "SELECT category_id AS id, name FROM Category",
+        "SELECT category_id AS id, name, type FROM Category ORDER BY type",
       );
       return rows;
     }

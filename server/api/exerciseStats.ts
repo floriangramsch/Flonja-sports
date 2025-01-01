@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
         MAX(s.weight) AS max_weight,
         w.user_id,
         e.name AS exercise_name,
-        JSON_ARRAYAGG(DISTINCT JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories,
+        JSON_ARRAYAGG(DISTINCT JSON_OBJECT('id', c.category_id, 'name', c.name, 'type', c.type)) AS categories,
         e.exercise_id,
         u.name AS user_name,
         e.info,

@@ -18,6 +18,7 @@ export type UserType = {
 export type CategoryType = {
   id: number;
   name: string;
+  type: 'muscle' | 'exercise'
 };
 
 export type ExerciseArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';

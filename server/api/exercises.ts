@@ -21,8 +21,8 @@ export default defineEventHandler(async (event) => {
       const rows = await query(
         connection,
         `
-          SELECT e.exercise_id, e.name AS exercise_name, info, type, metric,
-          JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories
+          SELECT e.exercise_id, e.name AS exercise_name, info, e.type, metric,
+          JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name, 'type', c.type)) AS categories
           FROM Exercise e
           JOIN Exercise_Category ec ON e.exercise_id = ec.exercise_id
           JOIN Category c ON ec.category_id = c.category_id
