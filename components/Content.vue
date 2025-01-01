@@ -6,7 +6,7 @@ import WorkoutExerciseOverview from "./WorkoutExercises/WorkoutExerciseOverview.
 import ExerciseList from "./Exercises/ExerciseList.vue";
 import Plan from "./Workout/Plan.vue";
 
-defineProps<{ users: UserType; workouts: WorkoutType[] }>();
+defineProps<{ users: UserType[]; workouts: WorkoutType[] }>();
 
 defineEmits<{
   (emits: "startTimer"): void;

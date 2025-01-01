@@ -4,8 +4,8 @@ interface LoggedState {
   logged: {
     isLogged: boolean;
     user: {
-      id: number;
-      name: string;
+      id: number | undefined;
+      name: string | undefined;
     };
     loggedWorkoutId: number | undefined;
   };
@@ -16,8 +16,8 @@ export const useLoggedStore = defineStore("logged", {
     logged: {
       isLogged: false,
       user: {
-        id: 1,
-        name: "Florian",
+        id: undefined,
+        name: undefined,
       },
       loggedWorkoutId: undefined,
     },

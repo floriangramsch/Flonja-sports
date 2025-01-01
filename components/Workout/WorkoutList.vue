@@ -8,7 +8,7 @@ import Plan from "./Plan.vue";
 defineProps<{
   workouts: WorkoutType[];
   workout: WorkoutType | undefined;
-  users: UserType;
+  users: UserType[];
 }>();
 
 const loggedStore = useLoggedStore();

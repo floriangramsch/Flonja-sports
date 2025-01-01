@@ -77,7 +77,7 @@ const createTopSetsChart = () => {
           type: "category",
           title: {
             display: true,
-            text: "Index",
+            text: "",
           },
         },
         y: {
@@ -159,7 +159,7 @@ const createVolumeChart = () => {
           type: "category",
           title: {
             display: true,
-            text: "Index",
+            text: "",
           },
         },
         y: {

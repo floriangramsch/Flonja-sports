@@ -10,10 +10,15 @@ export type LoggedType = {
 };
 
 export type UserType = {
-  [id: number]: {
-    name: string;
-  };
+  user_id: number;
+  name: string;
+  rest_time: number;
 };
+// export type UserType = {
+//   [id: number]: {
+//     name: string;
+//   };
+// };
 
 export type CategoryTypes = 'muscle' | 'exercise'
 export type CategoryType = {

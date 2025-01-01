@@ -10,7 +10,7 @@ import UpdateExercise from "./UpdateExercise.vue";
 
 defineProps<{
   categories: CategoryType[];
-  users: UserType;
+  users: UserType[];
   workout: WorkoutType | undefined;
 }>();
 
@@ -177,7 +177,9 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
           <div class="flex">
             {{ exercise[0].exercise_name }}
             [
-            <div v-for="c in exercise[0].categories">{{ c.name }},</div>
+            <div v-for="(c, index) in exercise[0].categories">{{ c.name }}
+              <span v-if="index < exercise[0].categories.length - 1">,</span>
+            </div>
             ]
           </div>
           <i
