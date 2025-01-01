@@ -80,19 +80,24 @@ watch(newExId, (newValue) => {
 });
 
 const mutation = useAddWorkoutExercise();
-const addNewWorkoutExercise = (workoutId: number, exercise_id: number) => {
-  mutation.mutate(
-    {
-      workout_id: workoutId,
-      exercise_id: exercise_id,
-    },
-    {
-      onSuccess: () => {
-        routerStore.route = "workoutdetail";
+const addNewWorkoutExercise = (
+  workoutId: number | undefined,
+  exercise_id: number,
+) => {
+  if (workoutId) {
+    mutation.mutate(
+      {
+        workout_id: workoutId,
+        exercise_id: exercise_id,
       },
-      onError: (e) => console.error(e),
-    },
-  );
+      {
+        onSuccess: () => {
+          routerStore.route = "workoutdetail";
+        },
+        onError: (e) => console.error(e),
+      },
+    );
+  }
 };
 
 const isDragging = ref(false);
@@ -257,10 +262,14 @@ watch(
             {{ ex.order }} {{ ex.name }}
             <i
               class="fa-solid fa-close cursor-pointer text-red-800"
-              @click.="
+              @click.stop="
                 confirmDeleteEx = true;
                 toDeleteExId = Number(ex.id);
               "
+            />
+            <i
+              class="fa-solid fa-check ml-2 cursor-pointer"
+              @click.stop="addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)"
             />
           </div>
           <div class="ml-2" v-if="ex.sets && ex.reps">
