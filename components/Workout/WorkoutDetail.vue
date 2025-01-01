@@ -290,7 +290,11 @@ watch(
         <div class="absolute -top-1 right-auto z-0 flex gap-1">
           <div
             v-for="category in wex.categories"
-            class="rounded bg-sonja-akz p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
+            class="rounded p-1 text-xs/[8px] shadow transition-all duration-300 group-hover:-right-8 group-hover:-translate-y-2 group-hover:-rotate-[20deg]"
+            :class="{
+              'bg-sonja-akz': category.type === 'muscle',
+              'bg-sonja-fg text-sonja-akz2': category.type === 'exercise'
+            }"
           >
             {{ category.name }}
           </div>

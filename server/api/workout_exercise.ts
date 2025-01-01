@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
           `
             SELECT 
             workout_exercise_id, we.exercise_id, e.name AS exercise_name, 
-            JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name)) AS categories, 
+            JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name, 'type', c.type)) AS categories, 
             e.type, e.metric 
             FROM Workout_Exercise we 
             LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id

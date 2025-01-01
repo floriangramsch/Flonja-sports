@@ -12,12 +12,12 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "POST") {
-      const { newCategory } = await readBody(event);
+      const { newCategory, newType } = await readBody(event);
 
       const res = await query(
         connection,
-        `INSERT INTO Category (name) VALUES (?)`,
-        [newCategory],
+        `INSERT INTO Category (name, type) VALUES (?, ?)`,
+        [newCategory, newType],
       );
       return res;
     }

@@ -82,7 +82,7 @@ const deleteCategory = () => {
       >
         <template v-slot:trigger>
           <button
-            class="absolute right-6 flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+            class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
             @click="showDialogNewCategory = true"
           >
             <i class="fa-solid fa-plus" />
@@ -122,8 +122,8 @@ const deleteCategory = () => {
       />
       <Select
         :options="[
-          { value: 'muscle', label: 'muscle' },
-          { value: 'exercise', label: 'exercise' },
+          { value: 'muscle', label: 'Muscle' },
+          { value: 'exercise', label: 'Exercise' },
         ]"
         :defaultSelected="categoryForm.category_type"
         default="Type"

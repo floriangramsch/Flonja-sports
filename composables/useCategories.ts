@@ -34,7 +34,7 @@ export const useUpdateCategory = () => {
           body: JSON.stringify({
             category_id,
             name,
-            category_type
+            category_type,
           }),
         });
 
@@ -84,14 +84,21 @@ export function useAddCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newCategoryName: string) => {
+    mutationFn: async ({
+      name,
+      type,
+    }: {
+      name: string;
+      type: CategoryTypes;
+    }) => {
       const response = await fetch("/api/category", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          newCategory: newCategoryName,
+          newCategory: name,
+          newType: type,
         }),
       });
       return response.json();
