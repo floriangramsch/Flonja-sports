@@ -17,9 +17,8 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "PUT") {
-      const { updateOrder } = getQuery(event);
+      const { updateOrder, id, order, form } = await readBody(event);
       if (updateOrder) {
-        const { id, order } = await readBody(event);
         const query = `
           UPDATE Plan_Exercise
           SET \`order\` = ?
@@ -29,7 +28,6 @@ export default defineEventHandler(async (event) => {
         const [rows] = await connection.execute(query, params);
         return rows;
       } else {
-        const { form } = await readBody(event);
         const query = `
           UPDATE Plan_Exercise
           SET sets = ?, reps = ?, reps_to = ?

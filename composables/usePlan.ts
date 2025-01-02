@@ -148,12 +148,12 @@ export function useUpdateOrderPlanExercise() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (d: { id: number; order: number }) => {
-      const response = await fetch("/api/plan_exercise?updateOrder", {
+      const response = await fetch("/api/plan_exercise", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: d.id, order: d.order }),
+        body: JSON.stringify({ updateOrder: true, id: d.id, order: d.order }),
       });
       if (!response.ok)
         throw new Error("Fehler beim Update des Workout Plans Exercises Order");
@@ -178,7 +178,7 @@ export function useUpdatePlanExercise() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({form}),
+        body: JSON.stringify({updateOrder: false, form}),
       });
       if (!response.ok)
         throw new Error("Fehler beim Updaten der Workout Plans Exercises");
