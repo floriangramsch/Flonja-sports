@@ -34,19 +34,17 @@
   </div>
   <div class="relative">
     <div class="absolute -top-[50px] right-auto z-0 flex gap-1">
-      <div
-        class="rounded p-1 text-xs/[8px] shadow"
-        :class="{
-          'bg-sonja-akz': c.type === 'muscle',
-          'bg-sonja-fg text-sonja-akz2': c.type === 'exercise',
-        }"
+      <UiChip
         v-for="c in exercise[0].categories"
-      >
-        {{ c.name }}
-      </div>
+        :content="c.name"
+        :type="c.type"
+      />
     </div>
     <transition name="expand">
-      <div v-show="showUser" class="overflow-hidden border-l-4 border-sonja-text pl-2">
+      <div
+        v-show="showUser"
+        class="overflow-hidden border-l-4 border-sonja-text pl-2"
+      >
         <!-- Chart exercise -->
         <button
           @click.stop="
