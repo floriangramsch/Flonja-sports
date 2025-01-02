@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
+import WorkoutExercise from "./WorkoutExercise.vue";
 
 const exercises = defineModel<ExerciseType[]>();
 
@@ -56,22 +57,7 @@ const showLegacy = ref<boolean>(false);
         class="p-1"
         :key="workout_exercise.exercise_id"
       >
-        <div class="font-bold">
-          {{ workout_exercise.exercise_name }}
-        </div>
-        <div v-for="user in workout_exercise.users" class="flex flex-wrap">
-          <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
-          <div v-if="showLegacy" v-for="(set, index) in user.sets" class="flex">
-            <div class="mx-2 flex">
-              <div v-if="set.reps">{{ set.reps }}</div>
-              <div>@{{ set.weight }}</div>
-            </div>
-            <i
-              v-if="index !== user.sets.length - 1"
-              class="fa-solid fa-arrow-right"
-            />
-          </div>
-        </div>
+        <WorkoutExercise :wexercise="workout_exercise" :showLegacy />
       </div>
     </div>
   </SlideTransition>
