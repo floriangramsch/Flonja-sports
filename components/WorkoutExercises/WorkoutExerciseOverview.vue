@@ -7,6 +7,7 @@ import WorkoutExercise from "./WorkoutExercise.vue";
 const exercises = defineModel<ExerciseType[]>();
 
 const { data: sets } = useGetSets();
+console.log(sets.value)
 
 const filterStore = useWorkoutExerciseFilterStore();
 

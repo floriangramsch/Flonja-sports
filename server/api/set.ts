@@ -86,6 +86,8 @@ export default defineEventHandler(async (event) => {
           };
         });
 
+        result.sort((a, b) => a.exercise_name.localeCompare(b.exercise_name));
+
         return result;
       }
     }
