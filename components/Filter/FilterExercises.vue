@@ -18,6 +18,7 @@
         v-model="search"
         @input="filter"
         @keydown="closeInput"
+        @blur="handleBlur"
       />
     </div>
   </DropdownSlideTransition>
@@ -70,5 +71,13 @@ const handleOverlayClick = (e: MouseEvent) => {
     isOpen.value = false;
     search.value = "";
   }
+};
+
+const handleBlur = () => {
+  if (search.value === "") {
+    model.value = "";
+  }
+  search.value = "";
+  isOpen.value = false;
 };
 </script>

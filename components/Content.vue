@@ -22,11 +22,9 @@ const { data: categories } = useCategories();
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
-    <Test v-route="'test'"  />
+    <Test v-route="'test'" />
     <Router route="workoutexercises">
-      <WorkoutExerciseOverview
-        v-model="exercises"
-      />
+      <WorkoutExerciseOverview :categories="categories" v-model="exercises" />
     </Router>
 
     <Router route="plans">
@@ -47,15 +45,13 @@ const { data: categories } = useCategories();
     </Router>
     <Router route="exerciselist">
       <ExerciseList
-        v-if="
-          categories
-        "
+        v-if="categories"
         :categories="categories"
         :users="users"
         :workout="workout"
       />
     </Router>
-    
+
     <Router route="stats">
       <Stats :workout="workout" />
     </Router>
