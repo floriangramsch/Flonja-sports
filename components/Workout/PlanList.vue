@@ -253,7 +253,7 @@ const updatePlanExerciseRef = ref<InstanceType<
     <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
       <div
         v-for="ex in data"
-        class="draggable cursor-move p-1"
+        class="draggable cursor-move p-1 py-2"
         :class="{
           'border-b-2 border-sonja-akz': ex.order === pos,
         }"
@@ -262,9 +262,16 @@ const updatePlanExerciseRef = ref<InstanceType<
         @mousedown="startMoving($event, $event.target as HTMLElement)"
         @touchstart="startMoving($event, $event.target as HTMLElement)"
       >
-        <div v-if="ex.name" class="mr-2 flex justify-between">
-          <div>
+        <div v-if="ex.name" class="mr-2 flex justify-between relative">
+          <div >
             {{ ex.order }} {{ ex.name }}
+            <div class="absolute -top-4 right-auto z-0 flex gap-1">
+              <UiChip
+                v-for="c in ex.categories"
+                :content="c.name"
+                :type="c.type"
+              />
+            </div>
             <i
               class="fa-solid fa-edit cursor-pointer text-xl"
               @click.stop="
@@ -273,7 +280,7 @@ const updatePlanExerciseRef = ref<InstanceType<
                   name: ex.name,
                   sets: ex.sets,
                   reps: ex.reps,
-                  reps_to: ex.reps_to
+                  reps_to: ex.reps_to,
                 })
               "
             />

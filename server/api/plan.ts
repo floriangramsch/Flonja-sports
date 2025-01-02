@@ -19,17 +19,29 @@ export default defineEventHandler(async (event) => {
     if (method === "GET") {
       const { workout_plan_id, user_id } = getQuery(event);
       if (workout_plan_id) {
-        const [rows] = await connection.execute(
+        const rows = await connection.execute(
           `
-          SELECT * FROM Plan p
+          SELECT *,
+          JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name, 'type', c.type)) AS categories
+          FROM Plan p
           LEFT JOIN Plan_Exercise we ON p.id = we.plan_id
           LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
+          JOIN Exercise_Category ec ON e.exercise_id = ec.exercise_id
+          JOIN Category c ON ec.category_id = c.category_id
           WHERE p.id = ? AND we.id IS NOT NULL
+          GROUP BY e.exercise_id, p.id
           ORDER BY we.order;
           `,
           [workout_plan_id],
         );
-        return rows;
+        
+        // @ts-ignore
+        const parsedRows = rows[0].map((row: any) => ({
+          ...row,
+          categories: JSON.parse(row.categories),
+        }));
+  
+        return parsedRows;
       } else if (user_id) {
         const [rows] = await connection.execute(
           `

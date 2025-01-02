@@ -148,4 +148,5 @@ export type PlanExercise = Plan & {
   type: ExerciseArtType;
   metric: ExerciseMetricType;
   order: number;
+  categories: CategoryType[]
 }
