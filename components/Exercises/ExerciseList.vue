@@ -39,8 +39,8 @@ const filteredExercises = computed(() => {
       filter.value.length === 0 ||
       ex.categories.some((category) => filter.value.includes(category.id));
 
-    const matchesSearchFilter = true;
-    searchFilter.value === "" ||
+    const matchesSearchFilter =
+      searchFilter.value === "" ||
       ex.exercise_name
         .toLowerCase()
         .includes(searchFilter.value.toLowerCase()) ||
@@ -98,8 +98,6 @@ const exerciseList = computed<ExerciseStatsType[][] | undefined>(() => {
   }
 });
 
-const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
-
 const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
 const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
 </script>
@@ -151,10 +149,7 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
       </Dialog>
     </FilterWrapper>
     <!-- Update Exercise -->
-    <UpdateExercise
-      ref="updateExerciseRef"
-      :categories="categories"
-    />
+    <UpdateExercise ref="updateExerciseRef" :categories="categories" />
     <!-- Exercise List -->
     <div
       class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg"
@@ -177,7 +172,8 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
           <div class="flex">
             {{ exercise[0].exercise_name }}
             [
-            <div v-for="(c, index) in exercise[0].categories">{{ c.name }}
+            <div v-for="(c, index) in exercise[0].categories">
+              {{ c.name }}
               <span v-if="index < exercise[0].categories.length - 1">,</span>
             </div>
             ]
