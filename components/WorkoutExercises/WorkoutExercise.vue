@@ -12,7 +12,7 @@ const showChart = ref<boolean>(false);
     {{ wexercise.exercise_name }}
   </div>
   <transition name="expand">
-    <div v-show="showChart" class="overflow-hidden">
+    <div v-show="showChart" class="overflow-hidden border-l-4 border-sonja-text pl-2">
       <div v-for="user in wexercise.users" class="flex flex-wrap">
         <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
         <div v-if="showLegacy" v-for="(set, index) in user.sets" class="flex">

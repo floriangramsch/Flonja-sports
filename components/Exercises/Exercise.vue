@@ -31,45 +31,9 @@
       v-else-if="exercise[0].metric === 'Weight'"
       class="fa-solid fa-weight-hanging"
     />
-    <button
-      class="ml-2"
-      @click.stop="
-        weFilterStore.addId(exercise[0].exercise_id);
-        routerStore.route = 'workoutexercises';
-      "
-    >
-      <i class="fa-solid fa-chart-line text-sonja-akz" />
-    </button>
-    <!-- Delete exercise -->
-    <button
-      class="ml-2"
-      @click.stop="
-        exerciseToDelete = Number(exercise[0].exercise_id);
-        showConfirmDeleteExercise = true;
-      "
-    >
-      <i class="fa-solid fa-close text-red-800" />
-    </button>
-    <!-- Edit exercise -->
-    <button
-      class="ml-2"
-      @click.stop="
-        updateExerciseRef?.setForm({
-          exercise_name: exercise[0].exercise_name,
-          exercise_id: exercise[0].exercise_id,
-          categories: exercise[0].categories.map((c) => c.id),
-          info: exercise[0].info,
-          type: exercise[0].type,
-          metric: exercise[0].metric,
-        });
-        updateExerciseRef?.open();
-      "
-    >
-      <i class="fa-solid fa-edit" />
-    </button>
   </div>
   <div class="relative">
-    <div class="absolute -top-12 right-auto z-0 flex gap-1">
+    <div class="absolute -top-[50px] right-auto z-0 flex gap-1">
       <div
         class="rounded p-1 text-xs/[8px] shadow"
         :class="{
@@ -82,7 +46,44 @@
       </div>
     </div>
     <transition name="expand">
-      <div v-show="showUser" class="overflow-hidden">
+      <div v-show="showUser" class="overflow-hidden border-l-4 border-sonja-text pl-2">
+        <!-- Chart exercise -->
+        <button
+          @click.stop="
+            weFilterStore.addId(exercise[0].exercise_id);
+            routerStore.route = 'workoutexercises';
+          "
+        >
+          <i class="fa-solid fa-chart-line text-sonja-akz" />
+        </button>
+
+        <!-- Edit exercise -->
+        <button
+          class="ml-2"
+          @click.stop="
+            updateExerciseRef?.setForm({
+              exercise_name: exercise[0].exercise_name,
+              exercise_id: exercise[0].exercise_id,
+              categories: exercise[0].categories.map((c) => c.id),
+              info: exercise[0].info,
+              type: exercise[0].type,
+              metric: exercise[0].metric,
+            });
+            updateExerciseRef?.open();
+          "
+        >
+          <i class="fa-solid fa-edit" />
+        </button>
+        <!-- Delete exercise -->
+        <button
+          class="ml-2"
+          @click.stop="
+            exerciseToDelete = Number(exercise[0].exercise_id);
+            showConfirmDeleteExercise = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
         <div v-for="user in exercise.slice(1)" class="flex gap-2">
           <div v-if="user.user_name" class="flex gap-2">
             <div v-if="user.user_name">{{ user.user_name }}:</div>
