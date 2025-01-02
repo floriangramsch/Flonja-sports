@@ -144,11 +144,11 @@ export function useDeletePlanExercise() {
   });
 }
 
-export function useUpdatePlanExercise() {
+export function useUpdateOrderPlanExercise() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async (d: { id: number; order: number }) => {
-      const response = await fetch("/api/plan_exercise", {
+      const response = await fetch("/api/plan_exercise?updateOrder", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +156,32 @@ export function useUpdatePlanExercise() {
         body: JSON.stringify({ id: d.id, order: d.order }),
       });
       if (!response.ok)
-        throw new Error("Fehler beim Löschen des Workout Plans Exercises");
+        throw new Error("Fehler beim Update des Workout Plans Exercises Order");
+      return response.json();
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
+  });
+}
+
+export function useUpdatePlanExercise() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (form: {
+      plan_id: number;
+      name: string;
+      set: number;
+      reps: number;
+      reps_to: number;
+    }) => {
+      const response = await fetch("/api/plan_exercise", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({form}),
+      });
+      if (!response.ok)
+        throw new Error("Fehler beim Updaten der Workout Plans Exercises");
       return response.json();
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),

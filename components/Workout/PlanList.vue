@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import UpdatePlanExercise from "../Plan/UpdatePlanExercise.vue";
 
 const props = defineProps<{
   plan: PlanExercise[];
@@ -14,7 +15,7 @@ defineEmits<{
 const selectedPlan = usePlanStore();
 
 const routerStore = useRouterStore();
-const updateOrderMutation = useUpdatePlanExercise();
+const updateOrderMutation = useUpdateOrderPlanExercise();
 
 const { data: exercises } = useExercises();
 const { data: categories } = useCategories();
@@ -241,6 +242,10 @@ watch(
     if (newVal) data.value = newVal;
   },
 );
+
+const updatePlanExerciseRef = ref<InstanceType<
+  typeof UpdatePlanExercise
+> | null>(null);
 </script>
 
 <template>
@@ -261,7 +266,19 @@ watch(
           <div>
             {{ ex.order }} {{ ex.name }}
             <i
-              class="fa-solid fa-close cursor-pointer text-red-800"
+              class="fa-solid fa-edit cursor-pointer text-xl"
+              @click.stop="
+                updatePlanExerciseRef?.setForm({
+                  plan_id: ex.id,
+                  name: ex.name,
+                  sets: ex.sets,
+                  reps: ex.reps,
+                  reps_to: ex.reps_to
+                })
+              "
+            />
+            <i
+              class="fa-solid fa-close ml-2 cursor-pointer text-red-800"
               @click.stop="
                 confirmDeleteEx = true;
                 toDeleteExId = Number(ex.id);
@@ -269,7 +286,9 @@ watch(
             />
             <i
               class="fa-solid fa-check ml-2 cursor-pointer"
-              @click.stop="addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)"
+              @click.stop="
+                addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)
+              "
             />
           </div>
           <div class="ml-2" v-if="ex.sets && ex.reps">
@@ -314,4 +333,6 @@ watch(
     @no="confirmDeleteEx = false"
     @yes="deleteEx"
   />
+
+  <UpdatePlanExercise ref="updatePlanExerciseRef" />
 </template>

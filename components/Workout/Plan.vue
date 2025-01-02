@@ -94,7 +94,6 @@ const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
       {{ showAllPlans ? "Show Yours" : "Show All" }}
     </Button>
   </FilterWrapper>
-  <!-- {{ plans[0] }} -->
   <div v-if="!plan">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"

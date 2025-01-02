@@ -19,7 +19,7 @@ defineProps<{
     </button>
 
     <div
-      class="flex h-full max-w-72 items-center justify-center text-wrap text-center text-4xl font-bold"
+      class="flex h-full max-w-64 items-center justify-center text-wrap text-center text-4xl font-bold"
     >
       <slot />
     </div>
