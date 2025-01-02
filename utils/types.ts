@@ -142,8 +142,6 @@ export type PlanExercise = Plan & {
   sets: number;
   reps: number;
   reps_to: number;
-  weight: number;
-  category_id: number;
   info: string;
   type: ExerciseArtType;
   metric: ExerciseMetricType;

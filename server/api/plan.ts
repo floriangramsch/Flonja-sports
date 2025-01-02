@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       if (workout_plan_id) {
         const rows = await connection.execute(
           `
-          SELECT *,
+          SELECT we.id, e.name, \`day\`, e.exercise_id, sets, reps, reps_to, info, e.type, metric, \`order\`,
           JSON_ARRAYAGG(JSON_OBJECT('id', c.category_id, 'name', c.name, 'type', c.type)) AS categories
           FROM Plan p
           LEFT JOIN Plan_Exercise we ON p.id = we.plan_id
@@ -34,13 +34,13 @@ export default defineEventHandler(async (event) => {
           `,
           [workout_plan_id],
         );
-        
+
         // @ts-ignore
         const parsedRows = rows[0].map((row: any) => ({
           ...row,
           categories: JSON.parse(row.categories),
         }));
-  
+
         return parsedRows;
       } else if (user_id) {
         const [rows] = await connection.execute(
