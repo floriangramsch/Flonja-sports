@@ -3,6 +3,7 @@ import { computed } from "vue";
 import Filter from "../Filter/Filter.vue";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import WorkoutExercise from "./WorkoutExercise.vue";
+import type FilterWrapper from "../Filter/FilterWrapper.vue";
 
 const exercises = defineModel<ExerciseType[]>();
 
@@ -18,7 +19,7 @@ const filtered = computed(() => {
   );
 });
 
-const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
+const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(null);
 
 const showLegacy = ref<boolean>(false);
 </script>
