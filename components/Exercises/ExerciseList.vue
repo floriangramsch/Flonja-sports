@@ -100,7 +100,7 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
       Exercise List
     </Header>
 
-    <FilterWrapper ref="filterWrapperComponent">
+    <FilterWrapper ref="filterWrapperComponent" open>
       <Filter
         :data="
           categories.map((category: CategoryType) => ({

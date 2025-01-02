@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import SlideDownTransition from "../ui/transitions/SlideDownTransition.vue";
 
-const isOpen = ref<boolean>(true);
+const props = defineProps<{
+  open?: boolean
+}>()
+
+const isOpen = ref<boolean>(props.open);
 
 const toggle = () => (isOpen.value = !isOpen.value);
+const close = () => isOpen.value = false
 
 defineExpose({
-  toggle,
+  toggle, close
 });
 </script>
 

@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import FilterWrapper from "../Filter/FilterWrapper.vue";
+import Button from "../ui/buttons/Button.vue";
 import PlanList from "./PlanList.vue";
 
 const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const logged = useLoggedStore()
+const logged = useLoggedStore();
 
-const { data: plans } = useUserPlans(computed(() => logged.logged.user.id));
-const selectedPlan = usePlanStore()
+const showAllPlans = ref<boolean>(false);
+
+const { data: plans } = useUserPlans(
+  computed(() => logged.logged.user.id),
+  computed(() => showAllPlans.value),
+);
+const selectedPlan = usePlanStore();
 const { data: plan } = useGetPlan(computed(() => selectedPlan.plan?.id));
 const addPlanMutation = useAddPlan();
 const addPlan = () => {
@@ -17,7 +24,7 @@ const addPlan = () => {
       {
         name: newPlanForm.value.name,
         day: newPlanForm.value.day,
-        user_id: logged.logged.user.id
+        user_id: logged.logged.user.id,
       },
       {
         onSuccess: () => {
@@ -55,7 +62,7 @@ const getRightIcon = () => {
       return "fa-solid fa-refresh";
     }
   }
-  return undefined;
+  return "fa-solid fa-filter";
 };
 
 const getRightFunction = () => {
@@ -66,23 +73,35 @@ const getRightFunction = () => {
       return planListRef?.value?.update();
     }
   }
-  return undefined;
+  return filterWrapperComponent.value?.toggle();
 };
+
+const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
+  null,
+);
 </script>
 <template>
   <Header
-    @left="selectedPlan.plan?.name ? (selectedPlan.reset()) : undefined"
+    @left="selectedPlan.plan?.name ? selectedPlan.reset() : undefined"
     @right="getRightFunction"
     :leftIcon="selectedPlan.plan?.name ? 'fa-solid fa-arrow-left' : undefined"
     :rightIcon="getRightIcon()"
   >
     {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
   </Header>
+  <FilterWrapper ref="filterWrapperComponent">
+    <Button @action="showAllPlans = !showAllPlans">
+      {{ showAllPlans ? "Show Yours" : "Show All" }}
+    </Button>
+  </FilterWrapper>
   <!-- {{ plans[0] }} -->
   <div v-if="!plan">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
-      @click="selectedPlan.setPlan(plan)"
+      @click="
+        selectedPlan.setPlan(plan);
+        filterWrapperComponent?.close();
+      "
       v-for="plan in plans"
     >
       {{ plan.name }}
@@ -114,10 +133,5 @@ const getRightFunction = () => {
       <UiButtonsButton @action="addPlan" class="mt-2">New Plan</UiButtonsButton>
     </DialogsDialog>
   </div>
-  <PlanList
-    v-if="plan"
-    ref="planListRef"
-    :plan="plan"
-    :workout="workout"
-  />
+  <PlanList v-if="plan" ref="planListRef" :plan="plan" :workout="workout" />
 </template>

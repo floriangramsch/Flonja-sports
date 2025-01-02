@@ -33,7 +33,7 @@ const showLegacy = ref<boolean>(false);
         Exercises Done
       </Header>
 
-      <FilterWrapper ref="filterWrapperComponent">
+      <FilterWrapper ref="filterWrapperComponent" open>
         <Filter
           :data="
             exercises?.map((exercise: ExerciseType) => ({
