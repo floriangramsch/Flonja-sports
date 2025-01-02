@@ -3,7 +3,7 @@ import type { PlanExercise } from "~/utils/types";
 
 export function usePlan() {
   return useQuery<Plan[]>({
-    queryKey: ["plan"],
+    queryKey: ["plans"],
     queryFn: async () => {
       const res = await fetch("api/plan");
       const data = await res.json();
@@ -13,7 +13,7 @@ export function usePlan() {
 }
 export function useUserPlans(user_id: Ref<number | undefined>) {
   return useQuery<Plan[]>({
-    queryKey: ["plan", user_id.value],
+    queryKey: ["plans", user_id.value],
     queryFn: async () => {
       const res = await fetch(`api/plan?user_id=${user_id.value}`);
       const data = await res.json();
@@ -54,7 +54,7 @@ export function useAddPlan() {
         throw new Error("Fehler beim Erstellen des Workout Plans");
       return response.json();
     },
-    onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["plans"] }),
   });
 }
 
@@ -73,7 +73,7 @@ export function useDeletePlan() {
         throw new Error("Fehler beim Löschen des Workout Plans");
       return response.json();
     },
-    onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["plans"] }),
   });
 }
 

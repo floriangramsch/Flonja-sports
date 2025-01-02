@@ -71,13 +71,14 @@ const getRightFunction = () => {
 </script>
 <template>
   <Header
-    @left="selectedPlan.plan ? (selectedPlan.reset()) : undefined"
+    @left="selectedPlan.plan?.name ? (selectedPlan.reset()) : undefined"
     @right="getRightFunction"
-    :leftIcon="selectedPlan.plan ? 'fa-solid fa-arrow-left' : undefined"
+    :leftIcon="selectedPlan.plan?.name ? 'fa-solid fa-arrow-left' : undefined"
     :rightIcon="getRightIcon()"
   >
     {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
   </Header>
+  <!-- {{ plans[0] }} -->
   <div v-if="!plan">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
