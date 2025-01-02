@@ -1,15 +1,4 @@
 <template>
-  <!-- @click="
-      updateExerciseRef?.setForm({
-        exercise_name: exercise[0].exercise_name,
-        exercise_id: exercise[0].exercise_id,
-        categories: exercise[0].categories.map((c) => c.id),
-        info: exercise[0].info,
-        type: exercise[0].type,
-        metric: exercise[0].metric,
-      });
-      updateExerciseRef?.open();
-    " -->
   <div
     @click.stop="showUser = !showUser"
     class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"

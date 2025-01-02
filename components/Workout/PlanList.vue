@@ -249,69 +249,70 @@ const updatePlanExerciseRef = ref<InstanceType<
 </script>
 
 <template>
-  <template v-if="!newExExerciseDialog">
-    <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
-      <div
-        v-for="ex in data"
-        class="draggable cursor-move p-1 py-2"
-        :class="{
-          'border-b-2 border-sonja-akz': ex.order === pos,
-        }"
-        :key="ex.order"
-        :id="String(ex.order)"
-        @mousedown="startMoving($event, $event.target as HTMLElement)"
-        @touchstart="startMoving($event, $event.target as HTMLElement)"
-      >
-        <div v-if="ex.name" class="mr-2 flex justify-between relative">
-          <div >
-            {{ ex.order }} {{ ex.name }}
-            <div class="absolute -top-4 right-auto z-0 flex gap-1">
-              <UiChip
-                v-for="c in ex.categories"
-                :content="c.name"
-                :type="c.type"
-              />
-            </div>
-            <i
-              class="fa-solid fa-edit cursor-pointer text-xl"
-              @click.stop="
-                updatePlanExerciseRef?.setForm({
-                  plan_id: ex.id,
-                  name: ex.name,
-                  sets: ex.sets,
-                  reps: ex.reps,
-                  reps_to: ex.reps_to,
-                })
-              "
-            />
-            <i
-              class="fa-solid fa-close ml-2 cursor-pointer text-red-800"
-              @click.stop="
-                confirmDeleteEx = true;
-                toDeleteExId = Number(ex.id);
-              "
-            />
-            <i
-              class="fa-solid fa-check ml-2 cursor-pointer"
-              @click.stop="
-                addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)
-              "
+  <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
+    <div
+      v-for="ex in data"
+      class="draggable ofer cursor-move p-1 py-3"
+      :class="{
+        'border-b-2 border-sonja-akz': ex.order === pos,
+      }"
+      :key="ex.order"
+      :id="String(ex.order)"
+      @mousedown="startMoving($event, $event.target as HTMLElement)"
+      @touchstart="startMoving($event, $event.target as HTMLElement)"
+    >
+      <div v-if="ex.name" class="relative mr-2 flex flex-col justify-between">
+        <div>
+          {{ ex.order }}. {{ ex.name }}
+          <div class="absolute -top-4 right-auto z-0 flex gap-1">
+            <UiChip
+              v-for="c in ex.categories"
+              :content="c.name"
+              :type="c.type"
             />
           </div>
-          <div class="ml-2" v-if="ex.sets && ex.reps">
-            {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-            }}{{ ex.metric === "Time" ? "s" : "" }}
-          </div>
+          <i
+            class="fa-solid fa-edit cursor-pointer text-xl"
+            @click.stop="
+              updatePlanExerciseRef?.setForm({
+                plan_id: ex.id,
+                name: ex.name,
+                sets: ex.sets,
+                reps: ex.reps,
+                reps_to: ex.reps_to,
+              })
+            "
+          />
+          <i
+            class="fa-solid fa-close ml-2 cursor-pointer text-red-800"
+            @click.stop="
+              confirmDeleteEx = true;
+              toDeleteExId = Number(ex.id);
+            "
+          />
+          <i
+            class="fa-solid fa-check ml-2 cursor-pointer"
+            @click.stop="
+              addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)
+            "
+          />
+        </div>
+        <div
+          class="ml-1 border-l-4 border-sonja-text pl-2"
+          v-if="ex.sets && ex.reps"
+        >
+          {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
+          }}{{ ex.metric === "Time" ? "s" : "" }}
         </div>
       </div>
     </div>
-    <button
-      class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
-      @click="newExExerciseDialog = true"
-    >
-      <i class="fa-solid fa-plus" />
-    </button>
-  </template>
+  </div>
+  <button
+    class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
+    @click="newExExerciseDialog = true"
+  >
+    <i class="fa-solid fa-plus" />
+  </button>
   <BetterExerciseSelection
     v-if="newExExerciseDialog && categories && exercises"
     :categories="categories"
