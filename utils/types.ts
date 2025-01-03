@@ -94,6 +94,15 @@ export type WorkoutExerciseType = {
   metric: ExerciseMetricType;
 };
 
+export type MaybeWorkoutExercise = {
+  workout_exercise_id?: number;
+  exercise_name?: string;
+  exercise_id?: number;
+  categories: CategoryType[];
+  type?: string;
+  metric?: string;
+}
+
 export type StatsType = {
   stats_id: number;
   user_id: number;
@@ -111,6 +120,7 @@ export type WorkoutRouterTypes =
   | "home"
   | "exerciseselection"
   | "workoutdetail"
+  | "workoutstretch"
   | "workoutexercisedetail";
 
 export type RouterTypes =

@@ -1,16 +1,8 @@
 import { defineStore } from "pinia";
-
-interface WorkoutExercise {
-  workout_exercise_id?: number;
-  exercise_name?: string;
-  exercise_id?: number;
-  categories: CategoryType[];
-  type?: string;
-  metric?: string;
-}
+import type { MaybeWorkoutExercise } from "~/utils/types";
 
 export const useExToShowStore = defineStore("exToShow", {
-  state: (): { wex: WorkoutExercise | undefined } => ({
+  state: (): { wex: MaybeWorkoutExercise | undefined } => ({
     wex: {
       workout_exercise_id: undefined,
       exercise_name: undefined,
@@ -21,7 +13,7 @@ export const useExToShowStore = defineStore("exToShow", {
     },
   }),
   actions: {
-    setExample(newExample: WorkoutExercise) {
+    setExample(newExample: MaybeWorkoutExercise) {
       this.wex = newExample;
     },
     reset() {

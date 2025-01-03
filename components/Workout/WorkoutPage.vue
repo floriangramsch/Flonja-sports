@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import type { ExerciseType, WorkoutType } from "~/utils/types";
+import type {
+  ExerciseType,
+  MaybeWorkoutExercise,
+  WorkoutExerciseType,
+  WorkoutRouterTypes,
+  WorkoutType,
+} from "~/utils/types";
 import WorkoutExerciseDetail from "./WorkoutExerciseDetail.vue";
 import WorkoutRouter from "../Router/WorkoutRouter.vue";
+import WorkoutStretch from "./WorkoutStretch.vue";
 
 const props = defineProps<{
   exercises: ExerciseType[] | undefined;
@@ -41,12 +48,21 @@ const prevExercise = () => {
   }
 };
 
+const checkWex = (
+  wex: MaybeWorkoutExercise | undefined,
+): WorkoutRouterTypes => {
+  if (wex?.workout_exercise_id) {
+    if (wex.categories.every((c) => c.name !== "Dehnen")) {
+      return "workoutexercisedetail";
+    } else {
+      return "workoutstretch";
+    }
+  }
+  return "workoutdetail";
+};
+
 routerStore.setWorkoutRoute(
-  loggedStore.logged.loggedWorkoutId
-    ? wexToShow.wex?.workout_exercise_id
-      ? "workoutexercisedetail"
-      : "workoutdetail"
-    : "home",
+  loggedStore.logged.loggedWorkoutId ? checkWex(wexToShow.wex) : "home",
 );
 </script>
 
@@ -54,10 +70,18 @@ routerStore.setWorkoutRoute(
   <WorkoutRouter route="home">
     <Home />
   </WorkoutRouter>
-  
+
   <!-- Workout Exercises List -->
   <WorkoutRouter route="workoutdetail">
     <WorkoutDetail
+      :exercises="exercises"
+      :categories="categories"
+      :workout="workout"
+    />
+  </WorkoutRouter>
+
+  <WorkoutRouter route="workoutstretch">
+    <WorkoutStretch
       :exercises="exercises"
       :categories="categories"
       :workout="workout"

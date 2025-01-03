@@ -15,6 +15,12 @@ const { data: workoutExercises } = useWorkoutExercisesByWorkout(
   computed(() => props.workout?.workout_id),
 );
 
+const workoutExercisesWithoutStretch = computed(() => {
+  return workoutExercises.value?.filter((ex) =>
+    ex.categories.every((c) => c.name !== "Dehnen"),
+  );
+});
+
 const filterStore = useWorkoutExerciseFilterStore();
 const routerStore = useRouterStore();
 const wexToShow = useExToShowStore();
@@ -95,7 +101,10 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
 </script>
 
 <template>
-  <Header>
+  <Header
+    @right="routerStore.setWorkoutRoute('workoutstretch')"
+    right-icon="fa-solid fa-repeat"
+  >
     Exercises
     <template #left-pure>
       <Confirm
@@ -114,9 +123,10 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
     ref="updateExerciseRef"
     :categories="categories"
   />
+  <!-- {{ workoutExercisesWithoutStretch }} -->
   <div
     v-if="workoutExercises?.length !== 0"
-    v-for="wex in workoutExercises"
+    v-for="wex in workoutExercisesWithoutStretch"
     class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
     @click="
       wexToShow.wex = wex;
@@ -178,8 +188,10 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
     v-if="
       isOpenExerciseSelection && workout?.workout_id && categories && exercises
     "
-    :categories="categories"
-    :exercises="exercises"
+    :categories="categories.filter((c) => c.name !== 'Dehnen')"
+    :exercises="
+      exercises.filter((ex) => ex.categories.every((c) => c.name !== 'Dehnen'))
+    "
     v-model:result="resultNewWorkoutExerciseId"
     @close="isOpenExerciseSelection = false"
   />
