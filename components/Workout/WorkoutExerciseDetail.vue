@@ -174,7 +174,9 @@ watch(
           "
           class="flex flex-col items-start"
         >
-          <div v-if="wexToShow.wex?.metric !== 'Time'">Reps: {{ set.reps }}</div>
+          <div v-if="wexToShow.wex?.metric !== 'Time'">
+            Reps: {{ set.reps }}
+          </div>
           <div>
             {{ wexToShow.wex?.metric }}: {{ set.weight
             }}{{ wexToShow.wex?.metric === "Time" ? "s" : " kg" }}
@@ -198,7 +200,9 @@ watch(
         class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
       >
         <div class="flex flex-col">
-          <div v-if="wexToShow.wex?.metric !== 'Time'">Reps: {{ set.reps }}</div>
+          <div v-if="wexToShow.wex?.metric !== 'Time'">
+            Reps: {{ set.reps }}
+          </div>
           <div>
             {{ wexToShow.wex?.metric }}: {{ set.weight }}
             {{ wexToShow.wex?.metric === "Weight" ? " kg" : "s" }}

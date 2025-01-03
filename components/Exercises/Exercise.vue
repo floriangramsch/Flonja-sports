@@ -3,6 +3,13 @@
     @click.stop="showUser = !showUser"
     class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
   >
+    <i
+      class="fa-solid transition-transform duration-300"
+      :class="{
+        'fa-caret-down': !showUser,
+        'fa-caret-up ': showUser,
+      }"
+    />
     <div class="flex">
       {{ exercise[0].exercise_name }}
     </div>
@@ -125,18 +132,21 @@ const deleteExercise = (id: number) => {
 <style scoped>
 .expand-enter-active,
 .expand-leave-active {
-  transition: all 0.3s ease-in-out;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform-origin: top;
 }
 
 .expand-enter-from,
 .expand-leave-to {
   max-height: 0;
   opacity: 0;
+  transform: scaleY(0);
 }
 
 .expand-enter-to,
 .expand-leave-from {
-  max-height: 1000px; /* Set a high value to ensure it expands fully */
+  max-height: 1000px;
   opacity: 1;
+  transform: scaleY(1);
 }
 </style>
