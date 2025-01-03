@@ -93,6 +93,7 @@ const addNewWorkoutExercise = (
       },
       {
         onSuccess: () => {
+          // routerStore.setWorkoutRoute('workoutexercisedetail')
           routerStore.setRoute('workoutpage')
         },
         onError: (e) => console.error(e),

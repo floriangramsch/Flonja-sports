@@ -19,10 +19,10 @@ const router = useRouterStore()
   <div
     class="no-x-scrollbar relative flex flex-1 flex-grow flex-col overflow-y-auto bg-sonja-bg text-2xl text-sonja-text mobile-landscape:mt-0"
   >
-  <!-- <div class="z-50">
+  <div class="z-50">
     {{ router.route }}
     {{ router.workoutRoute }}
-  </div> -->
+  </div>
     <Test v-route="'test'" />
     <Router route="workoutexercises">
       <WorkoutExerciseOverview :categories="categories" v-model="exercises" />

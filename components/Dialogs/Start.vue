@@ -47,6 +47,7 @@ const newWorkout = () => {
         user: loggedStore.logged?.user,
         loggedWorkoutId: data.workoutId,
       };
+      isOpen.value = false
     },
   });
 };
