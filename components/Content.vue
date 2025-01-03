@@ -8,10 +8,6 @@ import Plan from "./Workout/Plan.vue";
 
 defineProps<{ users: UserType[]; workouts: WorkoutType[] }>();
 
-defineEmits<{
-  (emits: "startTimer"): void;
-}>();
-
 const workout = defineModel<WorkoutType | undefined>("workout");
 
 const { data: exercises } = useExercises();
@@ -36,7 +32,6 @@ const { data: categories } = useCategories();
         :exercises="exercises"
         :categories="categories"
         :workout="workout"
-        @startTimer="$emit('startTimer')"
       />
     </Router>
 

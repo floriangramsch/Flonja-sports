@@ -18,7 +18,6 @@ const wexToShow = useExToShowStore();
 
 const emit = defineEmits<{
   (e: "close"): void;
-  (e: "startTimer"): void;
   (e: "next"): void;
   (e: "prev"): void;
 }>();
@@ -87,7 +86,6 @@ const handleSet = () => {
               showOldSets.value = false;
               showUpdateWorkoutExerciseDialog.value = false;
               newReps.value = undefined;
-              emit("startTimer");
             },
           },
         );

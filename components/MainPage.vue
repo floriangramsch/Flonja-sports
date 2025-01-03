@@ -13,7 +13,6 @@
         :users="users"
         :workouts="workouts"
         v-model:workout="workout"
-        @startTimer="startTimer"
       />
       <Navbar />
     </div>

@@ -25,10 +25,6 @@ const loggedStore = useLoggedStore();
 const filterStore = useWorkoutExerciseFilterStore();
 const routerStore = useRouterStore();
 
-defineEmits<{
-  (emits: "startTimer"): void;
-}>();
-
 const showConfirmEndWorkout = ref<boolean>(false);
 
 const switchRouter = (route: WorkoutRouterTypes) => {
@@ -338,7 +334,6 @@ watch(
         wexToShow.reset();
         workoutShow.showRouter = 'workoutdetail';
       "
-      @startTimer="$emit('startTimer')"
       @next="nextExercise"
       @prev="prevExercise"
     />
