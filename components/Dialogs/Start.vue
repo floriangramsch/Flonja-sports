@@ -51,6 +51,7 @@ const newWorkout = () => {
   });
 };
 
+const routeStore = useRouterStore();
 const resumeWorkout = () => {
   if (props.workouts) {
     const latestWorkout = props.workouts
@@ -68,6 +69,7 @@ const resumeWorkout = () => {
     };
     loggedStore.toStorage();
     isOpen.value = false;
+    routeStore.setWorkoutRoute("workoutdetail");
   }
 };
 
@@ -75,6 +77,7 @@ const resumeWorkout = () => {
 const logout = () => {
   loggedStore.logout();
   isOpen.value = false;
+  routeStore.setWorkoutRoute("home");
 };
 </script>
 

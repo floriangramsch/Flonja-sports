@@ -24,7 +24,7 @@ const editWorkout = (workout: WorkoutType) => {
     loggedWorkoutId: workout.workout_id,
   };
   loggedStore.toStorage();
-  routerStore.route = "workoutdetail";
+  routerStore.setRoute('workoutpage')
 };
 
 const mutation = useDeleteWorkout();

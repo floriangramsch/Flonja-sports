@@ -1,9 +1,6 @@
 <script setup lang="ts">
 const loggedStore = useLoggedStore()
-
-const emit = defineEmits<{
-  (e: "switch"): void;
-}>();
+const routeStore = useRouterStore()
 
 const mutation = useAddWorkout();
 
@@ -15,7 +12,7 @@ const addWorkout = () => {
           loggedStore.logged.isLogged = true;
           loggedStore.logged.loggedWorkoutId = workoutId;
           loggedStore.toStorage()
-          emit("switch");
+          routeStore.setWorkoutRoute('workoutdetail')
         }
       },
     });

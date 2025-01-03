@@ -51,12 +51,12 @@ onBeforeUnmount(() => {
       />
     </button>
 
-    <button @click="routerStore.route = 'workoutdetail'" class="w-full">
+    <button @click="routerStore.route = 'workoutpage'" class="w-full">
       <i
         class="fa-solid fa-home"
         :class="{
-          'text-sonja-akz': routerStore.route === 'workoutdetail',
-          'fa-bounce': activeBounce === 'workoutdetail',
+          'text-sonja-akz': routerStore.route === 'workoutpage',
+          'fa-bounce': activeBounce === 'workoutpage',
         }"
       />
     </button>

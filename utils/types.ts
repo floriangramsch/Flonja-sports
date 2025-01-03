@@ -20,15 +20,15 @@ export type UserType = {
 //   };
 // };
 
-export type CategoryTypes = 'muscle' | 'exercise'
+export type CategoryTypes = "muscle" | "exercise";
 export type CategoryType = {
   id: number;
   name: string;
-  type: CategoryTypes
+  type: CategoryTypes;
 };
 
-export type ExerciseArtType = 'Machine' | 'Bodyweight' | 'Dumbbell';
-export type ExerciseMetricType = 'Weight' | 'Time';
+export type ExerciseArtType = "Machine" | "Bodyweight" | "Dumbbell";
+export type ExerciseMetricType = "Weight" | "Time";
 export type ExerciseType = {
   exercise_id: number;
   exercise_name: string;
@@ -65,16 +65,16 @@ export type SetType = {
   weight: string;
   reps: number;
   start: string;
-}
+};
 export type DingensType = {
   user_name: string;
-  sets: SetType[]
-}
+  sets: SetType[];
+};
 export type SetHelperType = {
   exercise_id: number;
   exercise_name: string;
-  users: DingensType[]
-}
+  users: DingensType[];
+};
 
 export type SetOriginalType = {
   weight: number;
@@ -105,11 +105,16 @@ export type StatsType = {
 export type UserStatsType = {
   Florian: StatsType[];
   Sonja: StatsType[];
-  // [key: string]: StatsType[];
 };
 
-export type RouterTypes =
+export type WorkoutRouterTypes =
+  | "home"
+  | "exerciseselection"
   | "workoutdetail"
+  | "workoutexercisedetail";
+
+export type RouterTypes =
+  | "workoutpage"
   | "exerciselist"
   | "categorylist"
   | "workouts"
@@ -118,24 +123,11 @@ export type RouterTypes =
   | "plans"
   | "test";
 
-export type ShowType = {
-  showRouter: RouterTypes;
-};
-
-export type WorkoutRouterTypes =
-  | "home"
-  | "exerciseselection"
-  | "workoutdetail"
-  | "workoutexercisedetail";
-export type workoutShowType = {
-  showRouter: WorkoutRouterTypes;
-};
-
 export type Plan = {
   id: number;
   name: string;
   day?: number;
-}
+};
 
 export type PlanExercise = Plan & {
   exercise_id: number;
@@ -146,5 +138,5 @@ export type PlanExercise = Plan & {
   type: ExerciseArtType;
   metric: ExerciseMetricType;
   order: number;
-  categories: CategoryType[]
-}
+  categories: CategoryType[];
+};

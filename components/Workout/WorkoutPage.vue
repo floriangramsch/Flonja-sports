@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Button from "../ui/buttons/Button.vue";
 import type {
   ExerciseType,
-  WorkoutExerciseType,
-  WorkoutRouterTypes,
-  workoutShowType,
   WorkoutType,
 } from "~/utils/types";
 import Confirm from "../Dialogs/Confirm.vue";
@@ -14,6 +10,7 @@ import WorkoutExerciseDetail from "./WorkoutExerciseDetail.vue";
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 import BetterExerciseSelection from "./BetterExerciseSelection.vue";
 import UpdateExercise from "../Exercises/UpdateExercise.vue";
+import WorkoutRouter from "../Router/WorkoutRouter.vue";
 
 const props = defineProps<{
   exercises: ExerciseType[] | undefined;
@@ -26,10 +23,6 @@ const filterStore = useWorkoutExerciseFilterStore();
 const routerStore = useRouterStore();
 
 const showConfirmEndWorkout = ref<boolean>(false);
-
-const switchRouter = (route: WorkoutRouterTypes) => {
-  workoutShow.value.showRouter = route;
-};
 
 const { data: workoutExercises } = useWorkoutExercisesByWorkout(
   computed(() => props.workout?.workout_id),
@@ -59,16 +52,15 @@ const prevExercise = () => {
   }
 };
 
-// const workoutExToShow = ref<WorkoutExerciseType>();
 const wexToShow = useExToShowStore();
 
-const workoutShow = ref<workoutShowType>({
-  showRouter: loggedStore.logged.loggedWorkoutId
+routerStore.setWorkoutRoute(
+  loggedStore.logged.loggedWorkoutId
     ? wexToShow.wex?.workout_exercise_id
       ? "workoutexercisedetail"
       : "workoutdetail"
     : "home",
-});
+);
 
 const showLockerDialog = ref<boolean>(false);
 const newLocker = ref<number | undefined>(props.workout?.locker);
@@ -141,7 +133,7 @@ const addNewWorkoutExercise = (exercise_id: number) => {
                 metric: exercise?.metric,
               };
             }
-            workoutShow.value.showRouter = "workoutdetail";
+            routerStore.setWorkoutRoute("workoutdetail");
           }
         },
         onError: (e) => console.error(e),
@@ -164,35 +156,6 @@ watch(
 );
 
 watch(
-  () => loggedStore.logged,
-  (newVal) => {
-    if (newVal?.loggedWorkoutId) {
-      switchRouter("workoutdetail");
-    } else {
-      switchRouter("home");
-    }
-  },
-);
-
-watch(
-  () => loggedStore.logged.user,
-  () => {
-    if (!loggedStore.logged.loggedWorkoutId) {
-      switchRouter("home");
-    }
-  },
-);
-
-watch(
-  () => wexToShow.wex,
-  (newVal) => {
-    if (newVal) {
-      switchRouter("workoutexercisedetail");
-    }
-  },
-);
-
-watch(
   () => props.workout?.locker,
   (newVal) => {
     if (newVal) {
@@ -205,120 +168,109 @@ watch(
 </script>
 
 <template>
-  <SlideTransition>
-    <div v-if="workoutShow.showRouter === 'home'" class="absolute inset-0">
-      <Home @switch="switchRouter('workoutdetail')" />
-    </div>
-  </SlideTransition>
+  <WorkoutRouter route="home">
+    <Home />
+  </WorkoutRouter>
   <!-- Workout Exercises List -->
-  <SlideTransition>
-    <div
-      v-if="workoutShow.showRouter === 'workoutdetail'"
-      class="absolute inset-0"
-    >
-      <Header @right="showLockerDialog = true" rightIcon="fa-solid fa-lock">
-        Exercises
-        <template #left-pure>
-          <Confirm
-            v-model:isOpen="showConfirmEndWorkout"
-            @yes="endWorkout"
-            class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-            :disabled="workout?.end ? true : false"
-          >
-            <i
-              class="fa-solid fa-cat"
-              :class="workout?.end ? 'opacity-50' : ''"
-            />
-          </Confirm>
-        </template>
-      </Header>
-      <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
-        <div class="flex flex-col items-center justify-center gap-4">
-          <div class="flex gap-2">
-            <UiNumberInput
-              v-model:modelValue="newLocker"
-              label="Lockernummer"
-              :focus="!workout?.locker"
-            />
-          </div>
-          <Button @action="updateWorkout"> Done </Button>
+  <WorkoutRouter route="workoutdetail">
+    <Header @right="showLockerDialog = true" rightIcon="fa-solid fa-lock">
+      Exercises
+      <template #left-pure>
+        <Confirm
+          v-model:isOpen="showConfirmEndWorkout"
+          @yes="endWorkout"
+          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+          :disabled="workout?.end ? true : false"
+        >
+          <i
+            class="fa-solid fa-cat"
+            :class="workout?.end ? 'opacity-50' : ''"
+          />
+        </Confirm>
+      </template>
+    </Header>
+    <Dialog :isOpen="showLockerDialog" @close="showLockerDialog = false">
+      <div class="flex flex-col items-center justify-center gap-4">
+        <div class="flex gap-2">
+          <UiNumberInput
+            v-model:modelValue="newLocker"
+            label="Lockernummer"
+            :focus="!workout?.locker"
+          />
         </div>
-      </Dialog>
-      <UpdateExercise
-        v-if="categories"
-        ref="updateExerciseRef"
-        :categories="categories"
-      />
-      <div
-        v-if="workoutExercises?.length !== 0"
-        v-for="wex in workoutExercises"
-        class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
-        @click="
-          wexToShow.wex = wex;
-          workoutShow.showRouter = 'workoutexercisedetail';
+        <Button @action="updateWorkout"> Done </Button>
+      </div>
+    </Dialog>
+    <UpdateExercise
+      v-if="categories"
+      ref="updateExerciseRef"
+      :categories="categories"
+    />
+    <div
+      v-if="workoutExercises?.length !== 0"
+      v-for="wex in workoutExercises"
+      class="group relative flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker py-3"
+      @click="
+        wexToShow.wex = wex;
+        routerStore.setWorkoutRoute('workoutexercisedetail')
+      "
+    >
+      {{ wex.exercise_name }}
+      <button
+        class="ml-2"
+        @click.stop="
+          filterStore.setId(wex.exercise_id);
+          routerStore.setRoute('workoutexercises')
         "
       >
-        {{ wex.exercise_name }}
-        <button
-          class="ml-2"
-          @click.stop="
-            filterStore.setId(wex.exercise_id);
-            routerStore.route = 'workoutexercises';
-          "
-        >
-          <i class="fa-solid fa-chart-line text-sonja-fg" />
-        </button>
-        <button
-          class="ml-2"
-          @click.stop="
-            updateExerciseRef?.setForm({
-              exercise_name: wex.exercise_name,
-              exercise_id: wex.exercise_id,
-              categories: wex.categories.map((c) => c.id),
-              type: wex.type,
-              metric: wex.metric,
-            });
-            updateExerciseRef?.open();
-          "
-        >
-          <i class="fa-solid fa-edit text-sonja-text" />
-        </button>
-        <div class="absolute -top-1 right-auto z-0 flex gap-1">
-          <UiChip
-            v-for="category in wex.categories"
-            :content="category.name"
-            :type="category.type"
-            animated
-          />
-          <UiChip :content="wex.metric" type="metric" animated />
-          <UiChip :content="wex.type" type="exerciseType" animated />
-        </div>
-      </div>
-      <div v-else>
-        <div
-          class="flex h-20 w-full cursor-pointer items-center justify-center bg-sonja-bg-darker text-3xl font-bold"
-          @click="() => (isOpenExerciseSelection = true)"
-        >
-          Start Workout
-        </div>
-      </div>
+        <i class="fa-solid fa-chart-line text-sonja-fg" />
+      </button>
       <button
-        class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
+        class="ml-2"
+        @click.stop="
+          updateExerciseRef?.setForm({
+            exercise_name: wex.exercise_name,
+            exercise_id: wex.exercise_id,
+            categories: wex.categories.map((c) => c.id),
+            type: wex.type,
+            metric: wex.metric,
+          });
+          updateExerciseRef?.open();
+        "
+      >
+        <i class="fa-solid fa-edit text-sonja-text" />
+      </button>
+      <div class="absolute -top-1 right-auto z-0 flex gap-1">
+        <UiChip
+          v-for="category in wex.categories"
+          :content="category.name"
+          :type="category.type"
+          animated
+        />
+        <UiChip :content="wex.metric" type="metric" animated />
+        <UiChip :content="wex.type" type="exerciseType" animated />
+      </div>
+    </div>
+    <div v-else>
+      <div
+        class="flex h-20 w-full cursor-pointer items-center justify-center bg-sonja-bg-darker text-3xl font-bold"
         @click="() => (isOpenExerciseSelection = true)"
       >
-        <i class="fa-solid fa-plus text-5xl" />
-      </button>
+        Start Workout
+      </div>
     </div>
-  </SlideTransition>
+    <button
+      class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
+      @click="() => (isOpenExerciseSelection = true)"
+    >
+      <i class="fa-solid fa-plus text-5xl" />
+    </button>
+  </WorkoutRouter>
+
   <!-- Workout Exercise Detail -->
-  <SlideTransition>
+  <WorkoutRouter route="workoutexercisedetail">
     <WorkoutExerciseDetail
-      v-if="
-        workoutShow.showRouter === 'workoutexercisedetail' &&
-        workout?.start &&
-        workout.user_id &&
-        wexToShow.wex
-      "
+      v-if="workout?.start && workout.user_id && wexToShow.wex"
       :workout-info="{
         start: workout.start,
         user_id: workout.user_id,
@@ -329,15 +281,15 @@ watch(
           (e: ExerciseType) => e.exercise_id === wexToShow.wex?.exercise_id,
         )
       "
-      v-model:workout-show="workoutShow"
       @close="
         wexToShow.reset();
-        workoutShow.showRouter = 'workoutdetail';
+        routerStore.setWorkoutRoute('workoutdetail')
       "
       @next="nextExercise"
       @prev="prevExercise"
     />
-  </SlideTransition>
+  </WorkoutRouter>
+
   <BetterExerciseSelection
     v-if="
       isOpenExerciseSelection && workout?.workout_id && categories && exercises
