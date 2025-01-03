@@ -62,14 +62,14 @@ const handleSet = () => {
         {
           set_id: setIdToUpdate.value,
           weight: newWeight.value,
-          reps: newReps.value,
+          reps: newReps.value ?? 1,
         },
         {
           onSuccess: () => {
             showOldSets.value = false;
             showUpdateWorkoutExerciseDialog.value = false;
-            // newWeight.value = undefined;
-            newReps.value = undefined;
+            newReps.value = wexToShow.wex?.metric === "Time" ? 1 : undefined;
+            setIdToUpdate.value = undefined;
           },
         },
       );
@@ -79,13 +79,14 @@ const handleSet = () => {
           {
             workout_exercise_id: wexToShow.wex?.workout_exercise_id,
             weight: newWeight.value,
-            reps: newReps.value,
+            reps: newReps.value ?? 1,
           },
           {
             onSuccess: () => {
               showOldSets.value = false;
               showUpdateWorkoutExerciseDialog.value = false;
-              newReps.value = undefined;
+              newReps.value = wexToShow.wex?.metric === "Time" ? 1 : undefined;
+              setIdToUpdate.value = undefined;
             },
           },
         );
@@ -116,10 +117,22 @@ watch(
     }
   },
 );
+
+watch(
+  () => wexToShow.wex,
+  (newVal) => {
+    if (newVal) {
+      newReps.value = newVal.metric === "Time" ? 1 : undefined;
+      newWeight.value = undefined;
+      setIdToUpdate.value = undefined;
+    }
+  },
+);
 </script>
 
 <template>
   <div class="absolute inset-0 pb-52">
+    {{ setIdToUpdate }}
     <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">
       {{ wexToShow.wex?.exercise_name }}
       <template #right-pure>
