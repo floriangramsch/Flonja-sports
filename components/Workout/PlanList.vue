@@ -94,7 +94,7 @@ const addNewWorkoutExercise = (
       {
         onSuccess: () => {
           // routerStore.setWorkoutRoute('workoutexercisedetail')
-          routerStore.setRoute('workoutpage')
+          routerStore.setRoute("workoutpage");
         },
         onError: (e) => console.error(e),
       },
@@ -116,30 +116,28 @@ const isOrdered = computed(() => {
 });
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
-  if ((e.target as HTMLElement).tagName === "I") return;
-  dragTimeout.value = window.setTimeout(() => {
-    isDragging.value = true;
-    dragElement.value = element.closest(".draggable");
+  e.preventDefault()
+  isDragging.value = true;
+  dragElement.value = element.closest(".draggable");
 
-    document.body.style.overflow = "hidden";
-    window.addEventListener("touchmove", preventDefault, { passive: false });
-    window.addEventListener("scroll", preventDefault, { passive: false });
+  document.body.style.overflow = "hidden";
+  window.addEventListener("touchmove", preventDefault, { passive: false });
+  window.addEventListener("scroll", preventDefault, { passive: false });
 
-    const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-    const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
-    offsetX.value = clientX - element.getBoundingClientRect().left;
-    offsetY.value = clientY - element.getBoundingClientRect().top;
+  const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+  const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
+  offsetX.value = clientX - element.getBoundingClientRect().left;
+  offsetY.value = clientY - element.getBoundingClientRect().top;
 
-    // show line where the element can be put
-    if (dragElement.value) {
-      dragElement.value.style.visibility = "hidden";
-      const belowId = document
-        .elementFromPoint(clientX, clientY)
-        ?.closest(".draggable")?.id;
-      dragElement.value.style.visibility = "visible";
-      pos.value = Number(belowId) || -1;
-    }
-  }, 300);
+  // show line where the element can be put
+  if (dragElement.value) {
+    dragElement.value.style.visibility = "hidden";
+    const belowId = document
+      .elementFromPoint(clientX, clientY)
+      ?.closest(".draggable")?.id;
+    dragElement.value.style.visibility = "visible";
+    pos.value = Number(belowId) || -1;
+  }
 };
 
 const moveElement = (e: MouseEvent | TouchEvent) => {
@@ -247,23 +245,38 @@ watch(
 const updatePlanExerciseRef = ref<InstanceType<
   typeof UpdatePlanExercise
 > | null>(null);
+
+const isOpenId = ref<number>();
+const open = (id: number) => {
+  if (isOpenId.value === id) {
+    isOpenId.value = undefined;
+  } else {
+    isOpenId.value = id;
+  }
+};
 </script>
 
 <template>
   <div :class="{ 'border-t-2 border-sonja-akz': pos === -1 }">
     <div
       v-for="ex in data"
-      class="draggable ofer cursor-move p-1 py-3"
+      @click.stop="open(ex.id)"
+      class="draggable ofer p-1 py-3"
       :class="{
         'border-b-2 border-sonja-akz': ex.order === pos,
       }"
       :key="ex.order"
       :id="String(ex.order)"
-      @mousedown="startMoving($event, $event.target as HTMLElement)"
-      @touchstart="startMoving($event, $event.target as HTMLElement)"
     >
       <div v-if="ex.name" class="relative mr-2 flex flex-col justify-between">
         <div>
+          <i
+            class="fa-solid"
+            :class="{
+              'fa-caret-up': isOpenId === ex.id,
+              'fa-caret-down': isOpenId !== ex.id,
+            }"
+          />
           {{ ex.order }}. {{ ex.name }}
           <div class="absolute -top-4 right-auto z-0 flex gap-1">
             <UiChip
@@ -297,14 +310,22 @@ const updatePlanExerciseRef = ref<InstanceType<
               addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)
             "
           />
+          <i
+            @click.stop
+            @mousedown="startMoving($event, $event.target as HTMLElement)"
+            @touchstart="startMoving($event, $event.target as HTMLElement)"
+            class="fa-solid fa-up-down-left-right absolute right-2 cursor-move text-2xl"
+          />
         </div>
-        <div
-          class="ml-1 border-l-4 border-sonja-text pl-2"
-          v-if="ex.sets && ex.reps"
-        >
-          {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-          }}{{ ex.metric === "Time" ? "s" : "" }}
-        </div>
+        <transition name="expand">
+          <div
+            class="ml-1 border-l-4 border-sonja-text pl-2"
+            v-if="ex.sets && ex.reps && isOpenId === ex.id"
+          >
+            {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
+            }}{{ ex.metric === "Time" ? "s" : "" }}
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -345,3 +366,28 @@ const updatePlanExerciseRef = ref<InstanceType<
 
   <UpdatePlanExercise ref="updatePlanExerciseRef" />
 </template>
+
+<style scoped>
+.expand-enter-active,
+.expand-leave-active {
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+  transform-origin: top;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: scaleY(0);
+}
+
+.expand-enter-to,
+.expand-leave-from {
+  max-height: 1000px;
+  opacity: 1;
+  transform: scaleY(1);
+}
+</style>

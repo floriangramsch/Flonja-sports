@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Auth from './Auth/Auth.vue';
+
 const loggedStore = useLoggedStore()
 const routeStore = useRouterStore()
 
@@ -16,8 +18,12 @@ const addWorkout = () => {
         }
       },
     });
+  } else {
+    authRef.value?.openRegister()
   }
 };
+
+const authRef = ref<InstanceType<typeof Auth> | null>(null);
 </script>
 
 <template>
@@ -28,5 +34,6 @@ const addWorkout = () => {
     >
       Start
     </button>
+    <Auth ref="authRef" />
   </div>
 </template>
