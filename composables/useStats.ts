@@ -39,6 +39,30 @@ export function useGetStats() {
   });
 }
 
+export function useGetUserStats(
+  user: Ref<{ name?: string; id?: number } | undefined>,
+) {
+  return useQuery<UserStatsType>({
+    queryKey: computed(() => ["stats", user.value?.id]),
+    queryFn: async () => {
+      let response;
+      if (
+        user.value?.name === "Florian" ||
+        user.value?.name === "Sonja"
+      ) {
+        response = await fetch(`api/stats`);
+      } else {
+        response = await fetch(`api/stats?id=${user.value?.id}`);
+      }
+      if (!response.ok) {
+        throw new Error("Failed to fetch user stats");
+      }
+      return response.json();
+    },
+    enabled: computed(() => user.value?.id !== undefined),
+  });
+}
+
 export function useUpdateStats() {
   const client = useQueryClient();
   return useMutation({

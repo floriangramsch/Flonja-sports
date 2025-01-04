@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const token = jwt.sign({ id: user.user_id, username }, secret);
-    return {result: true, token}
+    return {result: true, token, id: user.user_id, username}
   } catch (error) {
     throw createError({ statusCode: 500, message: "Fehler beim Login." });
   }

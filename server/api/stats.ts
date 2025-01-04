@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         DELETE FROM Stats
         WHERE stats_id = ?
         `,
-        [stats_id]
+        [stats_id],
       );
       return rows;
     }
@@ -25,28 +25,57 @@ export default defineEventHandler(async (event) => {
         SET body_weight = ?,
         WHERE stats_id = ?;
         `,
-        [weight, stats_id]
+        [weight, stats_id],
       );
       return rows;
     }
     if (method === "GET") {
       const connection = await connect();
-      const [rows]: any[] = await connection.execute(
-        `
-          SELECT * FROM Stats s
-          LEFT JOIN User u ON u.user_id = s.user_id
-        `
-      );
-      const res: { Florian: any[]; Sonja: any[] } = {
-        Florian: [],
-        Sonja: [],
-      };
-      rows.forEach(
-        (element: { name: "Florian" | "Sonja"; [key: string]: any }) => {
-          res[element.name].push(element);
+
+      const { id } = await getQuery(event);
+      if (id) {
+        const [rows]: any[] = await connection.execute(
+          `
+            SELECT stats_id, u.user_id, body_weight, date, name FROM Stats s
+            LEFT JOIN User u ON u.user_id = s.user_id
+            WHERE u.user_id = ?
+          `,
+          [id],
+        );
+
+        if (rows.length === 0) {
+          throw new Error("Keine Daten gefunden");
         }
-      );
-      return res;
+
+        const dynamicName = rows[0].name;
+
+        const res: { [key: string]: any[] } = {
+          [dynamicName]: [],
+        };
+        rows.forEach((element: { name: string; [key: string]: any }) => {
+          res[element.name].push(element);
+        });
+        return res;
+      } else {
+        console.log('begor')
+        const [rows]: any[] = await connection.execute(
+          `
+            SELECT stats_id, u.user_id, body_weight, date, name FROM Stats s
+            LEFT JOIN User u ON u.user_id = s.user_id
+            WHERE u.name = 'Florian' OR u.name = 'Sonja'
+          `,
+        );
+        const res: { Florian: any[]; Sonja: any[] } = {
+          Florian: [],
+          Sonja: [],
+        };
+        rows.forEach(
+          (element: { name: "Florian" | "Sonja"; [key: string]: any }) => {
+            res[element.name].push(element);
+          },
+        );
+        return res;
+      }
     }
     if (method === "POST") {
       const { user_id, weight } = await readBody(event);
@@ -55,7 +84,7 @@ export default defineEventHandler(async (event) => {
         `
           INSERT INTO Stats (user_id, body_weight) Values (?, ?)
         `,
-        [user_id, weight]
+        [user_id, weight],
       );
 
       return rows;

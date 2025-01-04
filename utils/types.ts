@@ -112,6 +112,7 @@ export type StatsType = {
 };
 
 export type UserStatsType = {
+  [key: string]: StatsType[];
   Florian: StatsType[];
   Sonja: StatsType[];
 };

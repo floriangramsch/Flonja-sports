@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     if (method === "GET") {
       const connection = await connect();
 
-      const [rows] = await connection.execute("SELECT * FROM User");
+      const [rows] = await connection.execute("SELECT user_id, name, rest_time FROM User");
       return rows;
     }
     if (method === "PUT") {

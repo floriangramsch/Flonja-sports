@@ -13,7 +13,9 @@ const showList = ref<boolean>(false);
 const loggedStore = useLoggedStore();
 const routerStore = useRouterStore();
 
-const { data: stats } = useGetStats();
+const { data: stats } = useGetUserStats(
+  computed(() => loggedStore.logged.user),
+);
 const updateMutation = useUpdateStats();
 const deleteMutation = useDeleteStats();
 const addMutation = useAddStats();
@@ -111,12 +113,29 @@ watch(
       <!-- <Label :value="show(workout?.end)" label="End" /> -->
     </div>
     <ChartsBasicChart
-      v-if="stats"
+      v-if="
+        stats &&
+        (loggedStore.logged.user.name === 'Florian' ||
+          loggedStore.logged.user.name === 'Sonja')
+      "
       :dataFlorian="
         stats.Florian.map((stat: StatsType) => [stat.date, stat.body_weight])
       "
       :dataSonja="
         stats.Sonja.map((stat: StatsType) => [stat.date, stat.body_weight])
+      "
+    />
+    <ChartsBasicChart
+      v-else-if="
+        stats &&
+        loggedStore.logged.user.name &&
+        stats[loggedStore.logged.user.name]
+      "
+      :dataFlorian="
+        stats[loggedStore.logged.user.name].map((stat: StatsType) => [
+          stat.date,
+          stat.body_weight,
+        ])
       "
     />
 

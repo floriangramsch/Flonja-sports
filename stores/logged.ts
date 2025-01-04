@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 
 interface LoggedState {
@@ -28,7 +29,14 @@ export const useLoggedStore = defineStore("logged", {
   actions: {
     initializeLogged() {
       if (typeof window !== "undefined") {
-        useCheckLogin();
+        // const queryClient = useQueryClient()
+        // const existingData = queryClient.getQueryData(["isLogged"]);
+        // if (existingData) {
+        //   this.logged.isLogged = existingData.isLogged;
+        //   this.logged.user = existingData.user || {};
+        //   return;
+        // }
+        // useCheckLogin();
         const savedLogged = localStorage.getItem("logged");
         if (savedLogged) {
           this.logged = JSON.parse(savedLogged);

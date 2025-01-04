@@ -17,12 +17,31 @@ const emit = defineEmits<{
 }>();
 
 const client = useQueryClient();
+// const switchUser = () => {
+//   if (props.users && loggedStore) {
+//     const userIndex = props.users.findIndex(
+//       (user) => user.name === loggedStore.logged.user?.name,
+//     );
+//     const newIndex = userIndex + 1 < props.users.length ? userIndex + 1 : 0;
+//     loggedStore.logged.user = {
+//       id: props.users[newIndex].user_id,
+//       name: props.users[newIndex].name,
+//     };
+//     loggedStore.logged.isLogged = false;
+//     loggedStore.logged.loggedWorkoutId = undefined;
+//     loggedStore.toStorage();
+//     client.refetchQueries({ queryKey: ["plan"] });
+//   }
+// };
 const switchUser = () => {
   if (props.users && loggedStore) {
-    const userIndex = props.users.findIndex(
-      (user) => user.name === loggedStore.logged.user?.name,
-    );
-    const newIndex = userIndex + 1 < props.users.length ? userIndex + 1 : 0;
+    const userIndex = props.users.findIndex((user) => {
+      const nameToSearch =
+        loggedStore.logged.user?.name === "Florian" ? "Sonja" : "Florian";
+      return user.name === nameToSearch;
+    });
+    // const newIndex = userIndex + 1 < props.users.length ? userIndex + 1 : 0;
+    const newIndex = userIndex;
     loggedStore.logged.user = {
       id: props.users[newIndex].user_id,
       name: props.users[newIndex].name,
@@ -48,8 +67,16 @@ const userImage = computed(() => {
     class="sticky top-0 z-10 flex h-20 w-full items-center justify-between bg-sonja-text text-sonja-akz shadow mobile-landscape:hidden"
   >
     <!-- Profilepic -->
-    <!-- <div @click.prevent="switchUser" class="h-full w-16 cursor-pointer"> -->
-    <div class="h-full w-16">
+    <div
+      @click.prevent="
+        loggedStore.logged.user.name === 'Florian' ||
+        loggedStore.logged.user.name === 'Sonja'
+          ? switchUser()
+          : ''
+      "
+      class="h-full w-16 cursor-pointer"
+    >
+      <!-- <div class="h-full w-16"> -->
       <img
         :src="userImage"
         class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"
