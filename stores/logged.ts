@@ -4,10 +4,10 @@ interface LoggedState {
   logged: {
     isLogged: boolean;
     user: {
-      id: number | undefined;
-      name: string | undefined;
+      id?: number;
+      name?: string;
     };
-    loggedWorkoutId: number | undefined;
+    loggedWorkoutId?: number;
   };
 }
 
@@ -28,6 +28,7 @@ export const useLoggedStore = defineStore("logged", {
   actions: {
     initializeLogged() {
       if (typeof window !== "undefined") {
+        useCheckLogin();
         const savedLogged = localStorage.getItem("logged");
         if (savedLogged) {
           this.logged = JSON.parse(savedLogged);
@@ -41,8 +42,28 @@ export const useLoggedStore = defineStore("logged", {
           user: this.logged.user,
           loggedWorkoutId: undefined,
         };
-        localStorage.setItem("logged", JSON.stringify(this.logged));
+        this.toStorage();
       }
+    },
+    logoutComplete() {
+      if (typeof window !== "undefined") {
+        this.logged = {
+          isLogged: false,
+          user: {
+            id: undefined,
+            name: undefined,
+          },
+          loggedWorkoutId: undefined,
+        };
+        this.toStorage();
+      }
+    },
+    setUser(id: number, name: string) {
+      if (this.logged.user.id === id) return;
+      this.logout();
+      this.logged.user.id = id;
+      this.logged.user.name = name;
+      this.toStorage();
     },
     toStorage() {
       if (typeof window !== "undefined") {

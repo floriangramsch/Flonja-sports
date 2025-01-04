@@ -17,20 +17,52 @@
       v-if="isOpen"
       class="absolute right-14 top-10 flex flex-col rounded-md border-2 border-sonja-akz bg-sonja-text text-xl text-sonja-akz2 shadow-lg"
     >
-      <button class="px-4 py-2" @click.prevent="newWorkout">
-        Neues Training
-      </button>
+      <button class="px-4 py-2" @click.prevent="newWorkout">New Workout</button>
       <button class="px-4 py-2" @click.prevent="resumeWorkout">
-        Weiter trainieren
+        Resume Workout
+      </button>
+      <button
+        v-if="loggedStore.logged.user.id"
+        class="px-4 py-2"
+        @click.prevent="
+          isOpen = false;
+          loggedStore.logoutComplete()
+        "
+      >
+        Logout
+      </button>
+      <button
+        v-else
+        class="px-4 py-2"
+        @click.prevent="
+          isOpen = false;
+          authRef?.openLogin();
+        "
+      >
+        Login
+      </button>
+      <button
+        class="px-4 py-2"
+        @click.prevent="
+          isOpen = false;
+          authRef?.openRegister();
+        "
+      >
+        Register
       </button>
     </div>
   </Transition>
+  <Auth ref="authRef" />
 </template>
 
 <script setup lang="ts">
+import Auth from "../Auth/Auth.vue";
+
 const props = defineProps<{
   workouts: WorkoutType[] | undefined;
 }>();
+
+const authRef = ref<InstanceType<typeof Auth> | null>(null);
 
 const loggedStore = useLoggedStore();
 
@@ -47,7 +79,7 @@ const newWorkout = () => {
         user: loggedStore.logged?.user,
         loggedWorkoutId: data.workoutId,
       };
-      isOpen.value = false
+      isOpen.value = false;
     },
   });
 };

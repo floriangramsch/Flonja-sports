@@ -2,6 +2,20 @@
 const props = defineProps<{
   label?: string;
   focus?: boolean;
+  type?:
+    | "text"
+    | "password"
+    | "email"
+    | "number"
+    | "search"
+    | "tel"
+    | "url"
+    | "date"
+    | "datetime-local"
+    | "month"
+    | "week"
+    | "time"
+    | "color";
 }>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
@@ -31,6 +45,7 @@ onMounted(() => {
   <div class="relative">
     <input
       :id="labelId"
+      :type="type ?? 'default'"
       class="peer rounded bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
       v-model="model"
       placeholder=" "

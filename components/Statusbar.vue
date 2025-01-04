@@ -2,6 +2,7 @@
 import { useQueryClient } from "@tanstack/vue-query";
 import Start from "./Dialogs/Start.vue";
 import Timer from "./Timer/Timer.vue";
+import type Auth from "./Auth/Auth.vue";
 
 const props = defineProps<{
   users: UserType[] | undefined;
@@ -47,7 +48,8 @@ const userImage = computed(() => {
     class="sticky top-0 z-10 flex h-20 w-full items-center justify-between bg-sonja-text text-sonja-akz shadow mobile-landscape:hidden"
   >
     <!-- Profilepic -->
-    <div @click.prevent="switchUser" class="h-full w-16 cursor-pointer">
+    <!-- <div @click.prevent="switchUser" class="h-full w-16 cursor-pointer"> -->
+    <div class="h-full w-16">
       <img
         :src="userImage"
         class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"

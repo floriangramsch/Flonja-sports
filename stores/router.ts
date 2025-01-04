@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useRouterStore = defineStore('router', {
   state: () => ({
+    // route: "test",
     route: "workoutpage",
     workoutRoute: "home",
   }),
