@@ -45,17 +45,16 @@ const newStat = () => {
     // @ts-ignore
     if (statForm.value[key] === "") {
       // @ts-ignore
-      
+
       statForm.value[key] = undefined;
     }
   });
-  console.log(statForm.value)
+  console.log(statForm.value);
   if (
     loggedStore.logged.user?.id &&
     statForm.value &&
     Object.values(statForm.value).some((v) => v !== undefined)
   ) {
-    
     addMutation.mutate(
       {
         user_id: loggedStore.logged.user?.id,
@@ -154,6 +153,7 @@ watch(
           stat.body_weight,
         ])
       "
+      title="Weight"
     />
     <ChartsBasicChart
       v-else-if="
@@ -166,6 +166,7 @@ watch(
           (stat: StatsType) => [stat.date, stat.body_weight],
         )
       "
+      title="Weight"
     />
 
     <!-- Bauchumfang -->
@@ -187,6 +188,7 @@ watch(
           stat.bauchumfang,
         ])
       "
+      title="Bauchumfang"
     />
     <ChartsBasicChart
       v-else-if="
@@ -199,6 +201,7 @@ watch(
           (stat: StatsType) => [stat.date, stat.bauchumfang],
         )
       "
+      title="Bauchumfang"
     />
 
     <Dialog :isOpen="showNewStat" @close="showNewStat = false">

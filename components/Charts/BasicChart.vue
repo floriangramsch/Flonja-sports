@@ -15,6 +15,7 @@ import "chartjs-adapter-date-fns";
 const props = defineProps<{
   dataFlorian?: [string, number][]; // Datum und Wert für Florian
   dataSonja?: [string, number][]; // Datum und Wert für Sonja
+  title?: string;
 }>();
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null);
@@ -83,8 +84,8 @@ const createChart = () => {
         y: {
           beginAtZero: false,
           title: {
-            display: false,
-            text: "Weigth",
+            display: true,
+            text: props.title,
           },
         },
       },
