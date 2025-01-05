@@ -232,7 +232,7 @@ watch(
       class="opacity-0 transition-opacity duration-500 ease-in-out"
       :class="{ 'opacity-100': showList }"
     >
-      Flo
+      Flo (Bodyweight)
       <div v-for="stat in body_weight_stats?.Florian">
         {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
         <button
@@ -245,9 +245,35 @@ watch(
           <i class="fa-solid fa-close text-red-800" />
         </button>
       </div>
-      Sonja
+      Flo (Bauchumfang)
+      <div v-for="stat in bauchumfang_stats?.Florian">
+        {{ showTime(stat.date) }}: {{ stat.bauchumfang }} cm
+        <button
+          class="ml-2"
+          @click.stop="
+            statToDelete = Number(stat.stats_id);
+            showConfirmDeleteStat = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
+      </div>
+      Sonja (Bodyweight)
       <div v-for="stat in body_weight_stats?.Sonja">
         {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
+        <button
+          class="ml-2"
+          @click.stop="
+            statToDelete = Number(stat.stats_id);
+            showConfirmDeleteStat = true;
+          "
+        >
+          <i class="fa-solid fa-close text-red-800" />
+        </button>
+      </div>
+      Sonja (Bauchumfang)
+      <div v-for="stat in bauchumfang_stats?.Sonja">
+        {{ showTime(stat.date) }}: {{ stat.bauchumfang }} cm
         <button
           class="ml-2"
           @click.stop="
