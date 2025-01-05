@@ -107,9 +107,14 @@ export type StatsType = {
   stats_id: number;
   user_id: number;
   body_weight: number;
+  bauchumfang: number;
   date: string;
   name: string;
 };
+export type NewStatsType = {
+  body_weight?: number;
+  bauchumfang?: number;
+}
 
 export type UserStatsType = {
   [key: string]: StatsType[];

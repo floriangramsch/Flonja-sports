@@ -1,4 +1,5 @@
 import { defineEventHandler } from "h3";
+import { NewStatsType } from "~/utils/types";
 
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
@@ -57,7 +58,6 @@ export default defineEventHandler(async (event) => {
         });
         return res;
       } else {
-        console.log('begor')
         const [rows]: any[] = await connection.execute(
           `
             SELECT stats_id, u.user_id, body_weight, date, name FROM Stats s
@@ -78,15 +78,17 @@ export default defineEventHandler(async (event) => {
       }
     }
     if (method === "POST") {
-      const { user_id, weight } = await readBody(event);
+      const { user_id, form }: { user_id: number; form: NewStatsType } =
+        await readBody(event);
       const connection = await connect();
-      const [rows] = await connection.execute(
-        `
-          INSERT INTO Stats (user_id, body_weight) Values (?, ?)
-        `,
-        [user_id, weight],
-      );
-
+      const values = Object.keys(form);
+      const columns = values.join(", ");
+      const placeholders = values.map(() => "?").join(", ");
+      const sql = `
+        INSERT INTO Stats (user_id, ${columns}) VALUES (?, ${placeholders})
+      `;
+      const inputs = [user_id, ...Object.values(form)];
+      const [rows] = await connection.execute(sql, inputs);
       return rows;
     }
   } catch (error) {

@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { StatsType } from "~/utils/types";
+import type { NewStatsType } from "~/utils/types";
 
 export function useAddStats() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: async ({
       user_id,
-      weight,
+      form,
     }: {
       user_id: number;
-      weight: number;
+      form: NewStatsType;
     }) => {
       const response = await fetch("api/stats", {
         method: "POST",
@@ -18,7 +18,7 @@ export function useAddStats() {
         },
         body: JSON.stringify({
           user_id,
-          weight,
+          form,
         }),
       });
 
@@ -46,10 +46,7 @@ export function useGetUserStats(
     queryKey: computed(() => ["stats", user.value?.id]),
     queryFn: async () => {
       let response;
-      if (
-        user.value?.name === "Florian" ||
-        user.value?.name === "Sonja"
-      ) {
+      if (user.value?.name === "Florian" || user.value?.name === "Sonja") {
         response = await fetch(`api/stats`);
       } else {
         response = await fetch(`api/stats?id=${user.value?.id}`);

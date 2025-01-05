@@ -31,18 +31,26 @@ const deleteStat = () => {
 };
 
 const showNewStat = ref<boolean>(false);
-const newWeight = ref<number>();
+const statForm = ref<NewStatsType>({
+  body_weight: undefined,
+  bauchumfang: undefined,
+});
 const newStat = () => {
-  if (loggedStore.logged.user?.id && newWeight.value) {
+  if (
+    loggedStore.logged.user?.id &&
+    statForm.value &&
+    Object.values(statForm.value).some((v) => v !== undefined)
+  ) {
     addMutation.mutate(
       {
         user_id: loggedStore.logged.user?.id,
-        weight: newWeight.value,
+        form: statForm.value,
       },
       {
         onSuccess: () => {
           showNewStat.value = false;
-          newWeight.value = undefined;
+          statForm.value.body_weight = undefined;
+          statForm.value.bauchumfang = undefined;
         },
       },
     );
@@ -148,7 +156,17 @@ watch(
         </div>
       </template>
       <!-- <UiInputsTextinput v-model="newWeight" label="Weight" /> -->
-      <UiNumberInput class="mb-2" v-model="newWeight" label="Weight" />
+      <UiNumberInput
+        class="mb-2"
+        v-model="statForm.body_weight"
+        label="Weight"
+        focus
+      />
+      <UiNumberInput
+        class="mb-2"
+        v-model="statForm.bauchumfang"
+        label="Bauchumfang"
+      />
       <Button @action="newStat">New</Button>
     </Dialog>
 
