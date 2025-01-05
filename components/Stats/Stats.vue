@@ -13,8 +13,13 @@ const showList = ref<boolean>(false);
 const loggedStore = useLoggedStore();
 const routerStore = useRouterStore();
 
-const { data: stats } = useGetUserStats(
+const { data: body_weight_stats } = useGetUserStats(
   computed(() => loggedStore.logged.user),
+  "body_weight",
+);
+const { data: bauchumfang_stats } = useGetUserStats(
+  computed(() => loggedStore.logged.user),
+  "bauchumfang",
 );
 const updateMutation = useUpdateStats();
 const deleteMutation = useDeleteStats();
@@ -36,11 +41,21 @@ const statForm = ref<NewStatsType>({
   bauchumfang: undefined,
 });
 const newStat = () => {
+  Object.keys(statForm.value).forEach((key) => {
+    // @ts-ignore
+    if (statForm.value[key] === "") {
+      // @ts-ignore
+      
+      statForm.value[key] = undefined;
+    }
+  });
+  console.log(statForm.value)
   if (
     loggedStore.logged.user?.id &&
     statForm.value &&
     Object.values(statForm.value).some((v) => v !== undefined)
   ) {
+    
     addMutation.mutate(
       {
         user_id: loggedStore.logged.user?.id,
@@ -120,30 +135,69 @@ watch(
       />
       <!-- <Label :value="show(workout?.end)" label="End" /> -->
     </div>
+    <!-- Weight -->
     <ChartsBasicChart
       v-if="
-        stats &&
+        body_weight_stats &&
         (loggedStore.logged.user.name === 'Florian' ||
           loggedStore.logged.user.name === 'Sonja')
       "
       :dataFlorian="
-        stats.Florian.map((stat: StatsType) => [stat.date, stat.body_weight])
+        body_weight_stats.Florian.map((stat: StatsType) => [
+          stat.date,
+          stat.body_weight,
+        ])
       "
       :dataSonja="
-        stats.Sonja.map((stat: StatsType) => [stat.date, stat.body_weight])
+        body_weight_stats.Sonja.map((stat: StatsType) => [
+          stat.date,
+          stat.body_weight,
+        ])
       "
     />
     <ChartsBasicChart
       v-else-if="
-        stats &&
+        body_weight_stats &&
         loggedStore.logged.user.name &&
-        stats[loggedStore.logged.user.name]
+        body_weight_stats[loggedStore.logged.user.name]
       "
       :dataFlorian="
-        stats[loggedStore.logged.user.name].map((stat: StatsType) => [
+        body_weight_stats[loggedStore.logged.user.name].map(
+          (stat: StatsType) => [stat.date, stat.body_weight],
+        )
+      "
+    />
+
+    <!-- Bauchumfang -->
+    <ChartsBasicChart
+      v-if="
+        bauchumfang_stats &&
+        (loggedStore.logged.user.name === 'Florian' ||
+          loggedStore.logged.user.name === 'Sonja')
+      "
+      :dataFlorian="
+        bauchumfang_stats.Florian.map((stat: StatsType) => [
           stat.date,
-          stat.body_weight,
+          stat.bauchumfang,
         ])
+      "
+      :dataSonja="
+        bauchumfang_stats.Sonja.map((stat: StatsType) => [
+          stat.date,
+          stat.bauchumfang,
+        ])
+      "
+    />
+    <ChartsBasicChart
+      v-else-if="
+        bauchumfang_stats &&
+        loggedStore.logged.user.name &&
+        bauchumfang_stats[loggedStore.logged.user.name]
+      "
+      :dataFlorian="
+        bauchumfang_stats[loggedStore.logged.user.name].map(
+          (stat: StatsType) => [stat.date, stat.bauchumfang],
+        )
       "
     />
 
@@ -176,7 +230,7 @@ watch(
       :class="{ 'opacity-100': showList }"
     >
       Flo
-      <div v-for="stat in stats?.Florian">
+      <div v-for="stat in body_weight_stats?.Florian">
         {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
         <button
           class="ml-2"
@@ -189,7 +243,7 @@ watch(
         </button>
       </div>
       Sonja
-      <div v-for="stat in stats?.Sonja">
+      <div v-for="stat in body_weight_stats?.Sonja">
         {{ showTime(stat.date) }}: {{ stat.body_weight }} kg
         <button
           class="ml-2"

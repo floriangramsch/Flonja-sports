@@ -41,15 +41,16 @@ export function useGetStats() {
 
 export function useGetUserStats(
   user: Ref<{ name?: string; id?: number } | undefined>,
+  type: string,
 ) {
   return useQuery<UserStatsType>({
-    queryKey: computed(() => ["stats", user.value?.id]),
+    queryKey: computed(() => ["stats", user.value?.id, type]),
     queryFn: async () => {
       let response;
       if (user.value?.name === "Florian" || user.value?.name === "Sonja") {
-        response = await fetch(`api/stats`);
+        response = await fetch(`api/stats?type=${type}`);
       } else {
-        response = await fetch(`api/stats?id=${user.value?.id}`);
+        response = await fetch(`api/stats?id=${user.value?.id}&type=${type}`);
       }
       if (!response.ok) {
         throw new Error("Failed to fetch user stats");

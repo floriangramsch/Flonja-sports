@@ -33,25 +33,24 @@ export default defineEventHandler(async (event) => {
     if (method === "GET") {
       const connection = await connect();
 
-      const { id } = await getQuery(event);
+      const { id, type } = await getQuery(event);
       if (id) {
         const [rows]: any[] = await connection.execute(
           `
-            SELECT stats_id, u.user_id, body_weight, date, name FROM Stats s
+            SELECT stats_id, u.user_id, ${type}, date, name FROM Stats s
             LEFT JOIN User u ON u.user_id = s.user_id
             WHERE u.user_id = ?
+            AND ? IS NOT NULL AND ? != 0
           `,
-          [id],
+          [id, type, type],
         );
 
         if (rows.length === 0) {
           throw new Error("Keine Daten gefunden");
         }
 
-        const dynamicName = rows[0].name;
-
         const res: { [key: string]: any[] } = {
-          [dynamicName]: [],
+          [rows[0].name]: [],
         };
         rows.forEach((element: { name: string; [key: string]: any }) => {
           res[element.name].push(element);
@@ -60,9 +59,10 @@ export default defineEventHandler(async (event) => {
       } else {
         const [rows]: any[] = await connection.execute(
           `
-            SELECT stats_id, u.user_id, body_weight, date, name FROM Stats s
+            SELECT stats_id, u.user_id, ${type}, date, name FROM Stats s
             LEFT JOIN User u ON u.user_id = s.user_id
-            WHERE u.name = 'Florian' OR u.name = 'Sonja'
+            WHERE (u.name = 'Florian' OR u.name = 'Sonja')
+            AND ${type} IS NOT NULL AND ${type} != 0
           `,
         );
         const res: { Florian: any[]; Sonja: any[] } = {
