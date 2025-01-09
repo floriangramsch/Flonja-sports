@@ -178,7 +178,7 @@ onUnmounted(() => {
       <template v-slot:trigger>
         <div v-if="!startTime" @click="showAdjustRestTime = true">
           <!-- {{ formattedTime }} -->
-          <i class="fa-solid fa-clock text-xl" />
+          <i class="fa-solid fa-clock text-xl cursor-pointer" />
         </div>
       </template>
       <div class="flex w-full flex-col justify-center">

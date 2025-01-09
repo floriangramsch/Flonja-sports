@@ -33,6 +33,9 @@ const client = useQueryClient();
 //     client.refetchQueries({ queryKey: ["plan"] });
 //   }
 // };
+
+const wexToShow = useExToShowStore();
+
 const switchUser = () => {
   if (props.users && loggedStore) {
     const userIndex = props.users.findIndex((user) => {
@@ -49,6 +52,7 @@ const switchUser = () => {
     loggedStore.logged.isLogged = false;
     loggedStore.logged.loggedWorkoutId = undefined;
     loggedStore.toStorage();
+    wexToShow.reset()
     client.refetchQueries({ queryKey: ["plan"] });
   }
 };
@@ -74,7 +78,12 @@ const userImage = computed(() => {
           ? switchUser()
           : ''
       "
-      class="h-full w-16 cursor-pointer"
+      class="h-full w-16 flex items-center"
+      :class="{
+        'cursor-pointer':
+          loggedStore.logged.user.name === 'Florian' ||
+          loggedStore.logged.user.name === 'Sonja',
+      }"
     >
       <!-- <div class="h-full w-16"> -->
       <img

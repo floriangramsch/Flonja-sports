@@ -2,7 +2,6 @@
 import type {
   ExerciseType,
   MaybeWorkoutExercise,
-  WorkoutExerciseType,
   WorkoutRouterTypes,
   WorkoutType,
 } from "~/utils/types";

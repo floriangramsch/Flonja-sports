@@ -13,6 +13,7 @@ defineProps<{
 
 const loggedStore = useLoggedStore();
 const routerStore = useRouterStore();
+const wexToShow = useExToShowStore();
 
 const editWorkout = (workout: WorkoutType) => {
   loggedStore.logged = {
@@ -23,6 +24,7 @@ const editWorkout = (workout: WorkoutType) => {
     isLogged: true,
     loggedWorkoutId: workout.workout_id,
   };
+  wexToShow.reset()
   loggedStore.toStorage();
   routerStore.setRoute('workoutpage')
 };
