@@ -3,7 +3,7 @@ import useDeleteWorkout from "~/composables/Workouts/useDeleteWorkout";
 import Confirm from "../Dialogs/Confirm.vue";
 import Label from "../ui/label/Label.vue";
 import { showTime } from "~/utils/helpers";
-import Plan from "./Plan.vue";
+import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 
 defineProps<{
   workouts: WorkoutType[];
@@ -16,17 +16,22 @@ const routerStore = useRouterStore();
 const wexToShow = useExToShowStore();
 
 const editWorkout = (workout: WorkoutType) => {
-  loggedStore.logged = {
-    user: {
-      id: workout.user_id,
-      name: workout.name,
-    },
-    isLogged: true,
-    loggedWorkoutId: workout.workout_id,
-  };
-  wexToShow.reset()
-  loggedStore.toStorage();
-  routerStore.setRoute('workoutpage')
+  if (
+    loggedStore.logged.user.id === workout.user_id ||
+    loggedStore.logged.user.name === "Florian"
+  ) {
+    loggedStore.logged = {
+      user: {
+        id: workout.user_id,
+        name: workout.name,
+      },
+      isLogged: true,
+      loggedWorkoutId: workout.workout_id,
+    };
+    wexToShow.reset();
+    loggedStore.toStorage();
+    routerStore.setRoute("workoutpage");
+  }
 };
 
 const mutation = useDeleteWorkout();
@@ -46,6 +51,8 @@ const deleteWorkout = () => {
     });
   }
 };
+
+const userSelectionRef = ref<InstanceType<typeof UserSelectionHeader>>();
 </script>
 
 <template>
@@ -53,11 +60,18 @@ const deleteWorkout = () => {
     <Header @right="routerStore.setRoute('stats')" rightIcon="fa-solid fa-list">
       Workout List
     </Header>
+    <UserSelectionHeader ref="userSelectionRef" class="mb-3" />
     <!-- workout list -->
     <div
-      v-for="workout in workouts"
+      v-for="workout in workouts.filter((workout) => {
+        if (userSelectionRef?.selected === 0) return true;
+        else return userSelectionRef?.selected === workout.user_id;
+      })"
       @click="editWorkout(workout)"
-      class="flex min-w-full cursor-pointer snap-start flex-col p-2"
+      class="flex min-w-full snap-start flex-col p-2"
+      :class="{
+        'cursor-pointer': loggedStore.logged.user.id === workout.user_id,
+      }"
       :key="workout.workout_id"
     >
       <div class="flex">
