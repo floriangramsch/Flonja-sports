@@ -6,6 +6,7 @@ import FilterWrapper from "../Filter/FilterWrapper.vue";
 import NewExercise from "../Dialogs/NewExercise.vue";
 import FilterExercises from "../Filter/FilterExercises.vue";
 import Exercise from "./Exercise.vue";
+import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 
 defineProps<{
   categories: CategoryType[];
@@ -18,6 +19,8 @@ const routerStore = useRouterStore();
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
 const searchFilter = ref<string>("");
+
+const loggedStore = useLoggedStore();
 
 const { data: exerciseStats } = useExerciseStats();
 
@@ -36,7 +39,17 @@ const filteredExercises = computed(() => {
         category.name.toLowerCase().includes(searchFilter.value.toLowerCase()),
       );
 
-    return matchesCategoryFilter && matchesSearchFilter;
+    let userFilter;
+    if (userSelectionRef.value) {
+      userFilter =
+        userSelectionRef.value.selected === 0
+          ? true
+          : ex.user_id === userSelectionRef.value.selected;
+    } else {
+      userFilter = true;
+    }
+
+    return matchesCategoryFilter && matchesSearchFilter && userFilter;
   });
 });
 
@@ -87,6 +100,13 @@ const exerciseList = computed<ExerciseStatsType[][] | undefined>(() => {
 });
 
 const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
+const userSelectionRef = ref<InstanceType<typeof UserSelectionHeader>>();
+
+onMounted(() => {
+  if (userSelectionRef.value) {
+    userSelectionRef.value.selected = loggedStore.logged.user.id ?? 0;
+  }
+});
 </script>
 
 <template>
@@ -135,6 +155,9 @@ const filterWrapperComponent = ref<InstanceType<typeof Filter> | null>(null);
         />
       </Dialog>
     </FilterWrapper>
+
+    <UserSelectionHeader ref="userSelectionRef" class="mt-1" />
+
     <!-- Exercise List -->
     <div
       class="no-scrollbar flex snap-y snap-mandatory flex-col overflow-y-scroll bg-sonja-bg pt-4"
