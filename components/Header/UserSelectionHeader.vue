@@ -38,7 +38,7 @@ defineExpose({ selected });
     </button>
     <div
       ref="containerRef"
-      class="noscrollbar flex overflow-x-scroll text-base"
+      class="noscrollbar flex overflow-x-scroll text-base w-full"
       @scroll="checkScrollPosition"
     >
       <div
