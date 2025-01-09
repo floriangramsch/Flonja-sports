@@ -28,7 +28,7 @@ self.addEventListener("message", (event) => {
           400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200,
           200, 200,
         ],
-        requireInteraction: true,
+        requireInteraction: false,
       });
     }, delay);
   } else if (event.data.action === "interuptTimer") {

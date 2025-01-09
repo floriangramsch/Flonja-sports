@@ -64,6 +64,15 @@ const checkWex = (
 routerStore.setWorkoutRoute(
   loggedStore.logged.loggedWorkoutId ? checkWex(wexToShow.wex) : "home",
 );
+
+watch(
+  () => loggedStore.logged.loggedWorkoutId,
+  (newVal) => {
+    routerStore.setWorkoutRoute(
+      loggedStore.logged.loggedWorkoutId ? checkWex(wexToShow.wex) : "home",
+    );
+  },
+);
 </script>
 
 <template>
