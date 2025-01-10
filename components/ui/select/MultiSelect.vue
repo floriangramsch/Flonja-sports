@@ -8,6 +8,7 @@ defineProps<{
 const model = defineModel<number[]>();
 
 const isOpen = ref<boolean>(false);
+const close = () => (isOpen.value = false);
 
 const select = (id: number) => {
   const index = model.value?.indexOf(id);
@@ -25,7 +26,7 @@ const select = (id: number) => {
     <div
       :id="name"
       class="flex w-full gap-1 overflow-auto rounded-md bg-sonja-text p-2 text-sonja-akz2 focus:outline-none focus:ring-2 focus:ring-sonja-akz"
-      @click="isOpen = !isOpen"
+      @click="isOpen = true"
     >
       <div
         v-if="model && model.length !== 0"
@@ -44,9 +45,11 @@ const select = (id: number) => {
     </label>
 
     <!-- options -->
+    <!-- v-outside="close" -->
     <div
+      v-outside="close"
       v-if="isOpen"
-      class="absolute top-10 max-h-72 overflow-auto z-50 rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
+      class="absolute top-10 z-50 max-h-72 overflow-auto rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
     >
       <div
         v-for="opt in options"
