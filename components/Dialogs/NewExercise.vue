@@ -1,6 +1,6 @@
 <template>
   <div class="mb-2 flex flex-col gap-2">
-    <Textinput v-model="newExerciseName" label="Gerätename" />
+    <Textinput v-model="newExerciseName" label="Name..." />
     <Select
       v-if="categories"
       v-model="newExerciseCategoryId"
@@ -36,7 +36,7 @@
     />
   </div>
 
-  <Button @click="addNewExercise">Neue Gerät!</Button>
+  <Button @click="addNewExercise">New Exercise!</Button>
 </template>
 
 <script setup lang="ts">

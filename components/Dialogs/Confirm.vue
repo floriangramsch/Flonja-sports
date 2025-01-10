@@ -39,9 +39,12 @@ const handleOverlayClick = (e: MouseEvent) => {
     <div
       @click.stop
       ref="dialog"
-      class="fixed left-1/4 top-1/4 flex h-20 w-48 flex-col items-center justify-center rounded bg-sonja-bg p-12 py-14 text-sonja-text shadow"
+      class="fixed left-1/5 top-1/4 flex min-h-20 min-w-48 flex-col items-center justify-center rounded bg-sonja-bg px-3 py-6 text-sonja-text shadow"
     >
-      <div>Sure?</div>
+      <div v-if="!$slots['message']">Sure?</div>
+      <div v-else>
+        <slot name="message" />
+      </div>
       <div class="mt-2 flex gap-4">
         <Button @action="emit('yes')"> Yes </Button>
         <Button @action="isOpen = false"> No </Button>

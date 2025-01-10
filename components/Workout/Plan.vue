@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Confirm from "../Dialogs/Confirm.vue";
 import FilterWrapper from "../Filter/FilterWrapper.vue";
 import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 import Button from "../ui/buttons/Button.vue";
@@ -10,13 +11,9 @@ const props = defineProps<{
 
 const loggedStore = useLoggedStore();
 
-const showAllPlans = ref<boolean>(false);
+const showConfirmApply = ref<boolean>(false);
 
 const { data: plans } = usePlan();
-// const { data: plans } = useUserPlans(
-//   computed(() => logged.logged.user.id),
-//   computed(() => showAllPlans.value),
-// );
 
 const selectedPlan = usePlanStore();
 const { data: plan } = useGetPlan(computed(() => selectedPlan.plan?.id));
@@ -71,12 +68,13 @@ const getRightIcon = () => {
 const getRightFunction = () => {
   if (selectedPlan.plan && planListRef.value) {
     if (planListRef.value.isOrdered && props.workout) {
-      return planListRef?.value?.apply();
+      showConfirmApply.value = true;
     } else if (!planListRef.value.isOrdered) {
       return planListRef?.value?.update();
     }
+  } else {
+    return filterWrapperComponent.value?.toggle();
   }
-  return filterWrapperComponent.value?.toggle();
 };
 
 const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
@@ -100,10 +98,10 @@ onMounted(() => {
   >
     {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
   </Header>
-  <FilterWrapper ref="filterWrapperComponent" open>
-    <!-- <Button @action="showAllPlans = !showAllPlans">
-      {{ showAllPlans ? "Show Yours" : "Show All" }}
-    </Button> -->
+  <FilterWrapper
+    ref="filterWrapperComponent"
+    :open="selectedPlan.plan?.name ? false : true"
+  >
     <UserSelectionHeader ref="userSelectionRef" />
   </FilterWrapper>
 
@@ -149,4 +147,9 @@ onMounted(() => {
     </DialogsDialog>
   </div>
   <PlanList v-if="plan" ref="planListRef" :plan="plan" :workout="workout" />
+  <Confirm v-model:isOpen="showConfirmApply" @yes="planListRef?.apply()">
+    <template #message>
+      Sure to apply to your workout?
+    </template>
+  </Confirm>
 </template>
