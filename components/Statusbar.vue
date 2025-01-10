@@ -74,7 +74,7 @@ const userImage = computed(() => {
     <div
       @click.prevent="
         loggedStore.logged.user.name === 'Florian' ||
-        loggedStore.logged.user.name === 'Sonja' || true
+        loggedStore.logged.user.name === 'Sonja'
           ? switchUser()
           : ''
       "
