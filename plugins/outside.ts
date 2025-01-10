@@ -19,6 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       const handleClickOutside = (event: Event) => {
         if (el && !el.contains(event.target as Node)) {
+          // event.stopPropagation()
           binding.value(event); // Callback auslösen
         }
       };

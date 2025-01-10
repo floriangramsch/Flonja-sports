@@ -21,7 +21,7 @@
 
 .slide-fade-dropdown-enter-to,
 .slide-fade-dropdown-leave-from {
-  max-height: 1000px; /* Setzen Sie dies auf eine ausreichend große Höhe */
+  max-height: 300px;
   opacity: 1;
 }
 </style>
