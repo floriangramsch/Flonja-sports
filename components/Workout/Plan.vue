@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FilterWrapper from "../Filter/FilterWrapper.vue";
+import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 import Button from "../ui/buttons/Button.vue";
 import PlanList from "./PlanList.vue";
 
@@ -7,24 +8,26 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const logged = useLoggedStore();
+const loggedStore = useLoggedStore();
 
 const showAllPlans = ref<boolean>(false);
 
-const { data: plans } = useUserPlans(
-  computed(() => logged.logged.user.id),
-  computed(() => showAllPlans.value),
-);
+const { data: plans } = usePlan();
+// const { data: plans } = useUserPlans(
+//   computed(() => logged.logged.user.id),
+//   computed(() => showAllPlans.value),
+// );
+
 const selectedPlan = usePlanStore();
 const { data: plan } = useGetPlan(computed(() => selectedPlan.plan?.id));
 const addPlanMutation = useAddPlan();
 const addPlan = () => {
-  if (newPlanForm.value.name && logged.logged.user.id) {
+  if (newPlanForm.value.name && loggedStore.logged.user.id) {
     addPlanMutation.mutate(
       {
         name: newPlanForm.value.name,
         day: newPlanForm.value.day,
-        user_id: logged.logged.user.id,
+        user_id: loggedStore.logged.user.id,
       },
       {
         onSuccess: () => {
@@ -79,6 +82,14 @@ const getRightFunction = () => {
 const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
   null,
 );
+
+const userSelectionRef = ref<InstanceType<typeof UserSelectionHeader>>();
+
+onMounted(() => {
+  if (userSelectionRef.value) {
+    userSelectionRef.value.selected = loggedStore.logged.user.id ?? 0;
+  }
+});
 </script>
 <template>
   <Header
@@ -89,11 +100,13 @@ const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
   >
     {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
   </Header>
-  <FilterWrapper ref="filterWrapperComponent">
-    <Button @action="showAllPlans = !showAllPlans">
+  <FilterWrapper ref="filterWrapperComponent" open>
+    <!-- <Button @action="showAllPlans = !showAllPlans">
       {{ showAllPlans ? "Show Yours" : "Show All" }}
-    </Button>
+    </Button> -->
+    <UserSelectionHeader ref="userSelectionRef" />
   </FilterWrapper>
+
   <div v-if="!plan">
     <div
       class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
@@ -101,7 +114,10 @@ const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
         selectedPlan.setPlan(plan);
         filterWrapperComponent?.close();
       "
-      v-for="plan in plans"
+      v-for="plan in plans?.filter((plan) => {
+        if (userSelectionRef?.selected === 0) return true;
+        else return plan.user_id === userSelectionRef?.selected;
+      })"
     >
       {{ plan.name }}
       <button

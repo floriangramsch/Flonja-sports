@@ -4,15 +4,14 @@ import Filter from "../Filter/Filter.vue";
 import SlideTransition from "../ui/transitions/SlideTransition.vue";
 import WorkoutExercise from "./WorkoutExercise.vue";
 import type FilterWrapper from "../Filter/FilterWrapper.vue";
+import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 
-const props = defineProps<{
-  categories?: CategoryType[];
-}>();
 const exercises = defineModel<ExerciseType[]>();
 
 const { data: sets } = useGetSets();
 
 const filterStore = useWorkoutExerciseFilterStore();
+const loggedStore = useLoggedStore();
 const searchFilter = ref<string>("");
 
 const filtered = computed(() => {
@@ -24,7 +23,28 @@ const filtered = computed(() => {
     const matchesSearchFilter =
       searchFilter.value === "" ||
       ex.exercise_name.toLowerCase().includes(searchFilter.value.toLowerCase());
-    return matchesIdFilter && matchesSearchFilter;
+
+    // console.log('befor', ex);
+    // const filteredUsers = ex.users.filter((user) => {
+    //   return userSelectionRef.value?.selected === 0
+    //     ? true
+    //     : user.user_id === userSelectionRef.value?.selected;
+    // });
+    // console.log('after', ex)
+    // ex.users = filteredUsers;
+    let userFilter;
+    if (userSelectionRef.value) {
+      userFilter =
+        userSelectionRef.value.selected === 0
+          ? true
+          : ex.users.some(
+              (user) => user.user_id === userSelectionRef.value?.selected,
+            );
+    } else {
+      userFilter = true;
+    }
+    return matchesIdFilter && matchesSearchFilter && userFilter;
+    // return matchesIdFilter && matchesSearchFilter;
   });
 });
 
@@ -33,6 +53,14 @@ const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
 );
 
 const showLegacy = ref<boolean>(false);
+
+const userSelectionRef = ref<InstanceType<typeof UserSelectionHeader>>();
+
+onMounted(() => {
+  if (userSelectionRef.value) {
+    userSelectionRef.value.selected = loggedStore.logged.user.id ?? 0;
+  }
+});
 </script>
 
 <template>
@@ -46,22 +74,27 @@ const showLegacy = ref<boolean>(false);
       </Header>
 
       <FilterWrapper ref="filterWrapperComponent" open>
-        <Filter
-          :data="
-            exercises?.map((exercise: ExerciseType) => ({
-              id: exercise.exercise_id,
-              name: exercise.exercise_name,
-            }))
-          "
-          v-model="filterStore.ids"
-        />
-        <FilterExercises v-model="searchFilter" />
-        <button
-          class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
-          @click="showLegacy = !showLegacy"
-        >
-          <i class="fa-solid fa-barcode" />
-        </button>
+        <div class="flex flex-col">
+          <div class="flex max-w-full justify-evenly">
+            <Filter
+              :data="
+                exercises?.map((exercise: ExerciseType) => ({
+                  id: exercise.exercise_id,
+                  name: exercise.exercise_name,
+                }))
+              "
+              v-model="filterStore.ids"
+            />
+            <FilterExercises v-model="searchFilter" />
+            <button
+              class="flex h-10 items-center rounded-full bg-sonja-bg-darker px-4 text-sonja-text shadow"
+              @click="showLegacy = !showLegacy"
+            >
+              <i class="fa-solid fa-barcode" />
+            </button>
+          </div>
+          <UserSelectionHeader ref="userSelectionRef" class="mt-1" />
+        </div>
       </FilterWrapper>
 
       <!-- Workout_Exercise List -->
@@ -70,7 +103,12 @@ const showLegacy = ref<boolean>(false);
         class="p-1"
         :key="workout_exercise.exercise_id"
       >
-        <WorkoutExercise :wexercise="workout_exercise" :showLegacy />
+        <WorkoutExercise
+          v-if="userSelectionRef"
+          :wexercise="workout_exercise"
+          :showLegacy
+          :selectedUserId="userSelectionRef.selected"
+        />
       </div>
     </div>
   </SlideTransition>

@@ -68,6 +68,7 @@ export type SetType = {
 };
 export type DingensType = {
   user_name: string;
+  user_id: number;
   sets: SetType[];
 };
 export type SetHelperType = {
@@ -143,6 +144,7 @@ export type Plan = {
   id: number;
   name: string;
   day?: number;
+  user_id: number;
 };
 
 export type PlanExercise = Plan & {

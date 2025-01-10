@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
         // @ts-ignore
         const [rows] = await connection.execute<SetOriginalType[]>(
           `
-          SELECT weight, reps, e.exercise_id, e.name AS exercise_name, start, u.name AS user_name 
+          SELECT weight, reps, e.exercise_id, e.name AS exercise_name, start, u.name AS user_name, u.user_id 
           FROM Sets s
           LEFT JOIN Workout_Exercise we ON we.workout_exercise_id = s.workout_exercise_id
           LEFT JOIN Exercise e ON e.exercise_id = we.exercise_id
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
         `,
         );
         const groupedData = rows.reduce((acc: { [key: string]: any }, curr) => {
-          const { exercise_name, exercise_id, user_name, weight, reps } = curr;
+          const { exercise_name, exercise_id, user_name, user_id, weight, reps } = curr;
 
           // Wenn das Exercise-Objekt noch nicht existiert, füge es hinzu
           if (!acc[exercise_name]) {
@@ -56,11 +56,11 @@ export default defineEventHandler(async (event) => {
 
           // Wenn der User noch nicht existiert, füge ihn hinzu
           if (!acc[exercise_name].users[user_name]) {
-            acc[exercise_name].users[user_name] = [];
+            acc[exercise_name].users[user_name] = { user_id, sets: [] };
           }
 
           // Füge das Set (weight, reps) für den User hinzu
-          acc[exercise_name].users[user_name].push({
+          acc[exercise_name].users[user_name].sets.push({
             weight,
             reps,
             start: curr.start,
@@ -74,9 +74,10 @@ export default defineEventHandler(async (event) => {
           const { exercise_id, users } = groupedData[exercise_name];
 
           // Umwandlung der User-Daten
-          const userArray = Object.keys(users).map((user) => ({
-            user_name: user,
-            sets: users[user],
+          const userArray = Object.keys(users).map((user_name) => ({
+            user_name,
+            user_id: users[user_name].user_id,
+            sets: users[user_name].sets,
           }));
 
           return {

@@ -2,6 +2,7 @@
 defineProps<{
   wexercise: SetHelperType;
   showLegacy: boolean;
+  selectedUserId: number;
 }>();
 
 const showChart = ref<boolean>(false);
@@ -23,7 +24,13 @@ const showChart = ref<boolean>(false);
       v-show="showChart"
       class="overflow-hidden border-l-4 border-sonja-text pl-2"
     >
-      <div v-for="user in wexercise.users" class="flex flex-wrap">
+      <div
+        v-for="user in wexercise.users.filter((user) => {
+          if (selectedUserId === 0) return true;
+          else return user.user_id === selectedUserId;
+        })"
+        class="flex flex-wrap"
+      >
         <ChartsExerciseChart :user="user.user_name" :data="user.sets" />
         <div v-if="showLegacy" v-for="(set, index) in user.sets" class="flex">
           <div class="mx-2 flex">

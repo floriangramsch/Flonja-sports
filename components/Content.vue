@@ -21,7 +21,7 @@ const router = useRouterStore()
   >
     <Test v-route="'test'" />
     <Router route="workoutexercises">
-      <WorkoutExerciseOverview :categories="categories" v-model="exercises" />
+      <WorkoutExerciseOverview v-model="exercises" />
     </Router>
 
     <Router route="plans">
