@@ -72,19 +72,22 @@ export default defineEventHandler(async (event) => {
       return rows;
     }
     if (method === "POST") {
-      const { name, category_id, type, metric } = await readBody(event);
+      const { name, category_ids, type, metric } = await readBody(event);
 
       const response = await query(
         connection,
         `INSERT INTO Exercise (name, type, metric) VALUES (?, ?, ?)`,
         [name, type, metric],
       );
-      const response2 = await query(
-        connection,
-        `INSERT INTO Exercise_Category (exercise_id, category_id) VALUES (?, ?)`,
-        [response.insertId, category_id],
-      );
-      return response2;
+      
+      for (const category_id of category_ids) {
+        await query(
+          connection,
+          `INSERT INTO Exercise_Category (exercise_id, category_id) VALUES (?, ?)`,
+          [response.insertId, category_id],
+        );
+      }
+      return response;
     }
   } catch (error) {
     console.error(error);

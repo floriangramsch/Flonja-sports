@@ -29,7 +29,7 @@ export const useAddExercise = () => {
   return useMutation({
     mutationFn: async (newEx: {
       name: string;
-      category_id: number;
+      category_ids: number[];
       type: ExerciseArtType;
       metric: ExerciseMetricType;
     }) => {

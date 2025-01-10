@@ -8,7 +8,21 @@ defineProps<{
 const model = defineModel<number[]>();
 
 const isOpen = ref<boolean>(false);
-const close = () => (isOpen.value = false);
+const toggle = () => {
+  isOpen.value = !isOpen.value;
+};
+// const close = () => (isOpen.value = false);
+const close = (event?: MouseEvent) => {
+  if (
+    event &&
+    event.target &&
+    (event.target as HTMLElement).closest(".dropdown-trigger")
+  ) {
+    return;
+  }
+  console.log('close')
+  isOpen.value = false;
+};
 
 const select = (id: number) => {
   const index = model.value?.indexOf(id);
@@ -25,8 +39,8 @@ const select = (id: number) => {
   <div class="relative">
     <div
       :id="name"
-      class="flex w-full gap-1 overflow-auto rounded-md bg-sonja-text p-2 text-sonja-akz2 focus:outline-none focus:ring-2 focus:ring-sonja-akz"
-      @click="isOpen = true"
+      class="dropdown-trigger flex w-full gap-1 overflow-auto rounded-md bg-sonja-text p-2 text-sonja-akz2 focus:outline-none focus:ring-2 focus:ring-sonja-akz"
+      @click.stop="toggle"
     >
       <div
         v-if="model && model.length !== 0"
@@ -45,11 +59,10 @@ const select = (id: number) => {
     </label>
 
     <!-- options -->
-    <!-- v-outside="close" -->
     <div
       v-outside="close"
       v-if="isOpen"
-      class="absolute top-10 z-50 max-h-72 overflow-auto rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
+      class="absolute top-10 z-50 mt-1 max-h-72 overflow-auto rounded bg-sonja-fg py-2 text-sonja-akz2 shadow"
     >
       <div
         v-for="opt in options"
