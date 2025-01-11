@@ -57,11 +57,20 @@ const removeSet = (id: number) => {
 
 const handleSet = () => {
   if (newWeight.value !== undefined && newReps.value !== undefined) {
+    let totalSeconds;
+    if (typeof newWeight.value === "string") {
+      const [minutes, seconds] = newWeight.value.toString().split(":");
+      const minutesConverted = Number(minutes);
+      const secondsConverted = Number(seconds);
+      totalSeconds = 60 * minutesConverted + secondsConverted;
+    }
+    const resultSeconds =
+      totalSeconds !== undefined ? totalSeconds : newWeight.value;
     if (setIdToUpdate.value) {
       updateSetMutaiton.mutate(
         {
           set_id: setIdToUpdate.value,
-          weight: newWeight.value,
+          weight: Number(resultSeconds),
           reps: newReps.value ?? 1,
         },
         {
@@ -78,7 +87,7 @@ const handleSet = () => {
         addSetMutation.mutate(
           {
             workout_exercise_id: wexToShow.wex?.workout_exercise_id,
-            weight: newWeight.value,
+            weight: Number(resultSeconds),
             reps: newReps.value ?? 1,
           },
           {
@@ -102,11 +111,17 @@ const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.exercise?.info);
 
-const newWeight = ref<number>();
+const newWeight = ref<number | string>();
 const newReps = ref<number | undefined>(
   wexToShow.wex?.metric === "Time" ? 1 : undefined,
 );
 const setIdToUpdate = ref<number>();
+
+const convertToTime = (time: number) => {
+  const minutes = Math.floor(time / 60)
+  const seconds = time % 60
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+};
 
 watch(
   () => sets.value,
@@ -189,8 +204,9 @@ watch(
             Reps: {{ set.reps }}
           </div>
           <div>
-            {{ wexToShow.wex?.metric }}: {{ set.weight
-            }}{{ wexToShow.wex?.metric === "Time" ? "s" : " kg" }}
+            {{ wexToShow.wex?.metric }}:
+            {{ wexToShow.wex?.metric === "Time" ? convertToTime(set.weight) : set.weight }}
+            {{ wexToShow.wex?.metric === "Time" ? "s" : " kg" }}
           </div>
         </button>
 
@@ -269,7 +285,14 @@ watch(
             label="Reps"
             :focus="wexToShow.wex?.metric === 'Weight'"
           />
+
           <UiNumberInput
+            v-if="wexToShow.wex?.metric !== 'Time'"
+            v-model:modelValue="newWeight"
+            label="Weight"
+          />
+          <UiTimeInput
+            v-else
             v-model:modelValue="newWeight"
             :label="wexToShow.wex?.metric"
             :focus="wexToShow.wex?.metric === 'Time'"

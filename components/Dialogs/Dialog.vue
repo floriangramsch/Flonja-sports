@@ -9,8 +9,9 @@
       <div
         @click.stop
         ref="dialog"
-        class="absolute top-[15%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md max-h-[80%] "
-        :style="{width: w}"
+        class="absolute top-[15%] max-h-[80%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md"
+        :class="{ 'overflow-scroll': overflowScroll ? true : false }"
+        :style="{ width: w }"
       >
         <slot />
       </div>
@@ -22,12 +23,16 @@
 defineProps({
   isOpen: {
     type: Boolean,
-    required: true
+    required: true,
   },
   w: {
     type: String,
-    default: '20rem'
-  }
+    default: "20rem",
+  },
+  overflowScroll: {
+    type: Boolean,
+    required: false,
+  },
 });
 
 const emit = defineEmits<{

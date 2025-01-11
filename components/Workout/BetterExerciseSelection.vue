@@ -65,6 +65,7 @@ const exerciseSelectionRef =
         <Dialog
           :isOpen="showDialogCategory"
           @close="showDialogCategory = false"
+          overflowScroll
         >
           <template v-slot:trigger>
             <div
@@ -115,6 +116,7 @@ const exerciseSelectionRef =
         <Dialog
           :isOpen="showDialogExercise"
           @close="showDialogExercise = false"
+          overflowScroll
         >
           <template v-slot:trigger>
             <Button @action="showDialogExercise = true"> New Exercise </Button>
