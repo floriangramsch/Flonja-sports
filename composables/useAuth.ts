@@ -40,7 +40,6 @@ export const useCheckLogin = () => {
   return useQuery({
     queryKey: ["isLogged"],
     queryFn: async () => {
-      console.log("test");
       const token = localStorage.getItem("fitty_token");
       if (!token) return false;
       const res = await fetch("/api/auth/checkLogin", {

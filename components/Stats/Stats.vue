@@ -49,7 +49,6 @@ const newStat = () => {
       statForm.value[key] = undefined;
     }
   });
-  console.log(statForm.value);
   if (
     loggedStore.logged.user?.id &&
     statForm.value &&

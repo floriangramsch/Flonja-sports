@@ -44,7 +44,7 @@ const exerciseSelectionRef =
 </script>
 
 <template>
-  <Dialog :isOpen @close="$emit('close')" w="24rem">
+  <Dialog :isOpen overflowScroll @close="$emit('close')" w="24rem">
     <!-- category Selection -->
     <div v-if="showCategoryOverview">
       <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">
@@ -65,7 +65,6 @@ const exerciseSelectionRef =
         <Dialog
           :isOpen="showDialogCategory"
           @close="showDialogCategory = false"
-          overflowScroll
         >
           <template v-slot:trigger>
             <div
@@ -116,7 +115,6 @@ const exerciseSelectionRef =
         <Dialog
           :isOpen="showDialogExercise"
           @close="showDialogExercise = false"
-          overflowScroll
         >
           <template v-slot:trigger>
             <Button @action="showDialogExercise = true"> New Exercise </Button>

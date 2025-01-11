@@ -20,7 +20,6 @@ const close = (event?: MouseEvent) => {
   ) {
     return;
   }
-  console.log('close')
   isOpen.value = false;
 };
 

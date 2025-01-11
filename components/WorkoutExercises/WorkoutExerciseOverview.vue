@@ -24,14 +24,6 @@ const filtered = computed(() => {
       searchFilter.value === "" ||
       ex.exercise_name.toLowerCase().includes(searchFilter.value.toLowerCase());
 
-    // console.log('befor', ex);
-    // const filteredUsers = ex.users.filter((user) => {
-    //   return userSelectionRef.value?.selected === 0
-    //     ? true
-    //     : user.user_id === userSelectionRef.value?.selected;
-    // });
-    // console.log('after', ex)
-    // ex.users = filteredUsers;
     let userFilter;
     if (userSelectionRef.value) {
       userFilter =

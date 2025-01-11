@@ -6,13 +6,17 @@
       v-if="isOpen"
       class="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 text-xl"
     >
+      {{ overflowScroll ? "y" : "n" }}
       <div
         @click.stop
         ref="dialog"
-        class="absolute top-[15%] max-h-[80%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md"
-        :class="{ 'overflow-scroll': overflowScroll ? true : false }"
+        :class="[
+          'absolute top-[15%] max-h-[80%] rounded bg-sonja-bg p-4 text-sonja-text shadow-md',
+          { 'overflow-scroll': overflowScroll },
+        ]"
         :style="{ width: w }"
       >
+        <!-- :class="{ 'overflow-scroll': overflowScroll ? true : false }" -->
         <slot />
       </div>
     </div>
@@ -20,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   isOpen: {
     type: Boolean,
     required: true,
