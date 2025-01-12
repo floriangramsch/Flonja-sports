@@ -56,7 +56,10 @@ const removeSet = (id: number) => {
 };
 
 const handleSet = () => {
-  if (newWeight.value !== undefined && newReps.value !== undefined) {
+  if (
+    newWeight.value !== undefined &&
+    (newReps.value !== undefined || wexToShow.wex?.metric === "Time")
+  ) {
     let totalSeconds;
     if (typeof newWeight.value === "string") {
       const [minutes, seconds] = newWeight.value.toString().split(":");
@@ -118,9 +121,9 @@ const newReps = ref<number | undefined>(
 const setIdToUpdate = ref<number>();
 
 const convertToTime = (time: number) => {
-  const minutes = Math.floor(time / 60)
-  const seconds = time % 60
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
 
 watch(
@@ -147,7 +150,6 @@ watch(
 
 <template>
   <div class="absolute inset-0 pb-52">
-    {{ setIdToUpdate }}
     <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">
       {{ wexToShow.wex?.exercise_name }}
       <template #right-pure>
@@ -200,13 +202,23 @@ watch(
           "
           class="flex flex-col items-start"
         >
-          <div v-if="wexToShow.wex?.metric !== 'Time'">
-            Reps: {{ set.reps }}
+          <div
+            v-if="wexToShow.wex?.metric !== 'Time'"
+            class="flex items-center gap-2"
+          >
+            Reps
+            <i class="fa-solid fa-arrow-right" />
+            {{ set.reps }}
           </div>
-          <div>
-            {{ wexToShow.wex?.metric }}:
-            {{ wexToShow.wex?.metric === "Time" ? convertToTime(set.weight) : set.weight }}
-            {{ wexToShow.wex?.metric === "Time" ? "s" : " kg" }}
+          <div class="flex items-center gap-2">
+            {{ wexToShow.wex?.metric }}
+            <i class="fa-solid fa-arrow-right" />
+            {{
+              wexToShow.wex?.metric === "Time"
+                ? convertToTime(set.weight)
+                : set.weight
+            }}
+            {{ wexToShow.wex?.metric === "Time" ? "min" : " kg" }}
           </div>
         </button>
 
@@ -227,12 +239,23 @@ watch(
         class="m-2 flex justify-between rounded-lg border-b-2 bg-sonja-text p-2 pr-6 text-sonja-akz2"
       >
         <div class="flex flex-col">
-          <div v-if="wexToShow.wex?.metric !== 'Time'">
-            Reps: {{ set.reps }}
+          <div
+            v-if="wexToShow.wex?.metric !== 'Time'"
+            class="flex items-center gap-2"
+          >
+            Reps
+            <i class="fa-solid fa-arrow-right" />
+            {{ set.reps }}
           </div>
-          <div>
-            {{ wexToShow.wex?.metric }}: {{ set.weight }}
-            {{ wexToShow.wex?.metric === "Weight" ? " kg" : "s" }}
+          <div class="flex items-center gap-2">
+            {{ wexToShow.wex?.metric }}
+            <i class="fa-solid fa-arrow-right" />
+            {{
+              wexToShow.wex?.metric === "Time"
+                ? convertToTime(set.weight)
+                : set.weight
+            }}
+            {{ wexToShow.wex?.metric === "Time" ? "min" : " kg" }}
           </div>
         </div>
       </div>
@@ -264,7 +287,7 @@ watch(
       @close="
         {
           showUpdateWorkoutExerciseDialog = false;
-          newReps = undefined;
+          newReps = wexToShow.wex?.metric === 'Time' ? 1 : undefined;
           newWeight = undefined;
           setIdToUpdate = undefined;
         }

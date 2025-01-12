@@ -27,6 +27,7 @@ watch(
 );
 
 onMounted(() => {
+  newValue.value = "00:00"
   if (props.focus && inputRef.value) {
     inputRef.value.focus();
   }
@@ -39,7 +40,6 @@ onMounted(() => {
       :id="labelId"
       v-model="newValue"
       type="time"
-      value="00:00"
       class="remove-arrow peer h-12 w-32 rounded bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
       ref="inputRef"
       :placeholder="placeholder ?? ' '"

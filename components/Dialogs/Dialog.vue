@@ -6,7 +6,6 @@
       v-if="isOpen"
       class="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 text-xl"
     >
-      {{ overflowScroll ? "y" : "n" }}
       <div
         @click.stop
         ref="dialog"
