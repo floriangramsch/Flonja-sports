@@ -117,6 +117,7 @@ watch(
     >
       Stats
     </Header>
+    <FileUpload v-if="loggedStore.logged.user.name" />
     <!-- Stats -->
     <div v-if="workout" class="mb-2 flex w-full flex-col items-center gap-3">
       <!-- <div>Locker: {{ workout?.locker }}</div> -->

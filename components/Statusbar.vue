@@ -17,22 +17,6 @@ const emit = defineEmits<{
 }>();
 
 const client = useQueryClient();
-// const switchUser = () => {
-//   if (props.users && loggedStore) {
-//     const userIndex = props.users.findIndex(
-//       (user) => user.name === loggedStore.logged.user?.name,
-//     );
-//     const newIndex = userIndex + 1 < props.users.length ? userIndex + 1 : 0;
-//     loggedStore.logged.user = {
-//       id: props.users[newIndex].user_id,
-//       name: props.users[newIndex].name,
-//     };
-//     loggedStore.logged.isLogged = false;
-//     loggedStore.logged.loggedWorkoutId = undefined;
-//     loggedStore.toStorage();
-//     client.refetchQueries({ queryKey: ["plan"] });
-//   }
-// };
 
 const wexToShow = useExToShowStore();
 
@@ -43,7 +27,6 @@ const switchUser = () => {
         loggedStore.logged.user?.name === "Florian" ? "Sonja" : "Florian";
       return user.name === nameToSearch;
     });
-    // const newIndex = userIndex + 1 < props.users.length ? userIndex + 1 : 0;
     const newIndex = userIndex;
     loggedStore.logged.user = {
       id: props.users[newIndex].user_id,
@@ -52,18 +35,14 @@ const switchUser = () => {
     loggedStore.logged.isLogged = false;
     loggedStore.logged.loggedWorkoutId = undefined;
     loggedStore.toStorage();
-    wexToShow.reset()
+    wexToShow.reset();
     client.refetchQueries({ queryKey: ["plan"] });
   }
 };
 
-const userImage = computed(() => {
-  const userName = loggedStore.logged.user?.name;
-  if (userName) {
-    return new URL(`../public/user/${userName}.jpg`, import.meta.url).href;
-  }
-  return new URL(`../public/user/cat.png`, import.meta.url).href;
-});
+const { data: userImage } = useFile(
+  computed(() => loggedStore.logged.user?.name),
+);
 </script>
 
 <template>
@@ -72,13 +51,14 @@ const userImage = computed(() => {
   >
     <!-- Profilepic -->
     <div
+      v-if="loggedStore.logged.user.id"
       @click.prevent="
         loggedStore.logged.user.name === 'Florian' ||
         loggedStore.logged.user.name === 'Sonja'
           ? switchUser()
           : ''
       "
-      class="h-full w-16 flex items-center"
+      class="flex h-full w-16 items-center"
       :class="{
         'cursor-pointer':
           loggedStore.logged.user.name === 'Florian' ||
@@ -92,6 +72,7 @@ const userImage = computed(() => {
         alt="no Img"
       />
     </div>
+    <div v-else />
     <!-- Status -->
     <h1
       v-if="loggedStore.logged.user"

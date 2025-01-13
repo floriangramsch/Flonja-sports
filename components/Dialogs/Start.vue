@@ -14,6 +14,7 @@
   </button>
   <Transition name="slide-fade-dropdown">
     <div
+      v-outside="() => isOpen = false "
       v-if="isOpen"
       class="absolute right-14 top-10 flex flex-col rounded-md border-2 border-sonja-akz bg-sonja-text text-xl text-sonja-akz2 shadow-lg"
     >
