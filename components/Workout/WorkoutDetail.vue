@@ -183,6 +183,7 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
   >
     <i class="fa-solid fa-plus text-5xl" />
   </button>
+  
 
   <BetterExerciseSelection
     v-if="

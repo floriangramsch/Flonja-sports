@@ -48,8 +48,9 @@ function onFileSelected(event: Event) {
 </script>
 
 <template>
-  <SmallButton class="ml-4" @action="isOpen = true">
-    <i class="fa-solid fa-image" />
+  <SmallButton class="ml-4 mb-3" @action="isOpen = true">
+    <!-- <i class="fa-solid fa-image" /> -->
+     New Profilepicture
   </SmallButton>
   <Dialog
     :isOpen

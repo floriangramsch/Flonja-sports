@@ -43,6 +43,7 @@
         Login
       </button>
       <button
+        v-if="!loggedStore.logged.user.id"
         class="px-4 py-2"
         @click.prevent="
           isOpen = false;
@@ -107,7 +108,6 @@ const resumeWorkout = () => {
   }
 };
 
-// Funktion zum Ausloggen
 const logout = () => {
   loggedStore.logout();
   isOpen.value = false;

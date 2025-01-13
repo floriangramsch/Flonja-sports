@@ -116,7 +116,7 @@ const isOrdered = computed(() => {
 });
 
 const startMoving = (e: MouseEvent | TouchEvent, element: HTMLElement) => {
-  e.preventDefault()
+  e.preventDefault();
   isDragging.value = true;
   dragElement.value = element.closest(".draggable");
 
@@ -286,26 +286,7 @@ const open = (id: number) => {
             />
           </div>
           <i
-            class="fa-solid fa-edit cursor-pointer text-xl"
-            @click.stop="
-              updatePlanExerciseRef?.setForm({
-                plan_id: ex.id,
-                name: ex.name,
-                sets: ex.sets,
-                reps: ex.reps,
-                reps_to: ex.reps_to,
-              })
-            "
-          />
-          <i
-            class="fa-solid fa-close ml-2 cursor-pointer text-red-800"
-            @click.stop="
-              confirmDeleteEx = true;
-              toDeleteExId = Number(ex.id);
-            "
-          />
-          <i
-            class="fa-solid fa-check ml-2 cursor-pointer"
+            class="fa-solid fa-check cursor-pointer"
             @click.stop="
               addNewWorkoutExercise(props.workout?.workout_id, ex.exercise_id)
             "
@@ -318,12 +299,36 @@ const open = (id: number) => {
           />
         </div>
         <transition name="expand">
-          <div
-            class="ml-1 border-l-4 border-sonja-text pl-2"
-            v-if="ex.sets && ex.reps && isOpenId === ex.id"
-          >
-            {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
-            }}{{ ex.metric === "Time" ? "s" : "" }}
+          <div v-if="isOpenId === ex.id">
+            <div class="ml-1 pl-2 border-l-4 border-sonja-text border-b-4 max-w-20">
+              <i
+                class="fa-solid fa-edit cursor-pointer text-xl"
+                @click.stop="
+                  updatePlanExerciseRef?.setForm({
+                    plan_id: ex.id,
+                    name: ex.name,
+                    sets: ex.sets,
+                    reps: ex.reps,
+                    reps_to: ex.reps_to,
+                  })
+                "
+              />
+              <i
+                class="fa-solid fa-close ml-2 cursor-pointer text-red-800"
+                @click.stop="
+                  confirmDeleteEx = true;
+                  toDeleteExId = Number(ex.id);
+                "
+              />
+            </div>
+
+            <div
+              class="ml-1 border-l-4 border-sonja-text pl-2"
+              v-if="ex.sets && ex.reps"
+            >
+              {{ ex.sets }}x{{ ex.reps }}{{ ex.reps_to ? "-" + ex.reps_to : ""
+              }}{{ ex.metric === "Time" ? "s" : "" }}
+            </div>
           </div>
         </transition>
       </div>
