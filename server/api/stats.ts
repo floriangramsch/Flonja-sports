@@ -40,9 +40,9 @@ export default defineEventHandler(async (event) => {
             SELECT stats_id, u.user_id, ${type}, date, name FROM Stats s
             LEFT JOIN User u ON u.user_id = s.user_id
             WHERE u.user_id = ?
-            AND ? IS NOT NULL AND ? != 0
+            AND ${type} IS NOT NULL AND ${type} != 0
           `,
-          [id, type, type],
+          [id],
         );
 
         if (rows.length === 0) {
