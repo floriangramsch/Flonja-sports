@@ -25,7 +25,7 @@ defineExpose({ selected });
     </div>
   </div>
 </template>
-
+<!-- 
 <style scoped>
 .noscrollbar::-webkit-scrollbar {
   display: none;
@@ -34,4 +34,4 @@ defineExpose({ selected });
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-</style>
+</style> -->

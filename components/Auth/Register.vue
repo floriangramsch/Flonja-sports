@@ -40,5 +40,8 @@ const register = () => {
       v-model="form.password"
     />
     <UiButtonsButton @action="register">Register</UiButtonsButton>
+    <span class="text-gray-600">
+      After that, please log in
+    </span>
   </div>
 </template>

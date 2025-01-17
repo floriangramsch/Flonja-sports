@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
       await fs.rename(uploadedFilePath, newFilePath);
 
       // Datei-URL zurückgeben
-      const publicPath = `/user/${path.basename(uploadedFilePath)}`;
+      const publicPath = `/user/${path.basename(newFilePath)}`;
 
       return { message: "Upload erfolgreich", url: publicPath };
     } catch (error) {
