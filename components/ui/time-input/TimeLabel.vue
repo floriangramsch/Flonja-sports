@@ -29,6 +29,8 @@ const setTime = () => {
   newValue.value = 60 * 60 * hours.value + 60 * minutes.value + seconds.value;
 };
 
+const selectorRef = ref<HTMLDivElement | undefined>();
+
 watch([hours, minutes, seconds], setTime);
 
 onMounted(() => {
@@ -40,9 +42,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex w-full items-center justify-center gap-2 border-4 rounded p-2 border-sonja-text">
-    <TimeInput isHours v-model="hours" />
-    <TimeInput isMinutes v-model="minutes" />
-    <TimeInput v-model="seconds" />
+  <div
+    class="relative flex w-full items-center justify-center gap-2 rounded border-4 border-sonja-text p-2"
+  >
+    <TimeInput isHours v-model="hours" :selectorRef="selectorRef" />
+    <TimeInput isMinutes v-model="minutes" :selectorRef="selectorRef" />
+    <TimeInput v-model="seconds" :selectorRef="selectorRef" />
+    <div
+      ref="selectorRef"
+      class="pointer-events-none absolute top-1/2 h-8 w-full -translate-y-4 bg-sonja-akz opacity-30"
+    />
   </div>
 </template>
