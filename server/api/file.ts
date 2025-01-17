@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   // Nur POST-Anfragen verarbeiten
   if (method === "POST") {
     const form = new IncomingForm({
-      uploadDir: path.resolve("public/user"), // Zielverzeichnis
+      uploadDir: path.resolve(process.cwd(), "public/user"), // Zielverzeichnis
       keepExtensions: true, // Dateiendung beibehalten
     });
 
