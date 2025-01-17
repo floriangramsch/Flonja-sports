@@ -16,7 +16,6 @@ export function useFile(name: Ref<string | undefined>) {
 
       if (response.ok) {
         const blob = await response.blob();
-        console.log('blob', blob)
         return URL.createObjectURL(blob);
       }
 
@@ -33,7 +32,7 @@ export function useFile(name: Ref<string | undefined>) {
       //   }
       // }
 
-      // return new URL("../public/user/cat.png", import.meta.url).href;
+      return new URL("../public/user/cat.png", import.meta.url).href;
     },
     enabled: computed(() => name.value !== undefined),
   });
