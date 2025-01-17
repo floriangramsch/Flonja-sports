@@ -10,10 +10,11 @@ export function useFile(name: Ref<string | undefined>) {
         );
       }
 
-      const imageUrl = new URL(
-        `../public/user/${name.value}.jpg`,
-        import.meta.url,
-      ).href;
+      const imageUrl = `/user/${name.value}.jpg`;
+      // const imageUrl = new URL(
+      //   `../public/user/${name.value}.jpg`,
+      //   import.meta.url,
+      // ).href;
 
       const response = await fetch(imageUrl);
       if (response.ok) {
