@@ -42,15 +42,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="relative flex w-full items-center justify-center gap-2 rounded border-4 border-sonja-text p-2"
-  >
+  <div class="relative flex w-full items-center justify-center gap-2 p-2">
     <TimeInput isHours v-model="hours" :selectorRef="selectorRef" />
     <TimeInput isMinutes v-model="minutes" :selectorRef="selectorRef" />
     <TimeInput v-model="seconds" :selectorRef="selectorRef" />
     <div
       ref="selectorRef"
-      class="pointer-events-none absolute top-1/2 h-8 w-full -translate-y-4 bg-sonja-akz opacity-30"
+      class="pointer-events-none absolute top-1/2 h-8 w-full -translate-y-4 rounded bg-sonja-akz opacity-50"
     />
   </div>
 </template>

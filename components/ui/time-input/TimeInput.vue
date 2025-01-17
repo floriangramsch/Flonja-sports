@@ -13,7 +13,7 @@ const scrollContainer = ref<HTMLDivElement | null>(null);
 const currentItem = defineModel<number>({ default: 0 });
 
 const getScaleClass = (item: number) => {
-  if (item === currentItem.value) return "scale-100 text-sonja-akz";
+  if (item === currentItem.value) return "scale-100";
   if (Math.abs(item - currentItem.value) === 1) return "scale-75";
   return "scale-50";
 };
