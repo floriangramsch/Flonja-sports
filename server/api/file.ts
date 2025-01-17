@@ -35,8 +35,11 @@ export default defineEventHandler(async (event) => {
   }
 
   if (method === "POST") {
+    const dirPath = path.resolve(process.cwd(), "../uploads/user");
+
     const form = new IncomingForm({
-      uploadDir: path.resolve("uploads/user"), // Zielverzeichnis
+      // uploadDir: path.resolve("uploads/user"), // Zielverzeichnis
+      uploadDir: dirPath, // Zielverzeichnis
       keepExtensions: true, // Dateiendung beibehalten
     });
 
@@ -66,7 +69,7 @@ export default defineEventHandler(async (event) => {
         : file.filepath;
 
       const newFileName = `${fields.name}.jpg`;
-      const newFilePath = path.resolve("uploads/user", newFileName);
+      const newFilePath = path.resolve(dirPath, newFileName);
 
       fs.rename(uploadedFilePath, newFilePath, () => {});
 
