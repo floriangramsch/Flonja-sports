@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
         message: "Ungültiger Dateiname",
       });
     }
-    const filePath = path.resolve("uploads", fileName);
+    const filePath = path.resolve("uploads/user", fileName);
 
     try {
       await fs.promises.access(filePath);
