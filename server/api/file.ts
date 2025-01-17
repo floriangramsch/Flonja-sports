@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const filePath = path.resolve(process.cwd(), "uploads/user", fileName);
+    const filePath = path.resolve(process.cwd(), "../uploads/user", fileName);
 
     try {
       await fs.promises.access(filePath);
