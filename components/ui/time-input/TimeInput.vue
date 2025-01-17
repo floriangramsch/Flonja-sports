@@ -1,67 +1,41 @@
 <script setup lang="ts">
-const newValue = defineModel();
-
-const inputRef = ref<HTMLInputElement | null>(null);
-
 const props = defineProps<{
-  focus?: boolean;
-  placeholder?: string;
-  label?: string;
+  isHours?: boolean;
+  isMinutes?: boolean;
 }>();
 
-const labelId = `input-${Math.random().toString(36).slice(2, 9)}`;
+const items = props.isHours
+  ? Array.from({ length: 24 }, (_, i) => i)
+  : Array.from({ length: 60 }, (_, i) => i);
 
-defineEmits<{
-  (emit: "action"): void;
-}>();
+const scrollContainer = ref<HTMLDivElement | null>(null);
+const currentItem = defineModel<number>({ default: 0 });
 
-watch(
-  () => props.focus,
-  (newVal) => {
-    if (newVal) {
-      if (inputRef.value) {
-        inputRef.value.focus();
-      }
-    }
-  },
-);
-
-onMounted(() => {
-  newValue.value = "00:00"
-  if (props.focus && inputRef.value) {
-    inputRef.value.focus();
-  }
-});
+const getScaleClass = (item: number) => {
+  if (item === currentItem.value) return "scale-100 text-sonja-akz";
+  if (Math.abs(item - currentItem.value) === 1) return "scale-75";
+  return "scale-50";
+};
 </script>
 
 <template>
-  <div class="relative">
-    <input
-      :id="labelId"
-      v-model="newValue"
-      type="time"
-      class="remove-arrow peer h-12 w-32 rounded bg-sonja-text p-2 text-sonja-akz2 shadow focus:outline-none focus:ring-2 focus:ring-sonja-akz"
-      ref="inputRef"
-      :placeholder="placeholder ?? ' '"
-      @focusout="$emit('action')"
-    />
-    <label
-      :for="labelId"
-      class="absolute left-2 -translate-y-2 rounded bg-sonja-akz p-[2px] text-xs shadow transition-all duration-200 peer-placeholder-shown:left-1 peer-placeholder-shown:top-[1.1rem] peer-placeholder-shown:bg-sonja-text peer-placeholder-shown:text-base peer-placeholder-shown:text-sonja-akz2 peer-focus:left-2 peer-focus:top-0 peer-focus:bg-sonja-akz peer-focus:text-xs peer-focus:text-sonja-text"
+  <div class="flex items-center">
+    <div
+      ref="scrollContainer"
+      class="noscrollbar flex max-h-48 snap-y snap-mandatory flex-col items-center overflow-y-scroll"
     >
-      {{ label }}
-    </label>
+      <div
+        v-for="item in items"
+        class="snap-center px-4 text-4xl transition-transform duration-200"
+        :key="item"
+        :class="getScaleClass(item)"
+        @click="currentItem = item"
+      >
+        {{ item }}
+      </div>
+    </div>
+    <div class="-ml-4 text-sm h-full">
+      {{ isHours ? "Hours" : isMinutes ? "Min." : "Sec." }}
+    </div>
   </div>
 </template>
-
-<style scoped>
-.remove-arrow::-webkit-inner-spin-button,
-.remove-arrow::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.remove-arrow {
-  appearance: none;
-  -moz-appearance: textfield;
-}
-</style>

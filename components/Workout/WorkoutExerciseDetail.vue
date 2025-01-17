@@ -4,6 +4,7 @@ import Button from "../ui/buttons/Button.vue";
 import Dialog from "../Dialogs/Dialog.vue";
 import Confirm from "../Dialogs/Confirm.vue";
 import TextareaInfo from "../ui/inputs/TextareaInfo.vue";
+import TimeLabel from "../ui/time-input/TimeLabel.vue";
 
 const props = defineProps<{
   workoutInfo: {
@@ -60,20 +61,11 @@ const handleSet = () => {
     newWeight.value !== undefined &&
     (newReps.value !== undefined || wexToShow.wex?.metric === "Time")
   ) {
-    let totalSeconds;
-    if (typeof newWeight.value === "string") {
-      const [minutes, seconds] = newWeight.value.toString().split(":");
-      const minutesConverted = Number(minutes);
-      const secondsConverted = Number(seconds);
-      totalSeconds = 60 * minutesConverted + secondsConverted;
-    }
-    const resultSeconds =
-      totalSeconds !== undefined ? totalSeconds : newWeight.value;
     if (setIdToUpdate.value) {
       updateSetMutaiton.mutate(
         {
           set_id: setIdToUpdate.value,
-          weight: Number(resultSeconds),
+          weight: newWeight.value,
           reps: newReps.value ?? 1,
         },
         {
@@ -90,7 +82,7 @@ const handleSet = () => {
         addSetMutation.mutate(
           {
             workout_exercise_id: wexToShow.wex?.workout_exercise_id,
-            weight: Number(resultSeconds),
+            weight: newWeight.value,
             reps: newReps.value ?? 1,
           },
           {
@@ -114,18 +106,20 @@ const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.exercise?.info);
 
-const newWeight = ref<number | string>();
+const newWeight = ref<number>();
 const newReps = ref<number | undefined>(
   wexToShow.wex?.metric === "Time" ? 1 : undefined,
 );
 const setIdToUpdate = ref<number>();
 
 const convertToTime = (time: number) => {
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  const hrs = Math.floor(time / 3600).toString().padStart(2, "0");
+  const mins = Math.floor((time % 3600) / 60).toString().padStart(2, "0");
+  const secs = (time % 60).toString().padStart(2, "0");
+  return `${(hrs !== '00') ? hrs + 'h' : ''} ${mins}′${secs}″`;
 };
 
+// 
 watch(
   () => sets.value,
   (newVal) => {
@@ -218,7 +212,7 @@ watch(
                 ? convertToTime(set.weight)
                 : set.weight
             }}
-            {{ wexToShow.wex?.metric === "Time" ? "min" : " kg" }}
+            {{ wexToShow.wex?.metric === "Weight" ? " kg" : "" }}
           </div>
         </button>
 
@@ -255,7 +249,7 @@ watch(
                 ? convertToTime(set.weight)
                 : set.weight
             }}
-            {{ wexToShow.wex?.metric === "Time" ? "min" : " kg" }}
+            {{ wexToShow.wex?.metric === "Weight" ? " kg" : "" }}
           </div>
         </div>
       </div>
@@ -296,7 +290,7 @@ watch(
       <div class="flex flex-col items-center justify-center gap-4">
         {{ setIdToUpdate ? "Set: " + setIdToUpdate : "" }}
         <div
-          class="mt-2 grid grid-cols-2 gap-2"
+          class="mt-2 grid gap-2"
           :class="{
             'grid-cols-2': wexToShow.wex?.metric === 'Weight',
             'grid-cols-1': wexToShow.wex?.metric === 'Time',
@@ -314,7 +308,7 @@ watch(
             v-model:modelValue="newWeight"
             label="Weight"
           />
-          <UiTimeInput
+          <TimeLabel
             v-else
             v-model:modelValue="newWeight"
             :label="wexToShow.wex?.metric"

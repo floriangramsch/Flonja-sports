@@ -7,3 +7,11 @@ html {
   height: 100dvh;
   background-color: #97918e;
 }
+
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+.noscrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
