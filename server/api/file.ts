@@ -19,8 +19,6 @@ export default defineEventHandler(async (event) => {
     }
     const filePath = path.resolve("uploads", fileName);
 
-    console.log('filename', filePath)
-    
     try {
       await fs.promises.access(filePath);
 

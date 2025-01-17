@@ -14,8 +14,6 @@ export function useFile(name: Ref<string | undefined>) {
         `/api/file?fileName=${encodeURIComponent(name.value)}.jpg`,
       );
 
-      console.log(response)
-
       if (response.ok) {
         const blob = await response.blob();
         console.log('blob', blob)
