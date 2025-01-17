@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const filePath = path.resolve(process.cwd(), "uploads/user", fileName);
-    console.log('filePath', filePath)
 
     try {
       await fs.promises.access(filePath);
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
       console.error(error);
       throw createError({
         statusCode: 404,
-        message: "Datei nicht gefunden",
+        message: `Datei nicht gefunden: ${filePath}`,
       });
     }
   }
