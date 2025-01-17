@@ -1,5 +1,6 @@
 import formidable, { IncomingForm } from "formidable";
-import fs from "fs/promises";
+// import fs from "fs/promises";
+import fs from "fs";
 import path from "path";
 import { defineEventHandler, readBody, createError } from "h3";
 
@@ -7,10 +8,36 @@ import { defineEventHandler, readBody, createError } from "h3";
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
 
-  // Nur POST-Anfragen verarbeiten
+  if (method === "GET") {
+    const { fileName } = getQuery(event);
+    
+    if (typeof fileName !== "string") {
+      throw createError({
+        statusCode: 400,
+        message: "Ungültiger Dateiname",
+      });
+    }
+    const filePath = path.resolve("uploads", fileName);
+
+    console.log('filename', filePath)
+    
+    try {
+      await fs.promises.access(filePath);
+
+      const fileStream = fs.createReadStream(filePath);
+      return sendStream(event, fileStream);
+    } catch (error) {
+      console.error(error);
+      throw createError({
+        statusCode: 404,
+        message: "Datei nicht gefunden",
+      });
+    }
+  }
+
   if (method === "POST") {
     const form = new IncomingForm({
-      uploadDir: path.resolve("public/user"), // Zielverzeichnis
+      uploadDir: path.resolve("uploads/user"), // Zielverzeichnis
       keepExtensions: true, // Dateiendung beibehalten
     });
 
@@ -42,10 +69,10 @@ export default defineEventHandler(async (event) => {
       const newFileName = `${fields.name}.jpg`;
       const newFilePath = path.resolve("public/user", newFileName);
 
-      await fs.rename(uploadedFilePath, newFilePath);
+      fs.rename(uploadedFilePath, newFilePath, () => {});
 
       // Datei-URL zurückgeben
-      const publicPath = `/user/${path.basename(newFilePath)}`;
+      const publicPath = `/user/${path.basename(uploadedFilePath)}`;
 
       return { message: "Upload erfolgreich", url: publicPath };
     } catch (error) {

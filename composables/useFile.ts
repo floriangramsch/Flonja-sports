@@ -10,21 +10,32 @@ export function useFile(name: Ref<string | undefined>) {
         );
       }
 
-      const imageUrl = `/user/${name.value}.jpg`;
+      const response = await fetch(
+        `/api/file?fileName=${encodeURIComponent(name.value)}.jpg`,
+      );
+
+      console.log(response)
+
+      if (response.ok) {
+        const blob = await response.blob();
+        console.log('blob', blob)
+        return URL.createObjectURL(blob);
+      }
+
       // const imageUrl = new URL(
       //   `../public/user/${name.value}.jpg`,
       //   import.meta.url,
       // ).href;
 
-      const response = await fetch(imageUrl);
-      if (response.ok) {
-        const contentType = response.headers.get("Content-Type");
-        if (contentType?.includes("image")) {
-          return imageUrl;
-        }
-      }
+      // const response = await fetch(imageUrl);
+      // if (response.ok) {
+      //   const contentType = response.headers.get("Content-Type");
+      //   if (contentType?.includes("image")) {
+      //     return imageUrl;
+      //   }
+      // }
 
-      return new URL("../public/user/cat.png", import.meta.url).href;
+      // return new URL("../public/user/cat.png", import.meta.url).href;
     },
     enabled: computed(() => name.value !== undefined),
   });
