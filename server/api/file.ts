@@ -17,7 +17,8 @@ export default defineEventHandler(async (event) => {
         message: "Ungültiger Dateiname",
       });
     }
-    const filePath = path.resolve("uploads/user", fileName);
+
+    const filePath = path.resolve(process.cwd(), "uploads/user", fileName);
 
     try {
       await fs.promises.access(filePath);
@@ -65,7 +66,7 @@ export default defineEventHandler(async (event) => {
         : file.filepath;
 
       const newFileName = `${fields.name}.jpg`;
-      const newFilePath = path.resolve("public/user", newFileName);
+      const newFilePath = path.resolve("uploads/user", newFileName);
 
       fs.rename(uploadedFilePath, newFilePath, () => {});
 
