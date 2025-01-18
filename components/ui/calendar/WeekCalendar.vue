@@ -65,6 +65,10 @@ const showWorkout = (workout: WorkoutType) => {
   isShowWorkout.value = true;
 };
 
+const { data: workoutExercises } = useWorkoutExercisesByWorkout(
+  computed(() => workoutToShow.value?.workout_id),
+);
+
 watch(
   () => props.data,
   () => {
@@ -95,7 +99,7 @@ onMounted(() => groupData());
     </div>
     <div
       v-if="isShowWorkout"
-      class="absolute bottom-1 flex w-full flex-col border-t border-sonja-akz"
+      class="absolute bottom-1 flex max-h-[7.25rem] w-full flex-col overflow-y-scroll border-t border-sonja-akz"
     >
       <div>
         {{
@@ -110,6 +114,21 @@ onMounted(() => groupData());
             ? "Main category: " + workoutToShow?.main_category
             : "No Exercise yet"
         }}
+      </div>
+      <div v-for="wex in workoutExercises" class="relative">
+        <div class="w-1/2">
+          {{ wex.exercise_name }}
+        </div>
+        <div class="absolute top-1 right-1 z-0 flex gap-1">
+          <UiChip
+            v-for="category in wex.categories"
+            :content="category.name"
+            :type="category.type"
+            animated
+          />
+          <UiChip :content="wex.metric" type="metric" animated />
+          <UiChip :content="wex.type" type="exerciseType" animated />
+        </div>
       </div>
       <Button @action="() => editWorkout(workoutToShow!)">
         Edit workout
