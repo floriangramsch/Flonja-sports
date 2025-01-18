@@ -54,8 +54,7 @@ export const getWorkout = async (id: number) => {
       LIMIT 1) AS main_category
     FROM Workout w
     JOIN User u ON w.user_id = u.user_id
-    WHERE workout_id = ?
-    ORDER BY w.start DESC;
+    WHERE workout_id = ?;
   `;
 
   const results = await query(pool, sql, [id]);
