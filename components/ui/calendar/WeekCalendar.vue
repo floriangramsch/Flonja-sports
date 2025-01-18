@@ -88,7 +88,7 @@ onMounted(() => groupData());
         {{ day }}
       </div>
     </div>
-    <div class="max-h-72 w-full overflow-scroll">
+    <div class="h-72 w-full overflow-scroll">
       <div v-for="week in groupedData" class="grid grid-cols-7">
         <Week
           :week="week"
@@ -99,7 +99,7 @@ onMounted(() => groupData());
     </div>
     <div
       v-if="isShowWorkout"
-      class="absolute bottom-1 flex max-h-[7.25rem] w-full flex-col overflow-y-scroll border-t border-sonja-akz"
+      class="bottom-1 flex w-full max-h-fit flex-col overflow-y-scroll border-t border-sonja-akz"
     >
       <div>
         {{
@@ -107,6 +107,9 @@ onMounted(() => groupData());
           "-" +
           showTime(workoutToShow?.end).slice(-5)
         }}
+        <Button @action="() => editWorkout(workoutToShow!)">
+          Edit workout
+        </Button>
       </div>
       <div>
         {{
@@ -119,7 +122,7 @@ onMounted(() => groupData());
         <div class="w-1/2">
           {{ wex.exercise_name }}
         </div>
-        <div class="absolute top-1 right-1 z-0 flex gap-1">
+        <div class="absolute right-1 top-1 z-0 flex gap-1">
           <UiChip
             v-for="category in wex.categories"
             :content="category.name"
@@ -130,13 +133,10 @@ onMounted(() => groupData());
           <UiChip :content="wex.type" type="exerciseType" animated />
         </div>
       </div>
-      <Button @action="() => editWorkout(workoutToShow!)">
-        Edit workout
-      </Button>
     </div>
     <div
       v-else
-      class="absolute bottom-1 flex h-[7.25rem] w-full flex-col items-center justify-center border-t border-sonja-akz"
+      class="bottom-1 flex w-full h-20 flex-col items-center justify-center border-t border-sonja-akz"
     >
       No Workout selected
     </div>
