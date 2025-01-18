@@ -44,6 +44,7 @@ export default function useAddWorkoutExercise() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
     },
   });
 }

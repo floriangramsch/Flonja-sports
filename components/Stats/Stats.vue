@@ -70,17 +70,6 @@ const newStat = () => {
   }
 };
 
-const show = (time: any) => {
-  if (!time) return "?";
-  const convertedTime = new Date(time);
-  const year = convertedTime.getUTCFullYear().toString().slice(-2);
-  const month = convertedTime.getMonth() + 1;
-  const day = convertedTime.getDate();
-  const hours = convertedTime.getHours();
-  const minutes = convertedTime.getMinutes();
-  return `${day}.${month}.${year} ${hours}:${minutes}`;
-};
-
 const newLocker = ref<number | undefined>(props.workout?.locker);
 const updateLockerMutation = useUpdateWorkout();
 
@@ -129,7 +118,7 @@ watch(
         />
       </div>
       <Label
-        :value="show(workout?.start) + '-' + show(workout?.end).slice(-5)"
+        :value="showTime(workout?.start) + '-' + showTime(workout?.end).slice(-5)"
         label="Time"
       />
       <!-- <Label :value="show(workout?.end)" label="End" /> -->
