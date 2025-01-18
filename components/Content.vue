@@ -52,7 +52,7 @@ const router = useRouterStore()
       <Stats :workout="workout" />
     </Router>
     <Router route="workouts">
-      <WorkoutList :workouts="workouts" :users="users" :workout="workout" />
+      <WorkoutList :workouts="workouts" :users="users" />
     </Router>
   </div>
 </template>

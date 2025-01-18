@@ -123,7 +123,7 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
     ref="updateExerciseRef"
     :categories="categories"
   />
-  <!-- {{ workoutExercisesWithoutStretch }} -->
+  {{ workout?.main_category }}
   <div
     v-if="workoutExercises?.length !== 0"
     v-for="wex in workoutExercisesWithoutStretch"

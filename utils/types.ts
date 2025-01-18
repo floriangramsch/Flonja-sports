@@ -59,6 +59,7 @@ export type WorkoutType = {
   end: Date;
   locker: number;
   rest_time: number;
+  main_category: string;
 };
 
 export type SetType = {
