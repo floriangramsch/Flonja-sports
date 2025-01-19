@@ -5,7 +5,9 @@ export default defineEventHandler(async (event) => {
     if (method === "GET") {
       const connection = await connect();
 
-      const [rows] = await connection.execute("SELECT user_id, name, rest_time FROM User");
+      const [rows] = await connection.execute(
+        "SELECT user_id, name, rest_time, work_body_id FROM User",
+      );
       return rows;
     }
     if (method === "PUT") {
@@ -17,7 +19,7 @@ export default defineEventHandler(async (event) => {
           UPDATE User SET rest_time = ?
           WHERE user_id = ?
         `,
-        [rest_time, user_id]
+        [rest_time, user_id],
       );
       return rows;
     }

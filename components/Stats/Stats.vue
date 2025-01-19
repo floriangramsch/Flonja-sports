@@ -102,7 +102,7 @@ watch(
       @left="showList = !showList"
       @right="routerStore.route = 'workouts'"
       leftIcon="fa-solid fa-barcode"
-      rightIcon="fa-solid fa-list"
+      rightIcon="fa-solid fa-calendar"
     >
       Stats
     </Header>

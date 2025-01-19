@@ -1,7 +1,7 @@
 <template>
   <div
     @click.stop="showUser = !showUser"
-    class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto"
+    class="flex cursor-pointer gap-1 overflow-x-scroll whitespace-nowrap text-2xl font-bold sm:overflow-x-auto noscrollbar"
   >
     <i
       class="fa-solid transition-transform duration-300"

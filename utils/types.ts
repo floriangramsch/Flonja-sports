@@ -13,6 +13,7 @@ export type UserType = {
   user_id: number;
   name: string;
   rest_time: number;
+  work_body_id: number;
 };
 // export type UserType = {
 //   [id: number]: {

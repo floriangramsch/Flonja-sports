@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import WorkoutList from "./Workout/WorkoutList.vue";
 import CategoryList from "./Categories/CategoryList.vue";
 import WorkoutExerciseOverview from "./WorkoutExercises/WorkoutExerciseOverview.vue";
 import ExerciseList from "./Exercises/ExerciseList.vue";
 import Plan from "./Workout/Plan.vue";
 import WorkoutPage from "./Workout/WorkoutPage.vue";
+import WorkoutCalendar from "./Workout/WorkoutCalendar.vue";
 
 defineProps<{ users: UserType[]; workouts: WorkoutType[] }>();
 
@@ -52,7 +52,7 @@ const router = useRouterStore()
       <Stats :workout="workout" />
     </Router>
     <Router route="workouts">
-      <WorkoutList :workouts="workouts" :users="users" />
+      <WorkoutCalendar :workouts="workouts" :users="users" />
     </Router>
   </div>
 </template>

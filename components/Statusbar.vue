@@ -22,21 +22,24 @@ const wexToShow = useExToShowStore();
 
 const switchUser = () => {
   if (props.users && loggedStore) {
-    const userIndex = props.users.findIndex((user) => {
-      const nameToSearch =
-        loggedStore.logged.user?.name === "Florian" ? "Sonja" : "Florian";
-      return user.name === nameToSearch;
-    });
-    const newIndex = userIndex;
-    loggedStore.logged.user = {
-      id: props.users[newIndex].user_id,
-      name: props.users[newIndex].name,
-    };
-    loggedStore.logged.isLogged = false;
-    loggedStore.logged.loggedWorkoutId = undefined;
-    loggedStore.toStorage();
-    wexToShow.reset();
-    client.refetchQueries({ queryKey: ["plan"] });
+    const current_user = props.users.find(
+      (u) => u.user_id === loggedStore.logged.user.id,
+    );
+    if (current_user?.work_body_id) {
+      const userIndex = props.users.findIndex((user) => {
+        return user.user_id === current_user.work_body_id;
+      });
+      const newIndex = userIndex;
+      loggedStore.logged.user = {
+        id: props.users[newIndex].user_id,
+        name: props.users[newIndex].name,
+      };
+      loggedStore.logged.isLogged = false;
+      loggedStore.logged.loggedWorkoutId = undefined;
+      loggedStore.toStorage();
+      wexToShow.reset();
+      client.refetchQueries({ queryKey: ["plan"] });
+    }
   }
 };
 
@@ -52,20 +55,9 @@ const { data: userImage } = useFile(
     <!-- Profilepic -->
     <div
       v-if="loggedStore.logged.user.id"
-      @click.prevent="
-        loggedStore.logged.user.name === 'Florian' ||
-        loggedStore.logged.user.name === 'Sonja'
-          ? switchUser()
-          : ''
-      "
-      class="flex h-full w-16 items-center"
-      :class="{
-        'cursor-pointer':
-          loggedStore.logged.user.name === 'Florian' ||
-          loggedStore.logged.user.name === 'Sonja',
-      }"
+      @click.prevent="switchUser"
+      class="flex h-full w-16 items-center cursor-pointer"
     >
-      <!-- <div class="h-full w-16"> -->
       <img
         :src="userImage"
         class="max-h-full rounded-r-lg p-[1px] shadow shadow-sonja-akz"

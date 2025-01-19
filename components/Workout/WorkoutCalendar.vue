@@ -68,8 +68,8 @@ onMounted(() => {
     <Header
       @left="showList = !showList"
       @right="routerStore.setRoute('stats')"
-      rightIcon="fa-solid fa-list"
       leftIcon="fa-solid fa-barcode"
+      rightIcon="fa-solid fa-weight-scale"
     >
       Workout Calendar
     </Header>
