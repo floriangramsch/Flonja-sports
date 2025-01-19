@@ -109,7 +109,10 @@ onMounted(() => groupData());
           "-" +
           showTime(workoutToShow?.end).slice(-5)
         }}
-        <Button class="py-1 font-normal" @action="() => editWorkout(workoutToShow!)">
+        <Button
+          class="py-1 font-normal"
+          @action="() => editWorkout(workoutToShow!)"
+        >
           Edit workout
         </Button>
       </div>
@@ -120,11 +123,16 @@ onMounted(() => groupData());
             : "No Exercise yet"
         }}
       </div>
-      <div v-for="wex in workoutExercises" class="relative">
-        <div class="w-1/2">
+      <div
+        v-for="wex in workoutExercises"
+        class="relative flex items-center gap-1 pb-1"
+      >
+        <div class="noscrollbar mr-auto overflow-scroll text-nowrap px-1">
           {{ wex.exercise_name }}
         </div>
-        <div class="absolute right-1 top-1 z-0 flex gap-1">
+        <div
+          class="flex items-center justify-start gap-1 overflow-scroll text-nowrap"
+        >
           <UiChip
             v-for="category in wex.categories"
             :content="category.name"
