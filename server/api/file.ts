@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
   if (method === "GET") {
     const { fileName } = getQuery(event);
-    
+
     if (typeof fileName !== "string") {
       throw createError({
         statusCode: 400,
@@ -18,7 +18,11 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const filePath = path.resolve(process.cwd(), "../uploads/user", fileName);
+    // process.env.NODE_ENV === "production"
+    const filePath =
+      process.env.NODE_ENV === "development"
+        ? path.resolve("uploads/user", fileName)
+        : path.resolve(process.cwd(), "../uploads/user", fileName);
 
     try {
       await fs.promises.access(filePath);
@@ -35,10 +39,12 @@ export default defineEventHandler(async (event) => {
   }
 
   if (method === "POST") {
-    const dirPath = path.resolve(process.cwd(), "../uploads/user");
+    const dirPath =
+      process.env.NODE_ENV === "development"
+        ? path.resolve("uploads/user")
+        : path.resolve(process.cwd(), "../uploads/user");
 
     const form = new IncomingForm({
-      // uploadDir: path.resolve("uploads/user"), // Zielverzeichnis
       uploadDir: dirPath, // Zielverzeichnis
       keepExtensions: true, // Dateiendung beibehalten
     });

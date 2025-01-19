@@ -71,7 +71,7 @@ onMounted(() => {
       rightIcon="fa-solid fa-list"
       leftIcon="fa-solid fa-barcode"
     >
-      Workout List
+      Workout Calendar
     </Header>
     <UserSelectionHeader ref="userSelectionRef" class="mb-3" />
     <!-- workout list -->
