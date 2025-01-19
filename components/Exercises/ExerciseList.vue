@@ -49,6 +49,18 @@ const filteredExercises = computed(() => {
       userFilter = true;
     }
 
+    // const user = props.users.find(
+    //   (u) => userSelectionRef.value?.selected === u.user_id,
+    // );
+    // let bodyFilter;
+    // if (
+    //   userSelectionRef.value &&
+    //   user?.work_body_id &&
+    //   loggedStore.logged.user.id === userSelectionRef.value.selected
+    // ) {
+    //   bodyFilter = ex.user_id === user?.work_body_id;
+    // }
+
     return matchesCategoryFilter && matchesSearchFilter && userFilter;
   });
 });

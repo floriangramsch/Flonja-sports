@@ -2,7 +2,6 @@
 import { useQueryClient } from "@tanstack/vue-query";
 import Start from "./Dialogs/Start.vue";
 import Timer from "./Timer/Timer.vue";
-import type Auth from "./Auth/Auth.vue";
 
 const props = defineProps<{
   users: UserType[] | undefined;
