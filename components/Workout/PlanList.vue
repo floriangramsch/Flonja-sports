@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
-import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import BetterExerciseSelection from "../ExerciseSelection/BetterExerciseSelection.vue";
 import UpdatePlanExercise from "../Plan/UpdatePlanExercise.vue";
 
 const props = defineProps<{

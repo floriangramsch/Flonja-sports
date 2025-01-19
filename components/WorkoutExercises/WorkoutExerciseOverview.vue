@@ -12,7 +12,7 @@ const { data: sets } = useGetSets();
 
 const filterStore = useWorkoutExerciseFilterStore();
 const loggedStore = useLoggedStore();
-const searchFilter = ref<string>("");
+const searchFilter = ref<string | undefined>("");
 
 const filtered = computed(() => {
   return sets.value?.filter((ex) => {
@@ -22,7 +22,9 @@ const filtered = computed(() => {
 
     const matchesSearchFilter =
       searchFilter.value === "" ||
-      ex.exercise_name.toLowerCase().includes(searchFilter.value.toLowerCase());
+      ex.exercise_name
+        .toLowerCase()
+        .includes((searchFilter.value ?? "").toLowerCase());
 
     let userFilter;
     if (userSelectionRef.value) {

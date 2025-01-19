@@ -18,7 +18,7 @@ const filter = ref<number[]>([]);
 const routerStore = useRouterStore();
 const showDialogCategory = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
-const searchFilter = ref<string>("");
+const searchFilter = ref<string | undefined>("");
 
 const loggedStore = useLoggedStore();
 
@@ -34,9 +34,11 @@ const filteredExercises = computed(() => {
       searchFilter.value === "" ||
       ex.exercise_name
         .toLowerCase()
-        .includes(searchFilter.value.toLowerCase()) ||
+        .includes(searchFilter.value?.toLowerCase() || "") ||
       ex.categories.some((category) =>
-        category.name.toLowerCase().includes(searchFilter.value.toLowerCase()),
+        category.name
+          .toLowerCase()
+          .includes((searchFilter.value ?? "").toLowerCase()),
       );
 
     let userFilter;

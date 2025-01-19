@@ -3,7 +3,7 @@ import useAddWorkoutExercise from "~/composables/useWorkoutExercise";
 import Confirm from "../Dialogs/Confirm.vue";
 import UpdateExercise from "../Exercises/UpdateExercise.vue";
 import Header from "../Header/Header.vue";
-import BetterExerciseSelection from "./BetterExerciseSelection.vue";
+import BetterExerciseSelection from "../ExerciseSelection/BetterExerciseSelection.vue";
 
 const props = defineProps<{
   exercises: ExerciseType[] | undefined;

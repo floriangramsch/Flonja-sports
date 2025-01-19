@@ -5,6 +5,7 @@ import NewCategory from "../Dialogs/NewCategory.vue";
 import NewExercise from "../Dialogs/NewExercise.vue";
 import CategoryTypeSelectionHeader from "../Header/CategoryTypeSelectionHeader.vue";
 import ExerciseTypeSelectionHeader from "../Header/ExerciseTypeSelectionHeader.vue";
+import SearchedExercises from "./SearchedExercises.vue";
 
 const props = defineProps<{
   categories: CategoryType[];
@@ -37,6 +38,17 @@ const showDialogCategory = ref<boolean>(false);
 const showExerciseOverview = ref<boolean>(false);
 const showDialogExercise = ref<boolean>(false);
 
+const isSearch = ref<boolean>(false);
+const searchFilter = ref();
+const searchedExercises = computed(() => {
+  return props.exercises.filter((ex) => {
+    const match = ex.exercise_name
+      .toLowerCase()
+      .includes(searchFilter.value.toLowerCase());
+    return match;
+  });
+});
+
 const categorySelectionRef =
   ref<InstanceType<typeof CategoryTypeSelectionHeader>>();
 const exerciseSelectionRef =
@@ -47,36 +59,51 @@ const exerciseSelectionRef =
   <Dialog :isOpen overflowScroll @close="$emit('close')" w="24rem">
     <!-- category Selection -->
     <div v-if="showCategoryOverview">
-      <Header @left="emit('close')" leftIcon="fa-solid fa-arrow-left">
+      <Header
+        @left="emit('close')"
+        leftIcon="fa-solid fa-arrow-left"
+        @right="isSearch = true"
+      >
         Category
+        <template #right-pure>
+          <FilterExercises v-model="searchFilter" class="-translate-x-64" />
+        </template>
       </Header>
-      <CategoryTypeSelectionHeader ref="categorySelectionRef" class="mb-3" />
-      <div class="grid grid-cols-3 place-items-center gap-2 overflow-auto">
-        <div
-          class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker text-center font-bold"
-          @click="chooseCategory(category)"
-          v-for="category in categories.filter(
-            (c) => c.type === categorySelectionRef?.selected,
-          )"
-          :key="category.id"
-        >
-          {{ category.name }}
+      <div v-if="!searchFilter">
+        <CategoryTypeSelectionHeader ref="categorySelectionRef" class="mb-3" />
+        <div class="grid grid-cols-3 place-items-center gap-2 overflow-auto">
+          <div
+            class="flex size-28 cursor-pointer items-center justify-center overflow-auto border-4 border-sonja-bg-darker text-center font-bold"
+            @click="chooseCategory(category)"
+            v-for="category in categories.filter(
+              (c) => c.type === categorySelectionRef?.selected,
+            )"
+            :key="category.id"
+          >
+            {{ category.name }}
+          </div>
+          <Dialog
+            :isOpen="showDialogCategory"
+            @close="showDialogCategory = false"
+          >
+            <template v-slot:trigger>
+              <div
+                class="flex size-28 cursor-pointer items-center overflow-auto border-4 border-black bg-sonja-text text-center text-sonja-akz2"
+                @click="showDialogCategory = true"
+              >
+                New Category
+              </div>
+            </template>
+            <NewCategory @close="showDialogCategory = false" />
+          </Dialog>
         </div>
-        <Dialog
-          :isOpen="showDialogCategory"
-          @close="showDialogCategory = false"
-        >
-          <template v-slot:trigger>
-            <div
-              class="flex size-28 cursor-pointer items-center overflow-auto border-4 border-black bg-sonja-text text-center text-sonja-akz2"
-              @click="showDialogCategory = true"
-            >
-              New Category
-            </div>
-          </template>
-          <NewCategory @close="showDialogCategory = false" />
-        </Dialog>
       </div>
+      <SearchedExercises
+        v-else
+        :exercises="searchedExercises"
+        v-model="result"
+        @action="emit('close')"
+      />
     </div>
 
     <!-- Exercise Selection -->
