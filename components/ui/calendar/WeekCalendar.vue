@@ -83,6 +83,7 @@ onMounted(() => groupData());
 
 <template>
   <div class="">
+    <!-- calendar -->
     <div class="grid grid-cols-7 border-b-2 border-sonja-akz text-sm">
       <div v-for="day in weekDays" class="flex justify-center">
         {{ day }}
@@ -97,21 +98,22 @@ onMounted(() => groupData());
         />
       </div>
     </div>
+    <!-- detail -->
     <div
       v-if="isShowWorkout"
-      class="bottom-1 flex w-full max-h-fit flex-col overflow-y-scroll border-t border-sonja-akz"
+      class="flex w-full flex-col overflow-y-scroll border-t border-sonja-akz pt-1 text-base"
     >
-      <div>
+      <div class="flex w-full items-center justify-center gap-2 font-bold">
         {{
           showTime(workoutToShow?.start) +
           "-" +
           showTime(workoutToShow?.end).slice(-5)
         }}
-        <Button @action="() => editWorkout(workoutToShow!)">
+        <Button class="py-1 font-normal" @action="() => editWorkout(workoutToShow!)">
           Edit workout
         </Button>
       </div>
-      <div>
+      <div class="flex w-full justify-center font-bold">
         {{
           workoutToShow?.main_category
             ? "Main category: " + workoutToShow?.main_category
@@ -134,9 +136,10 @@ onMounted(() => groupData());
         </div>
       </div>
     </div>
+    <!-- else -->
     <div
       v-else
-      class="bottom-1 flex w-full h-20 flex-col items-center justify-center border-t border-sonja-akz"
+      class="bottom-1 flex h-20 w-full flex-col items-center justify-center border-t border-sonja-akz"
     >
       No Workout selected
     </div>
