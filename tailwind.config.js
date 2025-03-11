@@ -40,6 +40,7 @@ module.exports = {
           // akz2: "#eef2ff",
           akz2: "#eef2ef",
           akz3: "#C1D7F0",
+          lila: "#7c4d91",
         },
       },
       screens: {
