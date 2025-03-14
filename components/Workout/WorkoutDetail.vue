@@ -132,7 +132,9 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
       routerStore.setWorkoutRoute('workoutexercisedetail');
     "
   >
-    {{ wex.exercise_name }}
+    <div class="max-w-fit px-1 overflow-scroll text-nowrap">
+      {{ wex.exercise_name }}
+    </div>
     <button
       class="ml-2"
       @click.stop="
@@ -182,7 +184,6 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
   >
     <i class="fa-solid fa-plus text-5xl" />
   </button>
-  
 
   <BetterExerciseSelection
     v-if="

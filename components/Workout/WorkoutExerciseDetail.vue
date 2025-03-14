@@ -105,6 +105,7 @@ const showConfirmDeleteWorkoutExercise = ref<boolean>(false);
 const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.exercise?.info);
+const showWeight = ref<boolean>(true);
 
 const newWeight = ref<number>();
 const newReps = ref<number | undefined>(
@@ -113,13 +114,22 @@ const newReps = ref<number | undefined>(
 const setIdToUpdate = ref<number>();
 
 const convertToTime = (time: number) => {
-  const hrs = Math.floor(time / 3600).toString().padStart(2, "0");
-  const mins = Math.floor((time % 3600) / 60).toString().padStart(2, "0");
+  const hrs = Math.floor(time / 3600)
+    .toString()
+    .padStart(2, "0");
+  const mins = Math.floor((time % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
   const secs = (time % 60).toString().padStart(2, "0");
-  return `${(hrs !== '00') ? hrs + 'h' : ''} ${mins}′${secs}″`;
+  return `${hrs !== "00" ? hrs + "h" : ""} ${mins}′${secs}″`;
 };
 
-// 
+const handleShowWeight = () => {
+  newWeight.value = showWeight.value ? 0 : undefined;
+  showWeight.value = !showWeight.value;
+};
+
+//
 watch(
   () => sets.value,
   (newVal) => {
@@ -137,6 +147,7 @@ watch(
       newReps.value = newVal.metric === "Time" ? 1 : undefined;
       newWeight.value = undefined;
       setIdToUpdate.value = undefined;
+
     }
   },
 );
@@ -157,8 +168,17 @@ watch(
       </template>
     </Header>
     <!-- Buttons -->
-    <div class="mb-5 flex w-full items-center justify-center gap-3">
+    <div class="mb-5 flex w-full items-center justify-center gap-3 relative">
       <!-- Switch between current and old sets -->
+      <i
+        class="fa-solid fa-weight-hanging absolute left-9 cursor-pointer"
+        @click="handleShowWeight"
+      />
+      <i
+        v-if="!showWeight"
+        class="fa-solid fa-xmark text-red-800 absolute left-[2.2rem] cursor-pointer text-4xl"
+        style="pointer-events: none"
+      />
       <i class="fa-solid fa-arrow-left text-3xl" @click="emit('prev')" />
       <button
         class="text-3xl"
@@ -292,8 +312,8 @@ watch(
         <div
           class="mt-2 grid gap-2"
           :class="{
-            'grid-cols-2': wexToShow.wex?.metric === 'Weight',
-            'grid-cols-1': wexToShow.wex?.metric === 'Time',
+            'grid-cols-2': wexToShow.wex?.metric === 'Weight' && showWeight,
+            'grid-cols-1': wexToShow.wex?.metric === 'Time' || !showWeight,
           }"
         >
           <UiNumberInput
@@ -304,12 +324,12 @@ watch(
           />
 
           <UiNumberInput
-            v-if="wexToShow.wex?.metric !== 'Time'"
+            v-if="wexToShow.wex?.metric == 'Weight' && showWeight"
             v-model:modelValue="newWeight"
             label="Weight"
           />
           <TimeLabel
-            v-else
+            v-if="wexToShow.wex?.metric == 'Time'"
             v-model:modelValue="newWeight"
             :label="wexToShow.wex?.metric"
             :focus="wexToShow.wex?.metric === 'Time'"
