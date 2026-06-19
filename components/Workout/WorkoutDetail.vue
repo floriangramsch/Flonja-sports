@@ -17,7 +17,7 @@ const { data: workoutExercises } = useWorkoutExercisesByWorkout(
 
 const workoutExercisesWithoutStretch = computed(() => {
   return workoutExercises.value?.filter((ex) =>
-    ex.categories.every((c) => c.name !== "Dehnen"),
+    ex.categories.every((c) => c.name !== "Dehnen" && c.name !== "Cardio"),
   );
 });
 
@@ -102,7 +102,7 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
 
 <template>
   <Header
-    @right="routerStore.setWorkoutRoute('workoutstretch')"
+    @right="routerStore.setWorkoutRoute('workoutcondi')"
     right-icon="fa-solid fa-repeat"
   >
     Exercises
@@ -132,7 +132,7 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
       routerStore.setWorkoutRoute('workoutexercisedetail');
     "
   >
-    <div class="max-w-fit px-1 overflow-scroll text-nowrap">
+    <div class="max-w-fit overflow-scroll text-nowrap px-1">
       {{ wex.exercise_name }}
     </div>
     <button
@@ -189,9 +189,13 @@ const updateExerciseRef = ref<InstanceType<typeof UpdateExercise> | null>(null);
     v-if="
       isOpenExerciseSelection && workout?.workout_id && categories && exercises
     "
-    :categories="categories.filter((c) => c.name !== 'Dehnen')"
+    :categories="
+      categories.filter((c) => c.name !== 'Dehnen' && c.name !== 'Cardio')
+    "
     :exercises="
-      exercises.filter((ex) => ex.categories.every((c) => c.name !== 'Dehnen'))
+      exercises.filter((ex) =>
+        ex.categories.every((c) => c.name !== 'Dehnen' && c.name !== 'Cardio'),
+      )
     "
     v-model:result="resultNewWorkoutExerciseId"
     @close="isOpenExerciseSelection = false"

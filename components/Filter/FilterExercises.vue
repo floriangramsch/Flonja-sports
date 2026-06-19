@@ -7,7 +7,7 @@
   <input
     v-if="isOpen"
     v-outside="close"
-    class="absolute left-1/2 top-1/2 -translate-x-full translate-y-full rounded-md bg-sonja-text p-1 text-center text-2xl text-sonja-akz2 shadow-lg focus:outline-none focus:ring-2 focus:ring-sonja-akz"
+    class="absolute mr-10 translate-x-5 translate-y-12 rounded-md bg-sonja-text p-1 text-center text-2xl text-sonja-akz2 shadow-lg focus:outline-none focus:ring-2 focus:ring-sonja-akz"
     :class="class"
     ref="input"
     v-model="search"

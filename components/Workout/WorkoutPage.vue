@@ -87,9 +87,15 @@ watch(
       :workout="workout"
     />
   </WorkoutRouter>
-
   <WorkoutRouter route="workoutstretch">
     <WorkoutStretch
+      :exercises="exercises"
+      :categories="categories"
+      :workout="workout"
+    />
+  </WorkoutRouter>
+  <WorkoutRouter route="workoutcondi">
+    <WorkoutCondi
       :exercises="exercises"
       :categories="categories"
       :workout="workout"

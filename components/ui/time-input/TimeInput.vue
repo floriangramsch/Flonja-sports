@@ -51,6 +51,32 @@ const onScroll = () => {
 onMounted(() => {
   calculateVisibleItem();
 });
+
+watch(
+  currentItem,
+  (val) => {
+    if (val == null) return;
+
+    nextTick(() => {
+      requestAnimationFrame(() => {
+        const el = scrollContainer.value;
+        if (!el) return;
+
+        const index = items.indexOf(val);
+        if (index === -1) return;
+
+        const target = el.children[index] as HTMLElement;
+        if (!target) return;
+
+        target.scrollIntoView({
+          block: "center",
+          behavior: "auto",
+        });
+      });
+    });
+  },
+  { immediate: true },
+);
 </script>
 
 <template>

@@ -12,6 +12,7 @@ const props = defineProps<{
   focus?: boolean;
   placeholder?: string;
   label?: string;
+  defaultValue?: number;
 }>();
 
 watch(
@@ -31,10 +32,18 @@ const setTime = () => {
 
 const selectorRef = ref<HTMLDivElement | undefined>();
 
-watch([hours, minutes, seconds], setTime);
+watch([hours, minutes, seconds], setTime, { immediate: true });
 
 onMounted(() => {
   newValue.value = 0;
+
+  if (props.defaultValue) {
+    newValue.value = props.defaultValue;
+    hours.value = Math.floor(props.defaultValue / 3600);
+    minutes.value = Math.floor((props.defaultValue % 3600) / 60);
+    seconds.value = props.defaultValue % 60;
+  }
+
   if (props.focus && inputRef.value) {
     inputRef.value.focus();
   }

@@ -7,7 +7,8 @@ export function useWorkoutExercisesByWorkout(
   return useQuery<WorkoutExerciseType[]>({
     queryKey: computed(() => ["workout_exercises", workoutId.value]),
     queryFn: async () => {
-      if (!workoutId.value) throw new Error("Workout Exercises ID is undefined");
+      if (!workoutId.value)
+        throw new Error("Workout Exercises ID is undefined");
       const response = await fetch(
         `/api/workout_exercise?id=${workoutId.value}`,
         {
@@ -17,7 +18,28 @@ export function useWorkoutExercisesByWorkout(
           },
         },
       );
-      if (!response.ok) throw new Error("Fehler beim Abrufen der Workout Exercises");
+      if (!response.ok)
+        throw new Error("Fehler beim Abrufen der Workout Exercises");
+      return response.json();
+    },
+    enabled: computed(() => workoutId.value !== undefined),
+  });
+}
+
+export function useWorkoutCondiByWorkout(workoutId: Ref<number | undefined>) {
+  return useQuery<WorkoutCondiType[]>({
+    queryKey: computed(() => ["workout_condi", workoutId.value]),
+    queryFn: async () => {
+      if (!workoutId.value)
+        throw new Error("Workout Exercises ID is undefined");
+      const response = await fetch(`/api/workout_condi?id=${workoutId.value}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok)
+        throw new Error("Fehler beim Abrufen der Workout Exercises");
       return response.json();
     },
     enabled: computed(() => workoutId.value !== undefined),
@@ -45,6 +67,7 @@ export default function useAddWorkoutExercise() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
+      queryClient.invalidateQueries({ queryKey: ["workout_condi"] });
     },
   });
 }
@@ -65,6 +88,7 @@ export function useDeleteWorkoutExercise() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workout_exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workout_condi"] });
     },
   });
 }

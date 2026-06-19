@@ -65,6 +65,7 @@ export const useAddSet = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sets"] });
+      queryClient.invalidateQueries({ queryKey: ["workout_condi"] });
     },
   });
 };
