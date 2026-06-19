@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    image: registry.floxsite.de/fitty:latest
+    volumes:
+      - ./uploads:/uploads
+    env_file:
+      - .env
