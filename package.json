@@ -17,14 +17,13 @@
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.6",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^4.4.0",
     "formidable": "^3.5.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
     "nuxt": "^3.13.0",
     "pinia": "^2.3.0",
-    "radix-vue": "^1.9.6",
-    "vue": "latest",
-    "vue-router": "latest"
+    "radix-vue": "^1.9.6"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
