@@ -11,7 +11,7 @@ const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
-const time = ref<number>();
+const time = ref<number>(60);
 const showUpdateTimeDialog = ref<boolean>(false);
 
 const routerStore = useRouterStore();
@@ -46,7 +46,7 @@ const addSetMutation = useAddSet();
 
 const getTimeLabel = (time: number | undefined) => {
   if (!time) {
-    return "Not started yet";
+    return "Not yet started";
   }
   const hours = `${Math.floor(time / 3600)}h`;
   const minutes = `${Math.floor((time % 3600) / 60)}min`;
