@@ -10,7 +10,6 @@ const emit = defineEmits<{
 
 const loggedStore = useLoggedStore();
 
-
 function getWeekdayPosition(date: Date): number {
   const day = date.getDay();
   return day === 0 ? 7 : day;
@@ -51,11 +50,15 @@ onMounted(() => arrangeDays());
       <div
         class="flex translate-y-[2px] items-center justify-center text-lg"
         :class="{
-          'bg-sonja-akz rounded-full px-1': selectedWorkout?.workout_id === workout.workout_id,
+          'rounded-full bg-sonja-akz px-1':
+            selectedWorkout?.workout_id === workout.workout_id,
         }"
       >
-      <!-- 'border-l-2 border-sonja-akz pl-1': selectedWorkout?.workout_id === workout.workout_id, -->
-        {{ new Date(workout.start).getDate() }}
+        <!-- 'border-l-2 border-sonja-akz pl-1': selectedWorkout?.workout_id === workout.workout_id, -->
+        <div>{{ new Date(workout.start).getDate() }}</div>
+        <div class="pt-1 text-xs">
+          .{{ new Date(workout.start).getMonth() }}
+        </div>
       </div>
       <span
         class="noscrollbar absolute bottom-6 max-w-14 overflow-x-scroll text-nowrap text-start text-xs"
