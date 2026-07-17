@@ -115,12 +115,6 @@ const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
 );
 
 const userSelectionRef = ref<InstanceType<typeof UserSelectionHeader>>();
-
-onMounted(() => {
-  if (userSelectionRef.value) {
-    userSelectionRef.value.selected = loggedStore.logged.user.id ?? 0;
-  }
-});
 </script>
 <template>
   <div class="flex h-full flex-col">
@@ -142,7 +136,7 @@ onMounted(() => {
         ref="filterWrapperComponent"
         :open="selectedPlan.plan?.name ? false : true"
       >
-        <UserSelectionHeader ref="userSelectionRef" />
+        <UserSelectionHeader ref="userSelectionRef" :defaultSelected="loggedStore.logged.user.id ?? 0" />
       </FilterWrapper>
 
       <div v-if="!plan">

@@ -1,7 +1,11 @@
 <script setup lang="ts">
 const { data: users } = useUsers();
 
-const selected = ref<number>(0);
+const props = defineProps<{
+  defaultSelected?: number;
+}>();
+
+const selected = ref<number>(props.defaultSelected ?? 0);
 
 const containerRef = ref<HTMLDivElement | null>(null);
 const isAtStart = ref(false);
