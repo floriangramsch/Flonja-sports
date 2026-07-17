@@ -300,7 +300,9 @@ const open = (id: number) => {
         </div>
         <transition name="expand">
           <div v-if="isOpenId === ex.id">
-            <div class="ml-1 pl-2 border-l-4 border-sonja-text border-b-4 max-w-20">
+            <div
+              class="ml-1 max-w-20 border-b-4 border-l-4 border-sonja-text pl-2"
+            >
               <i
                 class="fa-solid fa-edit cursor-pointer text-xl"
                 @click.stop="

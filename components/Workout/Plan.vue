@@ -4,12 +4,15 @@ import FilterWrapper from "../Filter/FilterWrapper.vue";
 import UserSelectionHeader from "../Header/UserSelectionHeader.vue";
 import Button from "../ui/buttons/Button.vue";
 import PlanList from "./PlanList.vue";
+import WeekPlanner from "./WeekPlanner.vue";
 
 const props = defineProps<{
   workout: WorkoutType | undefined;
 }>();
 
 const loggedStore = useLoggedStore();
+
+const showPlans = ref(false);
 
 const showConfirmApply = ref<boolean>(false);
 
@@ -55,6 +58,7 @@ const newPlanForm = ref({
 const planListRef = ref<InstanceType<typeof PlanList> | null>(null);
 
 const getRightIcon = () => {
+  if (!showPlans.value) return undefined;
   if (selectedPlan.plan && planListRef.value) {
     if (planListRef.value.isOrdered && props.workout) {
       return "fa-solid fa-check";
@@ -66,6 +70,7 @@ const getRightIcon = () => {
 };
 
 const getRightFunction = () => {
+  if (!showPlans.value) return;
   if (selectedPlan.plan && planListRef.value) {
     if (planListRef.value.isOrdered && props.workout) {
       showConfirmApply.value = true;
@@ -76,6 +81,34 @@ const getRightFunction = () => {
     return filterWrapperComponent.value?.toggle();
   }
 };
+
+const openPlan = (plan: Plan) => {
+  selectedPlan.setPlan(plan);
+  showPlans.value = true;
+};
+
+const handleLeft = () => {
+  if (showPlans.value) {
+    if (selectedPlan.plan?.name) {
+      selectedPlan.reset();
+    } else {
+      showPlans.value = false;
+    }
+  } else {
+    showPlans.value = true;
+  }
+};
+
+const leftIcon = computed(() => {
+  if (!showPlans.value) return "fa-solid fa-calendar-days";
+  return "fa-solid fa-arrow-left";
+});
+
+const title = computed(() => {
+  if (!showPlans.value) return "Week";
+  if (selectedPlan.plan?.name) return selectedPlan.plan.name;
+  return "Plans";
+});
 
 const filterWrapperComponent = ref<InstanceType<typeof FilterWrapper> | null>(
   null,
@@ -90,66 +123,75 @@ onMounted(() => {
 });
 </script>
 <template>
-  <Header
-    @left="selectedPlan.plan?.name ? selectedPlan.reset() : undefined"
-    @right="getRightFunction"
-    :leftIcon="selectedPlan.plan?.name ? 'fa-solid fa-arrow-left' : undefined"
-    :rightIcon="getRightIcon()"
-  >
-    {{ selectedPlan.plan?.name ? selectedPlan.plan.name : "Workout Plans" }}
-  </Header>
-  <FilterWrapper
-    ref="filterWrapperComponent"
-    :open="selectedPlan.plan?.name ? false : true"
-  >
-    <UserSelectionHeader ref="userSelectionRef" />
-  </FilterWrapper>
-
-  <div v-if="!plan">
-    <div
-      class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
-      @click="
-        selectedPlan.setPlan(plan);
-        filterWrapperComponent?.close();
-      "
-      v-for="plan in plans?.filter((plan) => {
-        if (userSelectionRef?.selected === 0) return true;
-        else return plan.user_id === userSelectionRef?.selected;
-      })"
+  <div class="flex h-full flex-col">
+    <Header
+      @left="handleLeft"
+      @right="getRightFunction"
+      :leftIcon="leftIcon"
+      :rightIcon="getRightIcon()"
     >
-      {{ plan.name }}
-      <button
-        class="ml-2"
-        @click.stop="
-          PlanToDelete = Number(plan.id);
-          confirmDelete = true;
-        "
-      >
-        <i class="fa-solid fa-close text-red-800" />
-      </button>
+      {{ title }}
+    </Header>
+
+    <div v-if="!showPlans" class="flex flex-1 flex-col">
+      <WeekPlanner @select-plan="openPlan" />
     </div>
 
-    <DialogsConfirm
-      v-model:is-open="confirmDelete"
-      @no="newPlanDialog = false"
-      @yes="deletePlan"
-    />
+    <template v-if="showPlans">
+      <FilterWrapper
+        ref="filterWrapperComponent"
+        :open="selectedPlan.plan?.name ? false : true"
+      >
+        <UserSelectionHeader ref="userSelectionRef" />
+      </FilterWrapper>
 
-    <button
-      class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
-      @click="newPlanDialog = true"
-    >
-      <i class="fa-solid fa-plus" />
-    </button>
-    <DialogsDialog :is-open="newPlanDialog" @close="newPlanDialog = false">
-      <UiInputsTextinput label="Name" v-model="newPlanForm.name" focus />
-      <UiButtonsButton @action="addPlan" class="mt-2">New Plan</UiButtonsButton>
-    </DialogsDialog>
-  </div>
-  <PlanList v-if="plan" ref="planListRef" :plan="plan" :workout="workout" />
-  <Confirm v-model:isOpen="showConfirmApply" @yes="planListRef?.apply()">
-    <template #message>
-      Sure to apply to your workout?
+      <div v-if="!plan">
+        <div
+          class="flex cursor-pointer items-center justify-center rounded-full border-b border-sonja-bg-darker p-2"
+          @click="
+            selectedPlan.setPlan(plan);
+            filterWrapperComponent?.close();
+          "
+          v-for="plan in plans?.filter((plan) => {
+            if (userSelectionRef?.selected === 0) return true;
+            else return plan.user_id === userSelectionRef?.selected;
+          })"
+        >
+          {{ plan.name }}
+          <button
+            class="ml-2"
+            @click.stop="
+              PlanToDelete = Number(plan.id);
+              confirmDelete = true;
+            "
+          >
+            <i class="fa-solid fa-close text-red-800" />
+          </button>
+        </div>
+
+        <DialogsConfirm
+          v-model:is-open="confirmDelete"
+          @no="newPlanDialog = false"
+          @yes="deletePlan"
+        />
+
+        <button
+          class="flex w-full justify-center rounded-full rounded-t bg-sonja-bg-darker pb-2 pt-3"
+          @click="newPlanDialog = true"
+        >
+          <i class="fa-solid fa-plus" />
+        </button>
+        <DialogsDialog :is-open="newPlanDialog" @close="newPlanDialog = false">
+          <UiInputsTextinput label="Name" v-model="newPlanForm.name" focus />
+          <UiButtonsButton @action="addPlan" class="mt-2">New Plan</UiButtonsButton>
+        </DialogsDialog>
+      </div>
+      <PlanList v-if="plan" ref="planListRef" :plan="plan" :workout="workout" />
+      <Confirm v-model:isOpen="showConfirmApply" @yes="planListRef?.apply()">
+        <template #message>
+          Sure to apply to your workout?
+        </template>
+      </Confirm>
     </template>
-  </Confirm>
+  </div>
 </template>

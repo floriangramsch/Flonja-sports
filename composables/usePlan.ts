@@ -60,6 +60,7 @@ export function useAddPlan() {
       name: string;
       user_id: number;
       day?: number;
+      days?: number[];
     }) => {
       const response = await fetch("/api/plan", {
         method: "POST",
@@ -121,6 +122,25 @@ export function useAddPlanExercise() {
       return response.json();
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ["plan"] }),
+  });
+}
+
+export function useTogglePlanDay() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (form: { id: number; day: number; remove?: boolean }) => {
+      const response = await fetch("/api/plan", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      if (!response.ok)
+        throw new Error("Fehler beim Aktualisieren des Plans");
+      return response.json();
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ["plans"] }),
   });
 }
 

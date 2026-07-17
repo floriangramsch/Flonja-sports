@@ -153,6 +153,7 @@ export type Plan = {
   id: number;
   name: string;
   day?: number;
+  days: number[];
   user_id: number;
 };
 
