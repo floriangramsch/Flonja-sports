@@ -105,7 +105,7 @@ const showConfirmDeleteWorkoutExercise = ref<boolean>(false);
 const showOldSets = ref<boolean>(false);
 const showInfo = ref<boolean>(false);
 const editInfo = ref<boolean>(!props.exercise?.info);
-const showWeight = ref<boolean>(true);
+const showWeight = ref<boolean>(wexToShow.wex?.type !== "Bodyweight");
 
 const newWeight = ref<number>();
 const newReps = ref<number | undefined>(
@@ -147,7 +147,6 @@ watch(
       newReps.value = newVal.metric === "Time" ? 1 : undefined;
       newWeight.value = undefined;
       setIdToUpdate.value = undefined;
-
     }
   },
 );
@@ -168,7 +167,7 @@ watch(
       </template>
     </Header>
     <!-- Buttons -->
-    <div class="mb-5 flex w-full items-center justify-center gap-3 relative">
+    <div class="relative mb-5 flex w-full items-center justify-center gap-3">
       <!-- Switch between current and old sets -->
       <i
         class="fa-solid fa-weight-hanging absolute left-9 cursor-pointer"
@@ -176,7 +175,7 @@ watch(
       />
       <i
         v-if="!showWeight"
-        class="fa-solid fa-xmark text-red-800 absolute left-[2.2rem] cursor-pointer text-4xl"
+        class="fa-solid fa-xmark absolute left-[2.2rem] cursor-pointer text-4xl text-red-800"
         style="pointer-events: none"
       />
       <i class="fa-solid fa-arrow-left text-3xl" @click="emit('prev')" />
